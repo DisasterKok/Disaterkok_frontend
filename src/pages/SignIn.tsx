@@ -1,10 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import COLOR from '../constants/colors';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
 
-export default function SignIn() {
+type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
+
+export default function SignIn({ navigation }: SignInScreenProps) {
   const [inputIdFocused, setInputIdFocused] = useState(false);
   const [inputPasswordFocused, setInputPasswordFocused] = useState(false);
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+  const [activeLoginButton, setActiveLoginButton] = useState(false);
+
+  const onChangeId = (text) => {
+    setId(text);
+  };
+
+  const onChangePassword = (text) => {
+    setPassword(text);
+  };
+
+  const checkActiveLoginButton = () => {
+    setActiveLoginButton(!!id && !!password);
+  };
+
+  const gotoSignUp = () => {
+    navigation.navigate('SignUp');
+  };
+
+  useEffect(() => {
+    checkActiveLoginButton();
+  }, [id, password]);
 
   return (
     <View style={styles.layout}>
@@ -25,6 +52,8 @@ export default function SignIn() {
             clearButtonMode="always"
             onFocus={() => setInputIdFocused(true)}
             onBlur={() => setInputIdFocused(false)}
+            onChangeText={onChangeId}
+            autoCapitalize="none"
           />
         </View>
         <View style={styles.inputWrapper}>
@@ -40,22 +69,32 @@ export default function SignIn() {
             clearButtonMode="always"
             onFocus={() => setInputPasswordFocused(true)}
             onBlur={() => setInputPasswordFocused(false)}
+            onChangeText={onChangePassword}
+            autoCapitalize="none"
+            secureTextEntry
           />
         </View>
-        <Pressable style={styles.loginButton}>
+        <Pressable
+          style={
+            activeLoginButton
+              ? StyleSheet.compose(styles.loginButton, styles.loginButtonActive)
+              : styles.loginButton
+          }
+          disabled={!activeLoginButton}
+        >
           <Text style={styles.loginButtonText}>로그인</Text>
         </Pressable>
       </View>
       <View style={styles.loginBottomTap}>
-        <View>
+        <Pressable>
           <Text style={styles.loginBottomTapText}>아이디 찾기</Text>
-        </View>
-        <View style={styles.loginBottomTapCenter}>
+        </Pressable>
+        <Pressable style={styles.loginBottomTapCenter}>
           <Text style={styles.loginBottomTapText}>비밀번호 찾기</Text>
-        </View>
-        <View>
+        </Pressable>
+        <Pressable onPress={gotoSignUp}>
           <Text style={styles.loginBottomTapText}>회원가입</Text>
-        </View>
+        </Pressable>
       </View>
       <View style={styles.easyLoginContainer}>
         <Text style={styles.easyLoginText}>간편 로그인</Text>
@@ -106,7 +145,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   loginButton: {
-    backgroundColor: `${COLOR.primary}`,
+    backgroundColor: `${COLOR.lightGray}`,
     width: 346,
     height: 48,
     borderRadius: 5,
@@ -119,7 +158,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   loginButtonActive: {
-    backgroundColor: 'blue',
+    backgroundColor: `${COLOR.primary}`,
   },
   loginBottomTap: {
     display: 'flex',
