@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import COLOR from '../constants/colors';
 
 export default function SignUp() {
@@ -7,6 +7,96 @@ export default function SignUp() {
   const [inputEmailFocuesd, setInputEmailFocuesd] = useState(false);
   const [inputPasswordFocused, setInputPasswordFocused] = useState(false);
   const [inputPasswordConfirmFocused, setInputPasswordConfirmFocused] = useState(false);
+
+  const [id, setId] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+
+  const [activeSignUpButton, setActiveSignUpButton] = useState(false);
+
+  const [idError, setIdError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordConfirmError, setPasswordConfirmError] = useState('');
+
+  const [checkSubmit, setCheckSubmit] = useState(false);
+
+  const onChangeId = (text: string) => {
+    setId(text);
+  };
+
+  const onChangeEmail = (text: string) => {
+    setEmail(text);
+  };
+
+  const onChangePassword = (text: string) => {
+    setPassword(text);
+  };
+
+  const onChangePasswordConfirm = (text: string) => {
+    setPasswordConfirm(text);
+  };
+
+  const checkActiveLoginButton = () => {
+    setActiveSignUpButton(!!id && !!email && !!password && !!passwordConfirm);
+  };
+
+  const checkNameValidation = (id: string) => {
+    let isChekced = false;
+
+    if (id.length < 2) setIdError('사용할 수 없는 아이디에요');
+    else {
+      setIdError('');
+      isChekced = true;
+    }
+
+    return isChekced;
+  };
+
+  const checkEmailValidation = (email: string) => {
+    let isChekced = false;
+    const emailRegEx =
+      /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
+
+    if (!emailRegEx.test(email)) setEmailError('잘못된 이메일 형식이에요');
+    else {
+      setEmailError('');
+      isChekced = true;
+    }
+
+    return isChekced;
+  };
+
+  const checkConfirmedPasswordValidation = (password: string) => {
+    let isChecked = false;
+    if (password !== passwordConfirm) setPasswordConfirmError('비밀번호가 일치하지 않습니다');
+    else {
+      setPasswordConfirmError('');
+      isChecked = true;
+    }
+
+    return isChecked;
+  };
+
+  const checkAllValidation = (id: string, email: string, password: string) => {
+    // 유효성 검사 방식 정해지면 추후 수정
+    const checkedName = checkNameValidation(id);
+    const checkedEmail = checkEmailValidation(email);
+    const checkedConfirmedPassword = checkConfirmedPasswordValidation(password);
+
+    return checkedName && checkedEmail && checkedConfirmedPassword;
+  };
+
+  const onSubmit = () => {
+    checkAllValidation(id, email, password);
+    setCheckSubmit(true);
+  };
+
+  useEffect(() => {
+    checkActiveLoginButton();
+  }, [id, email, password, passwordConfirm]);
+
   return (
     <View style={styles.layout}>
       <View style={styles.title}>
@@ -25,8 +115,22 @@ export default function SignUp() {
           clearButtonMode="always"
           onFocus={() => setInputIdFocused(true)}
           onBlur={() => setInputIdFocused(false)}
+          onChangeText={onChangeId}
           autoCapitalize="none"
         />
+        {idError ? (
+          <View style={styles.submitReturnText}>
+            <Image source={require('../assets/images/sad.png')} />
+            <Text style={styles.errorText}>{idError}</Text>
+          </View>
+        ) : (
+          checkSubmit && (
+            <View style={styles.submitReturnText}>
+              <Image source={require('../assets/images/smile.png')} />
+              <Text style={styles.successText}>사용 가능한 아이디에요</Text>
+            </View>
+          )
+        )}
       </View>
       <View style={styles.inputWrapper}>
         <Text style={styles.label}>이메일</Text>
@@ -41,8 +145,23 @@ export default function SignUp() {
           clearButtonMode="always"
           onFocus={() => setInputEmailFocuesd(true)}
           onBlur={() => setInputEmailFocuesd(false)}
+          onChangeText={onChangeEmail}
           autoCapitalize="none"
         />
+
+        {emailError ? (
+          <View style={styles.submitReturnText}>
+            <Image source={require('../assets/images/sad.png')} />
+            <Text style={styles.errorText}>{emailError}</Text>
+          </View>
+        ) : (
+          checkSubmit && (
+            <View style={styles.submitReturnText}>
+              <Image source={require('../assets/images/smile.png')} />
+              <Text style={styles.successText}>사용 가능한 이메일이에요</Text>
+            </View>
+          )
+        )}
       </View>
       <View style={styles.inputWrapper}>
         <Text style={styles.label}>비밀번호</Text>
@@ -57,6 +176,7 @@ export default function SignUp() {
           clearButtonMode="always"
           onFocus={() => setInputPasswordFocused(true)}
           onBlur={() => setInputPasswordFocused(false)}
+          onChangeText={onChangePassword}
           autoCapitalize="none"
           secureTextEntry
         />
@@ -74,10 +194,36 @@ export default function SignUp() {
           clearButtonMode="always"
           onFocus={() => setInputPasswordConfirmFocused(true)}
           onBlur={() => setInputPasswordConfirmFocused(false)}
+          onChangeText={onChangePasswordConfirm}
           autoCapitalize="none"
           secureTextEntry
         />
+
+        {passwordConfirmError ? (
+          <View style={styles.submitReturnText}>
+            <Image source={require('../assets/images/sad.png')} />
+            <Text style={styles.errorText}>{passwordConfirmError}</Text>
+          </View>
+        ) : (
+          checkSubmit && (
+            <View style={styles.submitReturnText}>
+              <Image source={require('../assets/images/smile.png')} />
+              <Text style={styles.successText}>사용 가능한 비밀번호에요</Text>
+            </View>
+          )
+        )}
       </View>
+      <Pressable
+        style={
+          activeSignUpButton
+            ? StyleSheet.compose(styles.loginButton, styles.loginButtonActive)
+            : styles.loginButton
+        }
+        disabled={!activeSignUpButton}
+        onPress={onSubmit}
+      >
+        <Text style={styles.loginButtonText}>회원가입</Text>
+      </Pressable>
     </View>
   );
 }
@@ -110,5 +256,35 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 12,
     marginBottom: 20,
+  },
+  loginButton: {
+    backgroundColor: `${COLOR.lightGray}`,
+    width: 346,
+    height: 48,
+    borderRadius: 5,
+    marginBottom: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loginButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  loginButtonActive: {
+    backgroundColor: `${COLOR.primary}`,
+  },
+  successText: {
+    color: `${COLOR.blue}`,
+    fontSize: 12,
+  },
+  errorText: {
+    color: `${COLOR.red}`,
+    fontSize: 12,
+  },
+  submitReturnText: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
   },
 });

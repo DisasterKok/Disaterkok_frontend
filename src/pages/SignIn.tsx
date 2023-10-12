@@ -13,11 +13,11 @@ export default function SignIn({ navigation }: SignInScreenProps) {
   const [password, setPassword] = useState('');
   const [activeLoginButton, setActiveLoginButton] = useState(false);
 
-  const onChangeId = (text) => {
+  const onChangeId = (text: string) => {
     setId(text);
   };
 
-  const onChangePassword = (text) => {
+  const onChangePassword = (text: string) => {
     setPassword(text);
   };
 
