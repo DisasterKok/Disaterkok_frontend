@@ -3,23 +3,16 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import COLOR from '../constants/colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
+import useInput from '../hooks/useInput';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 
 export default function SignIn({ navigation }: SignInScreenProps) {
   const [inputIdFocused, setInputIdFocused] = useState(false);
   const [inputPasswordFocused, setInputPasswordFocused] = useState(false);
-  const [id, setId] = useState('');
-  const [password, setPassword] = useState('');
+  const [id, onChangeId] = useInput('');
+  const [password, onChangePassword] = useInput('');
   const [activeLoginButton, setActiveLoginButton] = useState(false);
-
-  const onChangeId = (text: string) => {
-    setId(text);
-  };
-
-  const onChangePassword = (text: string) => {
-    setPassword(text);
-  };
 
   const checkActiveLoginButton = () => {
     setActiveLoginButton(!!id && !!password);

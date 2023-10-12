@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import COLOR from '../constants/colors';
+import useInput from '../hooks/useInput';
 
 export default function SignUp() {
   const [inputIdFocused, setInputIdFocused] = useState(false);
@@ -8,35 +9,19 @@ export default function SignUp() {
   const [inputPasswordFocused, setInputPasswordFocused] = useState(false);
   const [inputPasswordConfirmFocused, setInputPasswordConfirmFocused] = useState(false);
 
-  const [id, setId] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [id, onChangeId] = useInput('');
+  const [email, onChangeEmail] = useInput('');
+  const [password, onChangePassword] = useInput('');
+  const [passwordConfirm, onChangePasswordConfirm] = useInput('');
 
   const [activeSignUpButton, setActiveSignUpButton] = useState(false);
 
   const [idError, setIdError] = useState('');
   const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+  // const [passwordError, setPasswordError] = useState('');
   const [passwordConfirmError, setPasswordConfirmError] = useState('');
 
   const [checkSubmit, setCheckSubmit] = useState(false);
-
-  const onChangeId = (text: string) => {
-    setId(text);
-  };
-
-  const onChangeEmail = (text: string) => {
-    setEmail(text);
-  };
-
-  const onChangePassword = (text: string) => {
-    setPassword(text);
-  };
-
-  const onChangePasswordConfirm = (text: string) => {
-    setPasswordConfirm(text);
-  };
 
   const checkActiveLoginButton = () => {
     setActiveSignUpButton(!!id && !!email && !!password && !!passwordConfirm);
