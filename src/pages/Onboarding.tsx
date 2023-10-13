@@ -20,10 +20,6 @@ const Onboarding = ({ navigation }: OnboardingScreenProps) => {
       activeDot={<View style={styles.activeDot} />}
       nextButton={<Text style={styles.buttonText}>›</Text>}
       prevButton={<Text style={styles.buttonText}>‹</Text>}
-      onIndexChanged={(index) => {
-        // 페이지가 변경될 때 실행되는 함수
-        console.log(`Changed to page ${index + 1}`);
-      }}
     >
       <View style={styles.slide}>
         <Image source={require('../assets/images/onboardingtmpBox.png')} style={styles.image} />
