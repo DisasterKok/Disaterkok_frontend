@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   dot: {
-    backgroundColor: `${COLOR.lightGray}`,
+    backgroundColor: `${COLOR.middleGray}`,
     width: 8,
     height: 8,
     borderRadius: 4,
