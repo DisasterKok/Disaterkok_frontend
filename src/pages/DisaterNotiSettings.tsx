@@ -5,6 +5,7 @@ import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import NaturalDisasterBottomSheet from '../components/BottomSheetModal/NaturalDisasterBottomSheet';
 import SocialDisasterBottomSheet from '../components/BottomSheetModal/SocialDisasterBottomSheet';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function DisaterNotiSettings() {
   const naturalDisasterModalRef = useRef<BottomSheetModal>(null);
@@ -52,7 +53,11 @@ export default function DisaterNotiSettings() {
                 >
                   자연재난
                 </Text>
-                <Image source={require('../assets/images/chevron-down.png')} />
+                <Icon
+                  name="angle-down"
+                  size={25}
+                  color={!naturalSelectedTags.length ? 'gray' : 'white'}
+                />
               </Pressable>
               <NaturalDisasterBottomSheet
                 bottomSheetModalRef={naturalDisasterModalRef}
@@ -76,7 +81,12 @@ export default function DisaterNotiSettings() {
                 >
                   사회재난
                 </Text>
-                <Image source={require('../assets/images/chevron-down.png')} />
+                <Icon
+                  name="angle-down"
+                  size={25}
+                  color={!soicalSelectedTags.length ? 'gray' : 'white'}
+                />
+
                 <SocialDisasterBottomSheet
                   bottomSheetModalRef={socialDisasterModalRef}
                   selectedTags={soicalSelectedTags}
