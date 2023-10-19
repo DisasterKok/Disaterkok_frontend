@@ -3,9 +3,11 @@ import { Pressable, StyleSheet, Text, View, Platform, Image } from 'react-native
 import COLOR from '../constants/colors';
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import NaturalDisasterBottomSheet from '../components/BottomSheetModal/NaturalDisasterBottomSheet';
-import SocialDisasterBottomSheet from '../components/BottomSheetModal/SocialDisasterBottomSheet';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {
+  NaturalDisasterBottomSheet,
+  SocialDisasterBottomSheet,
+} from '../components/BottomSheetModal';
 
 export default function DisaterNotiSettings() {
   const naturalDisasterModalRef = useRef<BottomSheetModal>(null);

@@ -44,6 +44,9 @@ export default function NaturalDisasterBottomSheet({
         return [...prevSelectedTags, tagId];
       }
     });
+
+    if (selectedTags.length === NATURAL_DISASTER.length) {
+    }
   };
 
   const toggleAllTags = () => {
@@ -111,6 +114,8 @@ export default function NaturalDisasterBottomSheet({
           innerIconStyle={{ borderWidth: 1, borderRadius: 3 }}
           textStyle={styles.selectAllText}
           onPress={toggleAllTags}
+          disableBuiltInState={true}
+          isChecked={selectedTags.length === NATURAL_DISASTER.length}
         />
         <Pressable
           onPress={() => handleCloseModalPress(bottomSheetModalRef)}
