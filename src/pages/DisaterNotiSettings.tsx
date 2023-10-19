@@ -1,97 +1,18 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View, Platform, Image, FlatList } from 'react-native';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import React, { useCallback, useRef } from 'react';
+import { Pressable, StyleSheet, Text, View, Platform, Image } from 'react-native';
 import COLOR from '../constants/colors';
-import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetModalProvider,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-
-type LocalDisasterType = {
-  id: number;
-  text: string;
-};
-
-const LOCAL_DISASTER: LocalDisasterType[] = [
-  { id: 1, text: '태풍' },
-  { id: 2, text: '호우' },
-  { id: 3, text: '폭설' },
-  { id: 4, text: '지진/해일' },
-  { id: 5, text: '산사태' },
-  { id: 6, text: '우박' },
-  { id: 7, text: '낙뢰/뇌우' },
-  { id: 8, text: '황사/미세먼지' },
-  { id: 9, text: '한파' },
-  { id: 10, text: '강풍' },
-  { id: 11, text: '가뭄' },
-  { id: 12, text: '산불' },
-  { id: 13, text: '폭염' },
-];
+import LocalDisasterBottomSheet from '../components/BottomSheetModal/LocalDisasterBottomSheet';
+import SocialDisasterBottomSheet from '../components/BottomSheetModal/SocialDisasterBottomSheet';
 
 export default function DisaterNotiSettings() {
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const bottomSheetModalRef2 = useRef<BottomSheetModal>(null);
-
-  const [selectedTags, setSelectedTags] = useState<number[]>([]);
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const localDisasterModalRef = useRef<BottomSheetModal>(null);
+  const socialDisasterModalRef = useRef<BottomSheetModal>(null);
 
   const handlePresentModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
     ref.current?.present();
   }, []);
-
-  const toggleTagSelection = (tagId: number) => {
-    setSelectedTags((prevSelectedTags) => {
-      if (prevSelectedTags.includes(tagId)) {
-        // 이미 선택된 경우 선택 해제
-        return prevSelectedTags.filter((id) => id !== tagId);
-      } else {
-        // 선택되지 않은 경우 선택
-        return [...prevSelectedTags, tagId];
-      }
-    });
-  };
-
-  const toggleAllTags = () => {
-    // 현재 선택된 태그가 있으면 전체 선택 해제
-    if (selectedTags.length === LOCAL_DISASTER.length) {
-      setSelectedTags([]);
-    } else {
-      // 현재 선택된 태그가 없으면 전체 선택
-      setSelectedTags(LOCAL_DISASTER.map((tag) => tag.id));
-    }
-  };
-
-  const snapPoints = useMemo(() => ['25%', '65%'], []);
-
-  const renderBackdrop = useCallback(
-    (props: any) => <BottomSheetBackdrop {...props} pressBehavior="close" />,
-    [],
-  );
-
-  const renderItem = ({ item }: { item: LocalDisasterType }) => (
-    <Pressable
-      onPress={() => toggleTagSelection(item.id)}
-      style={[
-        styles.tag,
-        {
-          backgroundColor: selectedTags.includes(item.id) ? `${COLOR.blue}` : `${COLOR.white}`,
-        },
-      ]}
-    >
-      <Text
-        style={[
-          styles.tagText,
-          {
-            color: selectedTags.includes(item.id) ? `${COLOR.white}` : `${COLOR.gray}`,
-          },
-        ]}
-      >
-        {item.text}
-      </Text>
-    </Pressable>
-  );
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -112,63 +33,19 @@ export default function DisaterNotiSettings() {
           <View style={styles.tabContainer}>
             <Pressable
               style={styles.tab}
-              onPress={() => handlePresentModalPress(bottomSheetModalRef)}
+              onPress={() => handlePresentModalPress(localDisasterModalRef)}
             >
-              <BottomSheetModal
-                ref={bottomSheetModalRef}
-                index={1}
-                snapPoints={snapPoints}
-                backdropComponent={renderBackdrop}
-                backgroundStyle={{ backgroundColor: `${COLOR.whiteBackground}` }}
-              >
-                <View style={styles.modalContainer}>
-                  <FlatList
-                    data={LOCAL_DISASTER}
-                    renderItem={renderItem}
-                    numColumns={3}
-                    style={styles.tagContainer}
-                  />
-                  <BouncyCheckbox
-                    size={15}
-                    style={styles.selectAllButton}
-                    fillColor="#2C58F4"
-                    unfillColor="#FFFFFF"
-                    text="전체 선택"
-                    iconStyle={{ marginRight: 0, borderRadius: 3 }}
-                    innerIconStyle={{ borderWidth: 1, borderRadius: 3 }}
-                    textStyle={styles.selectAllText}
-                    onPress={toggleAllTags}
-                  />
-                  <Pressable
-                    style={
-                      !selectedTags.length
-                        ? styles.selectButton
-                        : StyleSheet.compose(styles.selectButton, styles.selectButtonActive)
-                    }
-                  >
-                    <Text style={styles.selectButtonText}>완료</Text>
-                  </Pressable>
-                </View>
-              </BottomSheetModal>
-              <Text style={styles.tabText}>지역재난</Text>
+              <Text style={styles.tabText}>자연재난</Text>
               <Image source={require('../assets/images/chevron-down.png')} />
+              <LocalDisasterBottomSheet bottomSheetModalRef={localDisasterModalRef} />
             </Pressable>
             <Pressable
               style={styles.tab}
-              onPress={() => handlePresentModalPress(bottomSheetModalRef2)}
+              onPress={() => handlePresentModalPress(socialDisasterModalRef)}
             >
               <Text style={styles.tabText}>사회재난</Text>
-              <BottomSheetModal
-                ref={bottomSheetModalRef2}
-                index={1}
-                snapPoints={snapPoints}
-                backdropComponent={renderBackdrop}
-              >
-                <View style={styles.modalContainer}>
-                  <Text>사회재난</Text>
-                </View>
-              </BottomSheetModal>
               <Image source={require('../assets/images/chevron-down.png')} />
+              <SocialDisasterBottomSheet bottomSheetModalRef={socialDisasterModalRef} />
             </Pressable>
           </View>
         </View>
@@ -214,58 +91,4 @@ const styles = StyleSheet.create({
     }),
   },
   tabText: {},
-  modalContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  tagContainer: {},
-  tag: {
-    margin: 5,
-    width: 104,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: `${COLOR.white}`,
-    borderRadius: 8,
-    ...Platform.select({
-      ios: {
-        shadowColor: `${COLOR.black}`,
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        shadowOffset: {
-          width: 0,
-          height: 1,
-        },
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  tagText: { color: `${COLOR.gray}` },
-  selectAllButton: {
-    marginLeft: 'auto',
-    marginRight: 20,
-  },
-  selectAllText: {
-    color: `${COLOR.blue}`,
-    textDecorationLine: 'none',
-    marginLeft: -10,
-  },
-  selectButton: {
-    width: '90%',
-    height: 50,
-    backgroundColor: `${COLOR.lightGray}`,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 30,
-    marginBottom: 30,
-  },
-  selectButtonActive: {
-    backgroundColor: `${COLOR.blue}`,
-  },
-  selectButtonText: {
-    color: `${COLOR.white}`,
-  },
 });
