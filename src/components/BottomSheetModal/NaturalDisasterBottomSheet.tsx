@@ -4,16 +4,18 @@ import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import COLOR from '../../constants/colors';
 
-type LocalDisasterBottomSheetProps = {
+type NaturalDisasterBottomSheetProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
+  selectedTags: number[];
+  setSelectedTags: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
-type LocalDisasterType = {
+type NaturalDisasterType = {
   id: number;
   text: string;
 };
 
-const LOCAL_DISASTER: LocalDisasterType[] = [
+const NATURAL_DISASTER: NaturalDisasterType[] = [
   { id: 1, text: '태풍' },
   { id: 2, text: '호우' },
   { id: 3, text: '폭설' },
@@ -29,11 +31,11 @@ const LOCAL_DISASTER: LocalDisasterType[] = [
   { id: 13, text: '폭염' },
 ];
 
-export default function LocalDisasterBottomSheet({
+export default function NaturalDisasterBottomSheet({
   bottomSheetModalRef,
-}: LocalDisasterBottomSheetProps) {
-  const [selectedTags, setSelectedTags] = useState<number[]>([]);
-
+  selectedTags,
+  setSelectedTags,
+}: NaturalDisasterBottomSheetProps) {
   const toggleTag = (tagId: number) => {
     setSelectedTags((prevSelectedTags) => {
       if (prevSelectedTags.includes(tagId)) {
@@ -45,21 +47,25 @@ export default function LocalDisasterBottomSheet({
   };
 
   const toggleAllTags = () => {
-    if (selectedTags.length === LOCAL_DISASTER.length) {
+    if (selectedTags.length === NATURAL_DISASTER.length) {
       setSelectedTags([]);
     } else {
-      setSelectedTags(LOCAL_DISASTER.map((tag) => tag.id));
+      setSelectedTags(NATURAL_DISASTER.map((tag) => tag.id));
     }
   };
 
   const snapPoints = useMemo(() => ['25%', '65%'], []);
+
+  const handleCloseModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
+    ref.current?.close();
+  }, []);
 
   const renderBackdrop = useCallback(
     (props: any) => <BottomSheetBackdrop {...props} pressBehavior="close" />,
     [],
   );
 
-  const renderItem = ({ item }: { item: LocalDisasterType }) => (
+  const renderItem = ({ item }: { item: NaturalDisasterType }) => (
     <Pressable
       onPress={() => toggleTag(item.id)}
       style={
@@ -90,7 +96,7 @@ export default function LocalDisasterBottomSheet({
     >
       <View style={styles.modalContainer}>
         <FlatList
-          data={LOCAL_DISASTER}
+          data={NATURAL_DISASTER}
           renderItem={renderItem}
           numColumns={3}
           style={styles.tagContainer}
@@ -107,6 +113,7 @@ export default function LocalDisasterBottomSheet({
           onPress={toggleAllTags}
         />
         <Pressable
+          onPress={() => handleCloseModalPress(bottomSheetModalRef)}
           style={
             !selectedTags.length
               ? styles.selectButton

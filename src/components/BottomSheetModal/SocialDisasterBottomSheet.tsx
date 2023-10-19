@@ -6,6 +6,8 @@ import COLOR from '../../constants/colors';
 
 type SocialDisasterBottomSheetProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
+  selectedTags: number[];
+  setSelectedTags: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
 type SocialDisasterType = {
@@ -27,9 +29,9 @@ const SOCIAL_DISASTER: SocialDisasterType[] = [
 
 export default function SocialDisasterBottomSheet({
   bottomSheetModalRef,
+  selectedTags,
+  setSelectedTags,
 }: SocialDisasterBottomSheetProps) {
-  const [selectedTags, setSelectedTags] = useState<number[]>([]);
-
   const toggleTag = (tagId: number) => {
     setSelectedTags((prevSelectedTags) => {
       if (prevSelectedTags.includes(tagId)) {
@@ -49,6 +51,10 @@ export default function SocialDisasterBottomSheet({
   };
 
   const snapPoints = useMemo(() => ['25%', '50%'], []);
+
+  const handleCloseModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
+    ref.current?.close();
+  }, []);
 
   const renderBackdrop = useCallback(
     (props: any) => <BottomSheetBackdrop {...props} pressBehavior="close" />,
@@ -102,6 +108,7 @@ export default function SocialDisasterBottomSheet({
           onPress={toggleAllTags}
         />
         <Pressable
+          onPress={() => handleCloseModalPress(bottomSheetModalRef)}
           style={
             !selectedTags.length
               ? styles.selectButton
