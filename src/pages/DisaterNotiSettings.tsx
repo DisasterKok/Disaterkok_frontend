@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View, Platform, Image } from 'react-native';
+import { Pressable, StyleSheet, Text, View, Platform } from 'react-native';
 import COLOR from '../constants/colors';
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';

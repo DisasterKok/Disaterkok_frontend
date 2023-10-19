@@ -1,4 +1,4 @@
-import React, { RefObject, useCallback, useMemo, useState } from 'react';
+import React, { RefObject, useCallback, useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View, Platform, FlatList } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -106,6 +106,8 @@ export default function SocialDisasterBottomSheet({
           innerIconStyle={{ borderWidth: 1, borderRadius: 3 }}
           textStyle={styles.selectAllText}
           onPress={toggleAllTags}
+          disableBuiltInState={true}
+          isChecked={selectedTags.length === SOCIAL_DISASTER.length}
         />
         <Pressable
           onPress={() => handleCloseModalPress(bottomSheetModalRef)}
