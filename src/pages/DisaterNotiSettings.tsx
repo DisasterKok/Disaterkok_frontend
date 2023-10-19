@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View, Platform, Image, Button, FlatList } from 'react-native';
+import { Pressable, StyleSheet, Text, View, Platform, Image, FlatList } from 'react-native';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import COLOR from '../constants/colors';
 import {
   BottomSheetBackdrop,
@@ -34,6 +35,7 @@ export default function DisaterNotiSettings() {
   const bottomSheetModalRef2 = useRef<BottomSheetModal>(null);
 
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   const handlePresentModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
     ref.current?.present();
@@ -126,9 +128,17 @@ export default function DisaterNotiSettings() {
                     numColumns={3}
                     style={styles.tagContainer}
                   />
-                  <Pressable style={styles.selectAllButton} onPress={toggleAllTags}>
-                    <Text style={styles.selectAllText}>전체선택</Text>
-                  </Pressable>
+                  <BouncyCheckbox
+                    size={15}
+                    style={styles.selectAllButton}
+                    fillColor="#2C58F4"
+                    unfillColor="#FFFFFF"
+                    text="전체 선택"
+                    iconStyle={{ marginRight: 0, borderRadius: 3 }}
+                    innerIconStyle={{ borderWidth: 1, borderRadius: 3 }}
+                    textStyle={styles.selectAllText}
+                    onPress={toggleAllTags}
+                  />
                   <Pressable
                     style={
                       !selectedTags.length
@@ -239,6 +249,8 @@ const styles = StyleSheet.create({
   },
   selectAllText: {
     color: `${COLOR.blue}`,
+    textDecorationLine: 'none',
+    marginLeft: -10,
   },
   selectButton: {
     width: '90%',
