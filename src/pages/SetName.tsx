@@ -12,13 +12,13 @@ export default function SetName({ navigation }: SetNameScreenProps) {
 
   const [nickname, onChangeNickname] = useInput('');
 
-  const [activeSignUpButton, setActiveSignUpButton] = useState(false);
+  const [activeNextButton, setActiveNextButton] = useState(false);
 
   const [lengthError, setLengthError] = useState(false);
   const [charError, setCharError] = useState(false);
 
   const checkActiveButton = () => {
-    setActiveSignUpButton(!!nickname && !lengthError && !charError);
+    setActiveNextButton(!!nickname && !lengthError && !charError);
   };
 
   const checkNameValidation = (nickname: string) => {
@@ -77,11 +77,9 @@ export default function SetName({ navigation }: SetNameScreenProps) {
       </View>
       <Pressable
         style={
-          activeSignUpButton
-            ? StyleSheet.compose(styles.Button, styles.ButtonActive)
-            : styles.Button
+          activeNextButton ? StyleSheet.compose(styles.Button, styles.ButtonActive) : styles.Button
         }
-        disabled={!activeSignUpButton}
+        disabled={!activeNextButton}
         onPress={onSubmit}
       >
         <Text style={styles.ButtonText}>다음</Text>
