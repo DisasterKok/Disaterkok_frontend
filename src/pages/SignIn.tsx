@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 75,
     height: 75,
-    backgroundColor: `${COLOR.lightGray}`,
+    backgroundColor: `${COLOR.middleGray}`,
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 14,
     borderBottomWidth: 2,
-    borderBottomColor: `${COLOR.lightGray}`,
+    borderBottomColor: `${COLOR.middleGray}`,
   },
   textInputActive: {
     borderBottomColor: `${COLOR.black}`,
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   loginButton: {
-    backgroundColor: `${COLOR.lightGray}`,
+    backgroundColor: `${COLOR.middleGray}`,
     width: 346,
     height: 48,
     borderRadius: 5,
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   },
   easyLoginText: {
     fontSize: 14,
-    color: `${COLOR.lightGray}`,
+    color: `${COLOR.middleGray}`,
     marginBottom: 15,
   },
   easyLoginButtonTap: {
@@ -186,6 +186,6 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 50,
-    backgroundColor: `${COLOR.lightGray}`,
+    backgroundColor: `${COLOR.middleGray}`,
   },
 });

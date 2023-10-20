@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 14,
     borderBottomWidth: 2,
-    borderBottomColor: `${COLOR.lightGray}`,
+    borderBottomColor: `${COLOR.middleGray}`,
   },
   textInputActive: {
     borderBottomColor: `${COLOR.black}`,
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   loginButton: {
-    backgroundColor: `${COLOR.lightGray}`,
+    backgroundColor: `${COLOR.middleGray}`,
     width: 346,
     height: 48,
     borderRadius: 5,

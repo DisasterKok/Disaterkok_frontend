@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { RootStackParamList } from '../../App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -9,7 +9,7 @@ type OnboardingScreenProps = NativeStackScreenProps<RootStackParamList, 'Onboard
 
 const Onboarding = ({ navigation }: OnboardingScreenProps) => {
   const gotoSignIn = () => {
-    navigation.navigate('SignIn');
+    navigation.navigate('DisaterNotiSettings');
   };
 
   return (
@@ -35,14 +35,15 @@ const Onboarding = ({ navigation }: OnboardingScreenProps) => {
           <Text style={styles.titleText}>나에게 필요한 알림을 받을 수 있어요</Text>
         </View>
       </View>
-      <View style={styles.slide}>
+      <View style={StyleSheet.compose(styles.slide, styles.lastSlide)}>
         <Image source={require('../assets/images/onboardingtmpBox.png')} style={styles.image} />
-        <View style={styles.title}>
+        <View style={StyleSheet.compose(styles.title, styles.lastTitle)}>
           <Text style={styles.titleText}>생성한 재난 상황을 실시간으로,</Text>
-          <Text style={styles.titleText} onPress={gotoSignIn}>
-            재난콕과 안전한 하루를 시작해볼까요?
-          </Text>
+          <Text style={styles.titleText}>재난콕과 안전한 하루를 시작해볼까요?</Text>
         </View>
+        <Pressable style={styles.loginButton} onPress={gotoSignIn}>
+          <Text style={styles.loginButtonText}>로그인하기</Text>
+        </Pressable>
       </View>
     </Swiper>
   );
@@ -55,6 +56,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white',
   },
+  lastSlide: {
+    justifyContent: 'flex-end',
+  },
   image: {
     width: 200,
     height: 200,
@@ -64,17 +68,20 @@ const styles = StyleSheet.create({
   title: {
     alignItems: 'center',
   },
+  lastTitle: {
+    marginBottom: 110,
+  },
   titleText: {
     fontSize: 14,
     marginBottom: 4,
   },
   dot: {
-    backgroundColor: `${COLOR.lightGray}`,
+    backgroundColor: `${COLOR.middleGray}`,
     width: 8,
     height: 8,
     borderRadius: 4,
     marginHorizontal: 4,
-    marginBottom: 50,
+    marginBottom: 100,
   },
   activeDot: {
     backgroundColor: `${COLOR.black}`,
@@ -82,11 +89,24 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     marginHorizontal: 4,
-    marginBottom: 50,
+    marginBottom: 100,
   },
   buttonText: {
     fontSize: 40,
     color: `${COLOR.black}`,
+  },
+  loginButton: {
+    width: '90%',
+    height: 50,
+    backgroundColor: `${COLOR.blue}`,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 40,
+  },
+  loginButtonText: {
+    fontSize: 14,
+    color: `${COLOR.white}`,
   },
 });
 
