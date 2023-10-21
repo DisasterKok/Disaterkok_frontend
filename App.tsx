@@ -2,7 +2,16 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home, Report, SignIn, SignUp, Solution, SetName, SelectLocation } from './src/pages';
+import {
+  Home,
+  Report,
+  SignIn,
+  SignUp,
+  Solution,
+  SetName,
+  SelectLocation,
+  DisaterNotiSettings,
+} from './src/pages';
 import Onboarding from './src/pages/Onboarding';
 
 export type LoggedInParamList = {
@@ -14,6 +23,7 @@ export type LoggedInParamList = {
 
 export type RootStackParamList = {
   Onboarding: undefined;
+  DisaterNotiSettings: undefined;
   SignIn: undefined;
   SignUp: undefined;
   SetName: undefined;
@@ -36,11 +46,13 @@ function App() {
       ) : (
         <Stack.Navigator>
           <Stack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />
+          {/* 테스트 위해 임시로 설정한거 */}
           <Stack.Screen
-            name="SignIn"
-            component={SignIn}
-            options={{ headerShown: false, title: '로그인' }}
+            name="DisaterNotiSettings"
+            component={DisaterNotiSettings}
+            options={{ headerShown: false }}
           />
+          <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
           <Stack.Screen name="SignUp" component={SignUp} options={{ title: '회원가입' }} />
           <Stack.Screen name="SetName" component={SetName} options={{ title: '닉네임 설정' }} />
           <Stack.Screen
