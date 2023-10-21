@@ -17,7 +17,6 @@ import SearchPostcode from '../components/SelectAddress/SearchPostcode';
 import AliasPostcode from '../components/SelectAddress/AliasPostcode';
 import useAddressData from '../hooks/useAddressData';
 import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
-
 type SelectLocScreenProps = NativeStackScreenProps<RootStackParamList, 'SelectLocation'>;
 
 const AddressDataList = [
@@ -121,6 +120,11 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
     setIsSearchOpen(true);
   };
 
+  const handleSubmit = () => {
+    //console.log(addressDataList);
+    navigation.navigate('DisaterNotiSettings');
+  };
+
   useEffect(() => {
     //console.log(AddressDataList);
   }, [AddressDataList]);
@@ -158,7 +162,9 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
                       <View style={styles.roadIcon}>
                         <Text style={styles.roadIconText}>도로명</Text>
                       </View>
-                      <Text style={styles.roadText}>{data.addressData.roadAddress}</Text>
+                      <Text style={styles.roadText}>
+                        {data.addressData.roadAddress + ' ' + data.detail}
+                      </Text>
                     </View>
                   </View>
                 ))}
@@ -171,8 +177,8 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
               ? StyleSheet.compose(styles.Button, styles.ButtonActive)
               : styles.Button
           }
-          disabled={!!addressDataList}
-          onPress={() => {}}
+          disabled={!addressDataList}
+          onPress={handleSubmit}
         >
           <Text style={styles.ButtonText}>다음</Text>
         </Pressable>
@@ -295,7 +301,7 @@ const styles = StyleSheet.create({
     color: `${COLOR.gray}`,
   },
   Button: {
-    backgroundColor: `${COLOR.lightGray}`,
+    backgroundColor: `${COLOR.middleGray}`,
     position: 'absolute',
     bottom: 15,
     width: 346,

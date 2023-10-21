@@ -50,9 +50,9 @@ function App() {
           <Stack.Screen
             name="DisaterNotiSettings"
             component={DisaterNotiSettings}
-            options={{ headerShown: false }}
+            options={{  title: '알림 설정' }}
           />
-          <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
+          <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false, title: '로그인' }} />
           <Stack.Screen name="SignUp" component={SignUp} options={{ title: '회원가입' }} />
           <Stack.Screen name="SetName" component={SetName} options={{ title: '닉네임 설정' }} />
           <Stack.Screen

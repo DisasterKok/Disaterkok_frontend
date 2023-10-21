@@ -21,7 +21,7 @@ const getCurrentLocation = () => {
           },
         })
           .then((response) => response.json())
-          .then((data) => {
+          .then((data: any) => {
             const address = data.documents[0].address.address_name;
             const roadAddress = data.documents[0].road_address.address_name;
             const zoneCode = data.documents[0].road_address.zone_no;

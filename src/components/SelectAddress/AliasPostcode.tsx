@@ -160,11 +160,11 @@ const AliasPostcode = ({
         </View>
         <Pressable
           style={
-            detail && aliasType && name
+            aliasType && name
               ? StyleSheet.compose(styles.Button, styles.ButtonActive)
               : styles.Button
           }
-          disabled={!detail || !aliasType || !name}
+          disabled={!aliasType || !name}
           onPress={handleAddAddress}
         >
           <Text style={styles.ButtonText}>다음</Text>
