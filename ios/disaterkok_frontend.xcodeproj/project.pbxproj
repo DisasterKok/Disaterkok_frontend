@@ -12,6 +12,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		3137A0CF2AE0E28C00B83570 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 3137A0CE2AE0E28C00B83570 /* Fonts */; };
 		7699B88040F8A987B510C191 /* libPods-disaterkok_frontend-disaterkok_frontendTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-disaterkok_frontend-disaterkok_frontendTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -37,6 +38,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = disaterkok_frontend/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = disaterkok_frontend/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-disaterkok_frontend-disaterkok_frontendTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-disaterkok_frontend-disaterkok_frontendTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3137A0CE2AE0E28C00B83570 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = "../node_modules/react-native-vector-icons/Fonts"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-disaterkok_frontend.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-disaterkok_frontend.debug.xcconfig"; path = "Target Support Files/Pods-disaterkok_frontend/Pods-disaterkok_frontend.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-disaterkok_frontend.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-disaterkok_frontend.release.xcconfig"; path = "Target Support Files/Pods-disaterkok_frontend/Pods-disaterkok_frontend.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-disaterkok_frontend-disaterkok_frontendTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-disaterkok_frontend-disaterkok_frontendTests.debug.xcconfig"; path = "Target Support Files/Pods-disaterkok_frontend-disaterkok_frontendTests/Pods-disaterkok_frontend-disaterkok_frontendTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -105,7 +107,7 @@
 		13B07FAE1A68108700A75B9A /* disaterkok_frontend */ = {
 			isa = PBXGroup;
 			children = (
-				D3CB3BF92AE11BF000F4155A /* Fonts */,
+				3137A0CE2AE0E28C00B83570 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -288,6 +290,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3137A0CF2AE0E28C00B83570 /* Fonts in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
@@ -652,8 +655,7 @@
 					"-ld_classic",
 					"-Wl",
 					"-ld_classic",
-					"-Wl",
-					"-ld_classic",
+					"-Wl -ld_classic ",
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
@@ -730,8 +732,7 @@
 					"-ld_classic",
 					"-Wl",
 					"-ld_classic",
-					"-Wl",
-					"-ld_classic",
+					"-Wl -ld_classic ",
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;

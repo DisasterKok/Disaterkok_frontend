@@ -2,7 +2,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { DisaterNotiSettings, Home, Report, SignIn, SignUp, Solution } from './src/pages';
+import { Home, Report, SignIn, SignUp, Solution, SetName, SelectLocation, DisaterNotiSettings } from './src/pages';
 import Onboarding from './src/pages/Onboarding';
 
 export type LoggedInParamList = {
@@ -17,6 +17,8 @@ export type RootStackParamList = {
   DisaterNotiSettings: undefined;
   SignIn: undefined;
   SignUp: undefined;
+  SetName: undefined;
+  SelectLocation: undefined;
 };
 
 const Tab = createBottomTabNavigator();
@@ -43,6 +45,12 @@ function App() {
           />
           <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
           <Stack.Screen name="SignUp" component={SignUp} options={{ title: '회원가입' }} />
+          <Stack.Screen name="SetName" component={SetName} options={{ title: '닉네임 설정' }} />
+          <Stack.Screen
+            name="SelectLocation"
+            component={SelectLocation}
+            options={{ title: '지역 선택' }}
+          />
         </Stack.Navigator>
       )}
     </NavigationContainer>

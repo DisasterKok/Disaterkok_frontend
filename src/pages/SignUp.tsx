@@ -2,8 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import COLOR from '../constants/colors';
 import useInput from '../hooks/useInput';
+import { RootStackParamList } from '../../App';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-export default function SignUp() {
+type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
+
+export default function SignUp({ navigation }: SignUpScreenProps) {
   const [inputIdFocused, setInputIdFocused] = useState(false);
   const [inputEmailFocuesd, setInputEmailFocuesd] = useState(false);
   const [inputPasswordFocused, setInputPasswordFocused] = useState(false);
@@ -76,6 +80,7 @@ export default function SignUp() {
   const onSubmit = () => {
     checkAllValidation(id, email, password);
     setCheckSubmit(true);
+    navigation.navigate('SetName');
   };
 
   useEffect(() => {
@@ -207,7 +212,7 @@ export default function SignUp() {
         disabled={!activeSignUpButton}
         onPress={onSubmit}
       >
-        <Text style={styles.loginButtonText}>회원가입</Text>
+        <Text style={styles.loginButtonText}>다음</Text>
       </Pressable>
     </View>
   );

@@ -7,7 +7,7 @@ import COLOR from '../constants/colors';
 
 type OnboardingScreenProps = NativeStackScreenProps<RootStackParamList, 'Onboarding'>;
 
-const Onboarding = ({ navigation }: OnboardingScreenProps) => {
+export const Onboarding = ({ navigation }: OnboardingScreenProps) => {
   const gotoSignIn = () => {
     navigation.navigate('DisaterNotiSettings');
   };
