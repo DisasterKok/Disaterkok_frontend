@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import SearchPostcode from '../components/SelectAddress/SearchPostcode';
 import AliasPostcode from '../components/SelectAddress/AliasPostcode';
 import useAddressData from '../hooks/useAddressData';
+import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
 
 type SelectLocScreenProps = NativeStackScreenProps<RootStackParamList, 'SelectLocation'>;
 
@@ -59,7 +60,8 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   const [addressDataList, setAddressDataList] = React.useState(AddressDataList);
 
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
-  const [isAliasOpen, setIsAliasOpen] = React.useState(false);
+  const [isSearchAliasOpen, setIsSearchAliasOpen] = React.useState(false);
+  const [isCurrentAliasOpen, setIsCurrentAliasOpen] = React.useState(false);
 
   const { data, setAddressData, resetAddressData } = useAddressData({
     address: '',
@@ -79,7 +81,23 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
       roadAddress: data.roadAddress ? data.roadAddress : data.autoRoadAddress,
       zoneCode: data.zonecode,
     });
-    setIsAliasOpen(true);
+    setIsSearchAliasOpen(true);
+  };
+
+  const handleCurrentSelect = () => {
+    getCurrentLocation()
+      .then((data: any) => {
+        setAddressData({
+          address: data.address,
+          roadAddress: data.roadAddress,
+          zoneCode: data.zoneCode,
+        });
+        setIsCurrentAliasOpen(true);
+      })
+      .catch((error) => {
+        // console.log(error);
+        console.log('위치를 얻는 도중 오류가 발생했습니다.');
+      });
   };
 
   const handleAddAddress = (data: any) => {
@@ -94,16 +112,17 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
     updatedAddressDataList.push(newData);
     setAddressDataList(updatedAddressDataList);
     resetAddressData();
-    setIsAliasOpen(false);
+    if (isSearchAliasOpen) setIsSearchAliasOpen(false);
+    else if (isCurrentAliasOpen) setIsCurrentAliasOpen(false);
   };
 
   const backToSearch = () => {
-    setIsAliasOpen(false);
+    setIsSearchAliasOpen(false);
     setIsSearchOpen(true);
   };
 
   useEffect(() => {
-    console.log(AddressDataList);
+    //console.log(AddressDataList);
   }, [AddressDataList]);
 
   return (
@@ -121,6 +140,11 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
               style={styles.textInput}
               onFocus={openModal}
             />
+          </View>
+          <View>
+            <Pressable onPress={handleCurrentSelect}>
+              <Text>실시간</Text>
+            </Pressable>
           </View>
         </View>
         <SafeAreaView style={{ width: '100%' }}>
@@ -153,7 +177,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
           <Text style={styles.ButtonText}>다음</Text>
         </Pressable>
       </View>
-      <Modal visible={isSearchOpen || isAliasOpen}>
+      <Modal visible={isSearchOpen || isSearchAliasOpen || isCurrentAliasOpen}>
         {isSearchOpen && (
           <SearchPostcode
             onSelected={handleSelect}
@@ -162,8 +186,15 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
             }}
           />
         )}
-        {isAliasOpen && data.address && (
+        {isSearchAliasOpen && data.address && (
           <AliasPostcode addressData={data} addAddress={handleAddAddress} goBack={backToSearch} />
+        )}
+        {isCurrentAliasOpen && data.address && (
+          <AliasPostcode
+            addressData={data}
+            addAddress={handleAddAddress}
+            goBack={() => setIsCurrentAliasOpen(false)}
+          />
         )}
       </Modal>
     </>
