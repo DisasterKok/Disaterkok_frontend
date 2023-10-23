@@ -7,6 +7,7 @@ const Separator = () => {
 
 const styles = StyleSheet.create({
   separator: {
+    width: '100%',
     borderBottomWidth: 5,
     borderBottomColor: `${COLOR.lightGray}`,
   },

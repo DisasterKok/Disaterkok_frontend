@@ -22,19 +22,19 @@ interface AliasData {
 const AliasPostcode = ({
   addressData,
   aliasData,
-  addAddress,
+  updateAddress,
   goBack,
 }: {
   addressData: AddressData;
   aliasData?: AliasData;
-  addAddress: (data: any) => void;
+  updateAddress: (data: any) => void;
   goBack: () => void;
 }) => {
   const { address, roadAddress, zoneCode } = addressData;
   const [detail, setDetail] = useInput(aliasData?.detail || '');
   const [aliasType, setAliasType] = React.useState<string>(aliasData?.aliasType || '');
   const [name, setName] = useInput(aliasData?.name || '');
-  const [isEtc, setIsEtc] = React.useState<boolean>(false);
+  const [isEtc, setIsEtc] = React.useState<boolean>(aliasData?.aliasType == 'etc' || false);
 
   const [inputDetailFocused, setInputDetailFocused] = React.useState(false);
   const [inputNameFocused, setInputNameFocused] = React.useState(false);
@@ -69,7 +69,7 @@ const AliasPostcode = ({
     setName(text);
   };
 
-  const handleAddAddress = () => {
+  const handleUpdateAddress = () => {
     const newAliasData = {
       addressData: {
         address,
@@ -79,9 +79,9 @@ const AliasPostcode = ({
       detail,
       aliasType,
       name,
-      default: false,
+      default: aliasData?.default || false,
     };
-    addAddress(newAliasData);
+    updateAddress(newAliasData);
   };
 
   return (
@@ -89,7 +89,9 @@ const AliasPostcode = ({
       <View style={styles.layout}>
         <View style={styles.header}>
           <View style={styles.tabBar}>
-            <Icon name="chevron-back-outline" onPress={goBack} style={styles.gobackIcon} />
+            <Pressable onPress={goBack}>
+              <Icon name="chevron-back-outline" style={styles.gobackIcon} />
+            </Pressable>
           </View>
           <Text style={styles.headerText}>상세 주소와 주소 별명을 선택해주세요</Text>
         </View>
@@ -165,7 +167,7 @@ const AliasPostcode = ({
               : styles.Button
           }
           disabled={!aliasType || !name}
-          onPress={handleAddAddress}
+          onPress={handleUpdateAddress}
         >
           <Text style={styles.ButtonText}>다음</Text>
         </Pressable>
