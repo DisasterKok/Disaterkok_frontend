@@ -8,8 +8,12 @@ import {
   NaturalDisasterBottomSheet,
   SocialDisasterBottomSheet,
 } from '../components/BottomSheetModal';
+import { RootStackParamList } from '../../App';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-export default function DisaterNotiSettings() {
+type DstrNotiSetScreenProps = NativeStackScreenProps<RootStackParamList, 'DisasterNotiSettings'>;
+
+export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenProps) {
   const naturalDisasterModalRef = useRef<BottomSheetModal>(null);
   const socialDisasterModalRef = useRef<BottomSheetModal>(null);
 
@@ -20,6 +24,9 @@ export default function DisaterNotiSettings() {
     ref.current?.present();
   }, []);
 
+  const onSubmit = () => {
+    navigation.navigate('CompleteLogin');
+  };
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheetModalProvider>
@@ -107,6 +114,8 @@ export default function DisaterNotiSettings() {
                   ? StyleSheet.compose(styles.completeButton, styles.completeButtonActive)
                   : styles.completeButton
               }
+              disabled={!naturalSelectedTags.length && !soicalSelectedTags.length}
+              onPress={() => onSubmit()}
             >
               <Text style={styles.completeButtonText}>완료</Text>
             </Pressable>
