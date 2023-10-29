@@ -22,6 +22,7 @@ import useAddressData from '../hooks/useAddressData';
 import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
 import Separator from '../components/Separator';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+
 type SelectLocScreenProps = NativeStackScreenProps<RootStackParamList, 'SelectLocation'>;
 
 const AddressDataList = [
@@ -157,7 +158,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
 
   const handleSubmit = () => {
     //console.log(addressDataList);
-    navigation.navigate('DisaterNotiSettings');
+    navigation.navigate('DisasterNotiSettings');
   };
 
   useEffect(() => {
