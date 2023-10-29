@@ -9,7 +9,7 @@ type OnboardingScreenProps = NativeStackScreenProps<RootStackParamList, 'Onboard
 
 export const Onboarding = ({ navigation }: OnboardingScreenProps) => {
   const gotoSignIn = () => {
-    navigation.navigate('DisaterNotiSettings');
+    navigation.navigate('SignIn');
   };
 
   return (
