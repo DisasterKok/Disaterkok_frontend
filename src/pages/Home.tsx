@@ -6,12 +6,12 @@ export default function Home() {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   // Define the scroll threshold where you want to change the header color
-  const colorChangeThreshold = 100; // Adjust this value as needed
+  const colorChangeThreshold = 200; // Adjust this value as needed
 
   // Function to interpolate the background color
   const headerBackgroundColor = scrollY.interpolate({
     inputRange: [0, colorChangeThreshold],
-    outputRange: [`${COLOR.primary}`, 'white'],
+    outputRange: [`${COLOR.primary}`, `${COLOR.lightGray}`],
     extrapolate: 'clamp',
   });
 
@@ -20,19 +20,6 @@ export default function Home() {
     outputRange: [`${COLOR.white}`, `${COLOR.primary}`],
     extrapolate: 'clamp',
   });
-
-  useEffect(() => {
-    // Listen to the scroll position
-    scrollY.addListener(({ value }) => {
-      // Do something with the scroll position
-      // For example, you can change the background color or other styling
-    });
-
-    // Clean up the listener when the component unmounts
-    return () => {
-      scrollY.removeAllListeners();
-    };
-  }, [scrollY]);
 
   return (
     <View style={styles.layout}>
@@ -48,7 +35,7 @@ export default function Home() {
           height: 60,
         }}
       >
-        <Animated.Text style={{ color: headerTextColor }}>헤더입니다</Animated.Text>
+        <Animated.Text style={{ color: headerTextColor }}>앱바 영역입니다</Animated.Text>
       </Animated.View>
       <ScrollView
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
@@ -58,7 +45,7 @@ export default function Home() {
         style={{ position: 'absolute', top: 60, width: '100%' }}
       >
         <View style={{ height: 120, backgroundColor: `${COLOR.primary}` }}>
-          <Text>내용입니다</Text>
+          <Text>날씨 영역</Text>
         </View>
         <View style={styles.contentSheet}>
           <Text>내용입니다</Text>
