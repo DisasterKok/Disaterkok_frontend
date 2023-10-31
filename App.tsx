@@ -43,7 +43,7 @@ function App() {
       {isLoggedIn ? (
         <Tab.Navigator>
           <Tab.Screen name="home" component={Home} options={{ headerShown: false, title: '홈' }} />
-          <Tab.Screen name="report" component={Report} options={{ title: '제보' }} />
+          <Tab.Screen name="report" component={Report} options={{ title: '실시간 제보' }} />
           <Tab.Screen name="solution" component={Solution} options={{ title: '솔루션' }} />
         </Tab.Navigator>
       ) : (
