@@ -1,7 +1,8 @@
-import React, { RefObject, useCallback, useMemo, useState } from 'react';
+import React, { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, FlatList } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import COLOR from '../../constants/colors';
+import { fetchSidoInfo } from '../../apis/fetchSidoInfo';
 
 type SelectRegionBottomSheetProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
@@ -9,23 +10,23 @@ type SelectRegionBottomSheetProps = {
 
 type SelectRegionType = {
   id: number;
-  text: string;
+  name: string;
 };
 
 const SELECT_REGION: SelectRegionType[] = [
-  { id: 1, text: '서울' },
-  { id: 2, text: '경기' },
-  { id: 3, text: '인천' },
-  { id: 4, text: '대전' },
-  { id: 5, text: '강원' },
-  { id: 6, text: '세종' },
-  { id: 7, text: '낙뢰/뇌우' },
-  { id: 8, text: '황사/미세먼지' },
-  { id: 9, text: '한파' },
-  { id: 10, text: '강풍' },
-  { id: 11, text: '가뭄' },
-  { id: 12, text: '산불' },
-  { id: 13, text: '폭염' },
+  { id: 1, name: '서울' },
+  { id: 2, name: '경기' },
+  { id: 3, name: '인천' },
+  { id: 4, name: '대전' },
+  { id: 5, name: '강원' },
+  { id: 6, name: '세종' },
+  { id: 7, name: '낙뢰/뇌우' },
+  { id: 8, name: '황사/미세먼지' },
+  { id: 9, name: '한파' },
+  { id: 10, name: '강풍' },
+  { id: 11, name: '가뭄' },
+  { id: 12, name: '산불' },
+  { id: 13, name: '폭염' },
 ];
 
 export default function NaturalDisasterBottomSheet({
@@ -42,16 +43,41 @@ export default function NaturalDisasterBottomSheet({
     [],
   );
 
-  const [leftSelectedItem, setLeftSelectedItem] = useState('');
-  const [centerData, setCenterData] = useState([]);
+  const [sidoList, setSidoList] = useState([]);
 
-  const handleLeftItemClick = (item: string) => {
-    setLeftSelectedItem(item);
+  const [leftSelectedItem, setLeftSelectedItem] = useState(0);
+
+  const handleLeftItemClick = (itemId: number) => {
+    setLeftSelectedItem(itemId === leftSelectedItem ? 0 : itemId);
+  };
+
+  const renderSido = ({ item }: { item: SelectRegionType }) => {
+    console.log(item);
+    return (
+      <Pressable style={styles.regionItem} onPress={() => handleLeftItemClick(item.id)}>
+        <Text style={styles.regionItemtext}>{item.name}</Text>
+      </Pressable>
+    );
   };
 
   const renderItem = ({ item }: { item: SelectRegionType }) => (
-    <Pressable style={styles.regionItem}>
-      <Text style={styles.regionItemtext}>{item.text}</Text>
+    <Pressable
+      style={
+        leftSelectedItem == item.id
+          ? StyleSheet.compose(styles.regionItem, styles.selectedLeftRegion)
+          : styles.regionItem
+      }
+      onPress={() => handleLeftItemClick(item.id)}
+    >
+      <Text
+        style={
+          leftSelectedItem == item.id
+            ? StyleSheet.compose(styles.regionItemtext, styles.selectedLeftRegionText)
+            : styles.regionItemtext
+        }
+      >
+        {item.name}
+      </Text>
     </Pressable>
   );
 
@@ -63,8 +89,8 @@ export default function NaturalDisasterBottomSheet({
           <Text>시,도</Text>
         </View>
         <FlatList
-          data={SELECT_REGION}
-          renderItem={renderItem}
+          data={sidoList}
+          renderItem={renderSido}
           numColumns={1}
           contentContainerStyle={styles.regionList}
         />
@@ -105,6 +131,19 @@ export default function NaturalDisasterBottomSheet({
       </View>
     );
   };
+
+  useEffect(() => {
+    fetchSidoInfo()
+      .then((data) => {
+        // console.log(data.features);
+        const sidoListFormatted = data.features.map((feature) => ({
+          id: feature.properties.ctprvn_cd,
+          name: feature.properties.ctp_kor_nm,
+        }));
+        setSidoList(sidoListFormatted);
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   return (
     <BottomSheetModal
@@ -153,14 +192,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  regionList: {
-    alignItems: 'center',
-    gap: 3,
+  tableLeft: {
+    flex: 1.3,
   },
 
-  tableLeft: {
-    flex: 1,
-  },
   tableCenter: {
     flex: 2,
     borderLeftWidth: 1,
@@ -170,12 +205,23 @@ const styles = StyleSheet.create({
   tableRight: {
     flex: 2,
   },
+  regionList: {
+    flex: 1,
+    alignItems: 'center',
+  },
   regionItem: {
+    width: '100%',
     height: 34,
     justifyContent: 'center',
   },
   regionItemtext: {
     fontSize: 12,
     color: `${COLOR.gray}`,
+  },
+  selectedLeftRegion: {
+    backgroundColor: `${COLOR.blue}`, // 클릭 시 배경색 변경
+  },
+  selectedLeftRegionText: {
+    color: `${COLOR.white}`,
   },
 });
