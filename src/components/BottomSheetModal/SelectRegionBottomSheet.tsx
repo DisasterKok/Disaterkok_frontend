@@ -4,31 +4,22 @@ import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import COLOR from '../../constants/colors';
 import { fetchSidoInfo } from '../../apis/fetchSidoInfo';
 import { fetchSigunguInfo } from '../../apis/fetchSigunguInfo';
+import { fetchEupmyeondongInfo } from '../../apis/fetchEupmyeondong';
 
 type SelectRegionBottomSheetProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
 };
 
-type SelectRegionType = {
+type SidoType = {
   id: number;
   name: string;
 };
 
-const SELECT_REGION: SelectRegionType[] = [
-  { id: 1, name: '서울' },
-  { id: 2, name: '경기' },
-  { id: 3, name: '인천' },
-  { id: 4, name: '대전' },
-  { id: 5, name: '강원' },
-  { id: 6, name: '세종' },
-  { id: 7, name: '낙뢰/뇌우' },
-  { id: 8, name: '황사/미세먼지' },
-  { id: 9, name: '한파' },
-  { id: 10, name: '강풍' },
-  { id: 11, name: '가뭄' },
-  { id: 12, name: '산불' },
-  { id: 13, name: '폭염' },
-];
+type SigunguType = {
+  id: number;
+  fullName: string;
+  singleName: string;
+};
 
 export default function NaturalDisasterBottomSheet({
   bottomSheetModalRef,
@@ -46,59 +37,61 @@ export default function NaturalDisasterBottomSheet({
 
   const [sidoList, setSidoList] = useState([]);
   const [sigunguList, setSigunguList] = useState([]);
+  const [eupmyeondongList, setEupmyeondongList] = useState([]);
 
   const [leftSelectedItem, setLeftSelectedItem] = useState(0);
 
-  const handleLeftItemClick = ({ item }: { item: SelectRegionType }) => {
+  const handleSidoItemClick = ({ item }: { item: SidoType }) => {
     // setLeftSelectedItem(item.id === leftSelectedItem ? 0 : item.id);
-
     fetchSigunguInfo(item.name)
       .then((data) => {
         const sigunguListFormatted = data.features.map((feature) => ({
           id: feature.properties.sig_cd,
-          name: feature.properties.sig_kor_nm,
+          fullName: feature.properties.full_nm,
+          singleName: feature.properties.sig_kor_nm,
         }));
         setSigunguList(sigunguListFormatted);
       })
       .catch((error) => console.log(error));
   };
 
-  const renderSido = ({ item }: { item: SelectRegionType }) => {
+  const handleSigunguItemClick = ({ item }: { item: SigunguType }) => {
+    // setLeftSelectedItem(item.id === leftSelectedItem ? 0 : item.id);
+    fetchEupmyeondongInfo(item.fullName)
+      .then((data) => {
+        const eupmyeondongListFormatted = data.features.map((feature) => ({
+          id: feature.properties.emd_cd,
+          fullName: feature.properties.full_nm,
+          singleName: feature.properties.emd_kor_nm,
+        }));
+        setEupmyeondongList(eupmyeondongListFormatted);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const renderSido = ({ item }: { item: SidoType }) => {
     return (
-      <Pressable style={styles.regionItem} onPress={() => handleLeftItemClick({ item })}>
+      <Pressable style={styles.regionItem} onPress={() => handleSidoItemClick({ item })}>
         <Text style={styles.regionItemtext}>{item.name}</Text>
       </Pressable>
     );
   };
 
-  const renderSigungu = ({ item }: { item: SelectRegionType }) => {
+  const renderSigungu = ({ item }: { item: SigunguType }) => {
     return (
-      <Pressable style={styles.regionItem} onPress={() => handleLeftItemClick({ item })}>
-        <Text style={styles.regionItemtext}>{item.name}</Text>
+      <Pressable style={styles.regionItem} onPress={() => handleSigunguItemClick({ item })}>
+        <Text style={styles.regionItemtext}>{item.singleName}</Text>
       </Pressable>
     );
   };
 
-  const renderItem = ({ item }: { item: SelectRegionType }) => (
-    <Pressable
-      style={
-        leftSelectedItem == item.id
-          ? StyleSheet.compose(styles.regionItem, styles.selectedLeftRegion)
-          : styles.regionItem
-      }
-      onPress={() => handleLeftItemClick({ item })}
-    >
-      <Text
-        style={
-          leftSelectedItem == item.id
-            ? StyleSheet.compose(styles.regionItemtext, styles.selectedLeftRegionText)
-            : styles.regionItemtext
-        }
-      >
-        {item.name}
-      </Text>
-    </Pressable>
-  );
+  const renderEupmyeondong = ({ item }: { item: SigunguType }) => {
+    return (
+      <Pressable style={styles.regionItem} onPress={() => handleSigunguItemClick({ item })}>
+        <Text style={styles.regionItemtext}>{item.singleName}</Text>
+      </Pressable>
+    );
+  };
 
   const LeftTable = () => {
     // 왼쪽 테이블 UI 및 핸들러 등 구현
@@ -110,7 +103,6 @@ export default function NaturalDisasterBottomSheet({
         <FlatList
           data={sidoList}
           renderItem={renderSido}
-          numColumns={1}
           contentContainerStyle={styles.regionList}
         />
       </View>
@@ -142,8 +134,8 @@ export default function NaturalDisasterBottomSheet({
           <Text>동,읍,면</Text>
         </View>
         <FlatList
-          data={SELECT_REGION}
-          renderItem={renderItem}
+          data={eupmyeondongList}
+          renderItem={renderEupmyeondong}
           numColumns={1}
           contentContainerStyle={styles.regionList}
         />
