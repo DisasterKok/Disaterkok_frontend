@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View, FlatList } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import COLOR from '../../constants/colors';
 import { fetchSidoInfo } from '../../apis/fetchSidoInfo';
+import { fetchSigunguInfo } from '../../apis/fetchSigunguInfo';
 
 type SelectRegionBottomSheetProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
@@ -44,17 +45,35 @@ export default function NaturalDisasterBottomSheet({
   );
 
   const [sidoList, setSidoList] = useState([]);
+  const [sigunguList, setSigunguList] = useState([]);
 
   const [leftSelectedItem, setLeftSelectedItem] = useState(0);
 
-  const handleLeftItemClick = (itemId: number) => {
-    setLeftSelectedItem(itemId === leftSelectedItem ? 0 : itemId);
+  const handleLeftItemClick = ({ item }: { item: SelectRegionType }) => {
+    // setLeftSelectedItem(item.id === leftSelectedItem ? 0 : item.id);
+
+    fetchSigunguInfo(item.name)
+      .then((data) => {
+        const sigunguListFormatted = data.features.map((feature) => ({
+          id: feature.properties.sig_cd,
+          name: feature.properties.sig_kor_nm,
+        }));
+        setSigunguList(sigunguListFormatted);
+      })
+      .catch((error) => console.log(error));
   };
 
   const renderSido = ({ item }: { item: SelectRegionType }) => {
-    console.log(item);
     return (
-      <Pressable style={styles.regionItem} onPress={() => handleLeftItemClick(item.id)}>
+      <Pressable style={styles.regionItem} onPress={() => handleLeftItemClick({ item })}>
+        <Text style={styles.regionItemtext}>{item.name}</Text>
+      </Pressable>
+    );
+  };
+
+  const renderSigungu = ({ item }: { item: SelectRegionType }) => {
+    return (
+      <Pressable style={styles.regionItem} onPress={() => handleLeftItemClick({ item })}>
         <Text style={styles.regionItemtext}>{item.name}</Text>
       </Pressable>
     );
@@ -67,7 +86,7 @@ export default function NaturalDisasterBottomSheet({
           ? StyleSheet.compose(styles.regionItem, styles.selectedLeftRegion)
           : styles.regionItem
       }
-      onPress={() => handleLeftItemClick(item.id)}
+      onPress={() => handleLeftItemClick({ item })}
     >
       <Text
         style={
@@ -106,8 +125,8 @@ export default function NaturalDisasterBottomSheet({
           <Text>시,군,구</Text>
         </View>
         <FlatList
-          data={SELECT_REGION}
-          renderItem={renderItem}
+          data={sigunguList}
+          renderItem={renderSigungu}
           numColumns={1}
           contentContainerStyle={styles.regionList}
         />
@@ -135,7 +154,6 @@ export default function NaturalDisasterBottomSheet({
   useEffect(() => {
     fetchSidoInfo()
       .then((data) => {
-        // console.log(data.features);
         const sidoListFormatted = data.features.map((feature) => ({
           id: feature.properties.ctprvn_cd,
           name: feature.properties.ctp_kor_nm,
