@@ -1,13 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet, ScrollView, Animated, Platform } from 'react-native';
 import COLOR from '../constants/colors';
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import SwitchButton from '../components/Home/SwitchButton';
+import WeatherSection from '../components/Home/WeatherSection';
+import IssueSection from '../components/Home/IssueSection';
 
 export default function Home() {
+  const [isLocalSelected, setLocalSelected] = React.useState<boolean>(false);
   const insets = useSafeAreaInsets();
-  const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollY = React.useRef(new Animated.Value(0)).current;
 
-  const colorChangeThreshold = 120;
+  const colorChangeThreshold = 110;
 
   // Function to interpolate the background color
   const headerBackgroundColor = scrollY.interpolate({
@@ -27,18 +31,25 @@ export default function Home() {
       <SafeAreaView style={styles.layout}>
         <Animated.View
           style={[
+            styles.header,
             {
               backgroundColor: headerBackgroundColor,
             },
-            styles.header,
           ]}
         >
           {/* 상단바 영역 */}
           <View style={{ width: '100%', height: insets.top }}></View>
           {/* 앱바 영역 */}
-          <View style={{ height: 42, justifyContent: 'center' }}>
+          <Animated.View
+            style={{
+              width: '100%',
+              height: 42,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
             <Animated.Text style={{ color: headerTextColor }}>앱바 영역 입니다</Animated.Text>
-          </View>
+          </Animated.View>
         </Animated.View>
         <ScrollView
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
@@ -47,11 +58,10 @@ export default function Home() {
           scrollEventThrottle={16}
           style={{ marginTop: 42, width: '100%' }}
         >
-          <View style={{ height: 146, backgroundColor: `${COLOR.primary}` }}>
-            <Text>날씨영역</Text>
-          </View>
+          <WeatherSection />
           <View style={styles.contentSheet}>
-            <Text>내용입니다</Text>
+            <SwitchButton isLocalSelected={isLocalSelected} onSelect={setLocalSelected} />
+            <IssueSection isLocalSelected={isLocalSelected} />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -82,16 +92,20 @@ const styles = StyleSheet.create({
     display: 'flex',
     width: '100%',
     height: 3000,
+    alignItems: 'center',
     backgroundColor: `${COLOR.lightGray}`,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 20,
+    paddingLeft: 22,
+    paddingRight: 22,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 10,
+        backgroundColor: `${COLOR.lightGray}`,
       },
       android: {
         elevation: 2,
