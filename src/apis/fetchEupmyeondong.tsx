@@ -14,7 +14,6 @@ export const fetchEupmyeondongInfo = async (fullName: string) => {
     }
 
     const data = await response.json();
-    console.log(data);
     return data.response.result.featureCollection;
   } catch (error) {
     console.error('Fetch error:', error);

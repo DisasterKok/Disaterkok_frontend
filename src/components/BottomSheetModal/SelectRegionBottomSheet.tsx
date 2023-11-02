@@ -5,6 +5,7 @@ import COLOR from '../../constants/colors';
 import { fetchSidoInfo } from '../../apis/fetchSidoInfo';
 import { fetchSigunguInfo } from '../../apis/fetchSigunguInfo';
 import { fetchEupmyeondongInfo } from '../../apis/fetchEupmyeondong';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 type SelectRegionBottomSheetProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
@@ -15,7 +16,7 @@ type SidoType = {
   name: string;
 };
 
-type SigunguType = {
+type SigunguAndEupmyeondongType = {
   id: number;
   fullName: string;
   singleName: string;
@@ -39,56 +40,119 @@ export default function NaturalDisasterBottomSheet({
   const [sigunguList, setSigunguList] = useState([]);
   const [eupmyeondongList, setEupmyeondongList] = useState([]);
 
-  const [leftSelectedItem, setLeftSelectedItem] = useState(0);
+  const [selectedSido, setSelectedSido] = useState(0);
+  const [selectedSigungu, setSelectedSigungu] = useState(0);
+  const [selectedEupmyeondong, setSelectedEupmyeondong] = useState(0);
 
   const handleSidoItemClick = ({ item }: { item: SidoType }) => {
-    // setLeftSelectedItem(item.id === leftSelectedItem ? 0 : item.id);
-    fetchSigunguInfo(item.name)
-      .then((data) => {
-        const sigunguListFormatted = data.features.map((feature) => ({
-          id: feature.properties.sig_cd,
-          fullName: feature.properties.full_nm,
-          singleName: feature.properties.sig_kor_nm,
-        }));
-        setSigunguList(sigunguListFormatted);
-      })
-      .catch((error) => console.log(error));
+    if (item.id === selectedSido) {
+      setSelectedSido(0);
+      setSelectedSigungu(0);
+      setSelectedEupmyeondong(0);
+      setSigunguList([]);
+      setEupmyeondongList([]);
+    } else {
+      setSelectedSido(item.id);
+      fetchSigunguInfo(item.name)
+        .then((data) => {
+          const sigunguListFormatted = data.features.map((feature) => ({
+            id: feature.properties.sig_cd,
+            fullName: feature.properties.full_nm,
+            singleName: feature.properties.sig_kor_nm,
+          }));
+          setSigunguList(sigunguListFormatted);
+        })
+        .catch((error) => console.log(error));
+    }
   };
 
-  const handleSigunguItemClick = ({ item }: { item: SigunguType }) => {
-    // setLeftSelectedItem(item.id === leftSelectedItem ? 0 : item.id);
-    fetchEupmyeondongInfo(item.fullName)
-      .then((data) => {
-        const eupmyeondongListFormatted = data.features.map((feature) => ({
-          id: feature.properties.emd_cd,
-          fullName: feature.properties.full_nm,
-          singleName: feature.properties.emd_kor_nm,
-        }));
-        setEupmyeondongList(eupmyeondongListFormatted);
-      })
-      .catch((error) => console.log(error));
+  const handleSigunguItemClick = ({ item }: { item: SigunguAndEupmyeondongType }) => {
+    if (item.id === selectedSigungu) {
+      setSelectedSigungu(0);
+      setSelectedEupmyeondong(0);
+      setEupmyeondongList([]);
+    } else {
+      setSelectedSigungu(item.id);
+      fetchEupmyeondongInfo(item.fullName)
+        .then((data) => {
+          const eupmyeondongListFormatted = data.features.map((feature) => ({
+            id: feature.properties.emd_cd,
+            fullName: feature.properties.full_nm,
+            singleName: feature.properties.emd_kor_nm,
+          }));
+          setEupmyeondongList(eupmyeondongListFormatted);
+        })
+        .catch((error) => console.log(error));
+    }
+  };
+
+  const handleEupmyeondongItemClick = ({ item }: { item: SigunguAndEupmyeondongType }) => {
+    setSelectedEupmyeondong(item.id === selectedEupmyeondong ? 0 : item.id);
   };
 
   const renderSido = ({ item }: { item: SidoType }) => {
     return (
-      <Pressable style={styles.regionItem} onPress={() => handleSidoItemClick({ item })}>
-        <Text style={styles.regionItemtext}>{item.name}</Text>
+      <Pressable
+        style={
+          selectedSido == item.id
+            ? StyleSheet.compose(styles.regionItem, styles.selectedSido)
+            : styles.regionItem
+        }
+        onPress={() => handleSidoItemClick({ item })}
+      >
+        <Text
+          style={
+            selectedSido == item.id
+              ? StyleSheet.compose(styles.regionItemtext, styles.selectedSidoText)
+              : styles.regionItemtext
+          }
+        >
+          {item.name.slice(0, 2)}
+        </Text>
       </Pressable>
     );
   };
 
-  const renderSigungu = ({ item }: { item: SigunguType }) => {
+  const renderSigungu = ({ item }: { item: SigunguAndEupmyeondongType }) => {
     return (
-      <Pressable style={styles.regionItem} onPress={() => handleSigunguItemClick({ item })}>
-        <Text style={styles.regionItemtext}>{item.singleName}</Text>
+      <Pressable
+        style={
+          selectedSigungu == item.id
+            ? StyleSheet.compose(styles.regionItem, styles.selectedSigungu)
+            : styles.regionItem
+        }
+        onPress={() => handleSigunguItemClick({ item })}
+      >
+        <Text
+          style={
+            selectedSigungu == item.id
+              ? StyleSheet.compose(styles.regionItemtext, styles.selectedSigunguText)
+              : styles.regionItemtext
+          }
+        >
+          {item.singleName}
+        </Text>
       </Pressable>
     );
   };
 
-  const renderEupmyeondong = ({ item }: { item: SigunguType }) => {
+  const renderEupmyeondong = ({ item }: { item: SigunguAndEupmyeondongType }) => {
     return (
-      <Pressable style={styles.regionItem} onPress={() => handleSigunguItemClick({ item })}>
-        <Text style={styles.regionItemtext}>{item.singleName}</Text>
+      <Pressable style={styles.regionItem} onPress={() => handleEupmyeondongItemClick({ item })}>
+        <View style={styles.eupmyeondongItem}>
+          <Text
+            style={
+              selectedEupmyeondong == item.id
+                ? StyleSheet.compose(styles.regionItemtext, styles.selectedEupmyeondongText)
+                : styles.regionItemtext
+            }
+          >
+            {item.singleName}
+          </Text>
+          {item.id === selectedEupmyeondong && (
+            <FeatherIcon name="check" size={18} style={styles.check} />
+          )}
+        </View>
       </Pressable>
     );
   };
@@ -204,34 +268,58 @@ const styles = StyleSheet.create({
 
   tableLeft: {
     flex: 1.3,
+    width: '100%',
   },
 
   tableCenter: {
     flex: 2,
+    width: '100%',
     borderLeftWidth: 1,
     borderRightWidth: 1,
     borderColor: `${COLOR.middleGray}`,
   },
   tableRight: {
     flex: 2,
+    width: '100%',
   },
   regionList: {
     flex: 1,
-    alignItems: 'center',
+    width: '100%',
+    alignItems: 'stretch',
   },
   regionItem: {
     width: '100%',
     height: 34,
     justifyContent: 'center',
+    alignItems: 'center',
   },
+  eupmyeondongItem: {
+    position: 'relative',
+  },
+  check: {
+    position: 'absolute',
+    top: -3,
+    right: -30,
+    color: `${COLOR.blue}`,
+  },
+
   regionItemtext: {
     fontSize: 12,
     color: `${COLOR.gray}`,
   },
-  selectedLeftRegion: {
-    backgroundColor: `${COLOR.blue}`, // 클릭 시 배경색 변경
+  selectedSido: {
+    backgroundColor: `${COLOR.blue}`,
   },
-  selectedLeftRegionText: {
+  selectedSidoText: {
     color: `${COLOR.white}`,
+  },
+  selectedSigungu: {
+    backgroundColor: `${COLOR.lightBlue}`,
+  },
+  selectedSigunguText: {
+    color: `${COLOR.white}`,
+  },
+  selectedEupmyeondongText: {
+    color: `${COLOR.blue}`,
   },
 });
