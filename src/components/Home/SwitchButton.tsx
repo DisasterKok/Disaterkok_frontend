@@ -1,14 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Platform } from 'react-native';
+import React from 'react';
+import { View, TouchableOpacity, StyleSheet, Animated, Platform } from 'react-native';
 import COLOR from '../../constants/colors';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 const SwitchButton = ({
   isLocalSelected,
   onSelect,
+  handleSheet,
+  bottomSheetModalRef,
 }: {
   isLocalSelected: boolean;
   onSelect: React.Dispatch<React.SetStateAction<boolean>>;
+  handleSheet: (ref: React.RefObject<BottomSheetModal>) => void;
+  bottomSheetModalRef: React.RefObject<BottomSheetModal>;
 }) => {
+  const handleBoottomSheet = () => {
+    handleSheet(bottomSheetModalRef);
+  };
+
   const translateX = new Animated.Value(isLocalSelected ? 2000 : 0);
 
   const toggleSwitch = () => {
@@ -49,7 +59,7 @@ const SwitchButton = ({
     extrapolate: 'clamp',
   });
 
-  useEffect(() => {}, [translateX]);
+  const AnimatedEntypo = Animated.createAnimatedComponent(EntypoIcon);
 
   return (
     <View style={styles.container}>
@@ -62,12 +72,19 @@ const SwitchButton = ({
         >
           <View style={styles.buttonShadow} />
         </Animated.View>
-        <Animated.Text style={[styles.buttonText, styles.leftText, { color: NationalTextColor }]}>
-          전국
-        </Animated.Text>
-        <Animated.Text style={[styles.buttonText, styles.rightText, { color: LocalTextColor }]}>
-          우리동네
-        </Animated.Text>
+        <Animated.View style={[styles.buttonField, styles.leftText]}>
+          <Animated.Text style={[styles.buttonText, { color: NationalTextColor }]}>
+            전국
+          </Animated.Text>
+        </Animated.View>
+        <Animated.View style={[styles.buttonField, styles.rightText]}>
+          <Animated.Text style={[styles.buttonText, { color: LocalTextColor, left: 7 }]}>
+            우리동네
+          </Animated.Text>
+          <TouchableOpacity style={{ left: 7, padding: 5 }} onPress={handleBoottomSheet}>
+            <AnimatedEntypo name="chevron-down" size={14} color={LocalTextColor} />
+          </TouchableOpacity>
+        </Animated.View>
       </TouchableOpacity>
     </View>
   );
@@ -117,13 +134,16 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  buttonText: {
+  buttonField: {
     position: 'absolute',
     display: 'flex',
-    top: 9,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     height: 30,
+  },
+  buttonText: {
     textAlign: 'center',
-    color: '#888',
     fontWeight: '600',
     fontSize: 12,
   },

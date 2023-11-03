@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet, TextInput, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import COLOR from '../../constants/colors';

@@ -5,8 +5,12 @@ import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-
 import SwitchButton from '../components/Home/SwitchButton';
 import WeatherSection from '../components/Home/WeatherSection';
 import IssueSection from '../components/Home/IssueSection';
+import LocationBottomSheet from '../components/Home/LocationSetting/LocationBottomSheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 export default function Home() {
+  const bottomSheetRef = React.useRef<BottomSheetModal>(null);
+
   const [isLocalSelected, setLocalSelected] = React.useState<boolean>(false);
   const insets = useSafeAreaInsets();
   const scrollY = React.useRef(new Animated.Value(0)).current;
@@ -25,6 +29,11 @@ export default function Home() {
     outputRange: [`${COLOR.white}`, `${COLOR.primary}`],
     extrapolate: 'clamp',
   });
+
+  const handlePresentModalPress = React.useCallback((ref: React.RefObject<BottomSheetModal>) => {
+    console.log('clicking');
+    ref.current?.present();
+  }, []);
 
   return (
     <SafeAreaProvider>
@@ -60,10 +69,16 @@ export default function Home() {
         >
           <WeatherSection />
           <View style={styles.contentSheet}>
-            <SwitchButton isLocalSelected={isLocalSelected} onSelect={setLocalSelected} />
+            <SwitchButton
+              isLocalSelected={isLocalSelected}
+              onSelect={setLocalSelected}
+              handleSheet={() => handlePresentModalPress(bottomSheetRef)}
+              bottomSheetModalRef={bottomSheetRef}
+            />
             <IssueSection isLocalSelected={isLocalSelected} />
           </View>
         </ScrollView>
+        <LocationBottomSheet bottomSheetModalRef={bottomSheetRef} />
       </SafeAreaView>
     </SafeAreaProvider>
   );

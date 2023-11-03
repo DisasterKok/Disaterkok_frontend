@@ -16,6 +16,9 @@ import {
 import Onboarding from './src/pages/Onboarding';
 import useAuth from './src/states/useAuth';
 
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+
 export type LoggedInParamList = {
   Orders: undefined;
   Settings: undefined;
@@ -39,42 +42,54 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function App() {
   const { isLoggedIn } = useAuth();
   return (
-    <NavigationContainer>
-      {isLoggedIn ? (
-        <Tab.Navigator>
-          <Tab.Screen name="home" component={Home} options={{ headerShown: false, title: '홈' }} />
-          <Tab.Screen name="report" component={Report} options={{ title: '제보' }} />
-          <Tab.Screen name="solution" component={Solution} options={{ title: '솔루션' }} />
-        </Tab.Navigator>
-      ) : (
-        <Stack.Navigator>
-          <Stack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />
-          {/* 테스트 위해 임시로 설정한거 */}
-          <Stack.Screen
-            name="DisasterNotiSettings"
-            component={DisasterNotiSettings}
-            options={{ title: '알림 설정' }}
-          />
-          <Stack.Screen
-            name="SignIn"
-            component={SignIn}
-            options={{ headerShown: false, title: '로그인' }}
-          />
-          <Stack.Screen name="SignUp" component={SignUp} options={{ title: '회원가입' }} />
-          <Stack.Screen name="SetName" component={SetName} options={{ title: '닉네임 설정' }} />
-          <Stack.Screen
-            name="SelectLocation"
-            component={SelectLocation}
-            options={{ title: '지역 선택' }}
-          />
-          <Stack.Screen
-            name="CompleteLogin"
-            component={CompleteLogin}
-            options={{ headerShown: false, title: '회원가입 완료' }}
-          />
-        </Stack.Navigator>
-      )}
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomSheetModalProvider>
+        <NavigationContainer>
+          {isLoggedIn ? (
+            <Tab.Navigator screenOptions={{ tabBarStyle: { zIndex: 1000 } }}>
+              <Tab.Screen
+                name="home"
+                component={Home}
+                options={{ headerShown: false, title: '홈' }}
+              />
+              <Tab.Screen name="report" component={Report} options={{ title: '제보' }} />
+              <Tab.Screen name="solution" component={Solution} options={{ title: '솔루션' }} />
+            </Tab.Navigator>
+          ) : (
+            <Stack.Navigator>
+              <Stack.Screen
+                name="Onboarding"
+                component={Onboarding}
+                options={{ headerShown: false }}
+              />
+              {/* 테스트 위해 임시로 설정한거 */}
+              <Stack.Screen
+                name="DisasterNotiSettings"
+                component={DisasterNotiSettings}
+                options={{ title: '알림 설정' }}
+              />
+              <Stack.Screen
+                name="SignIn"
+                component={SignIn}
+                options={{ headerShown: false, title: '로그인' }}
+              />
+              <Stack.Screen name="SignUp" component={SignUp} options={{ title: '회원가입' }} />
+              <Stack.Screen name="SetName" component={SetName} options={{ title: '닉네임 설정' }} />
+              <Stack.Screen
+                name="SelectLocation"
+                component={SelectLocation}
+                options={{ title: '지역 선택' }}
+              />
+              <Stack.Screen
+                name="CompleteLogin"
+                component={CompleteLogin}
+                options={{ headerShown: false, title: '회원가입 완료' }}
+              />
+            </Stack.Navigator>
+          )}
+        </NavigationContainer>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 }
 
