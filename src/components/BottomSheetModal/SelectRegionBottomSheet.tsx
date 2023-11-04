@@ -1,11 +1,12 @@
 import React, { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, View, FlatList } from 'react-native';
+import { Pressable, StyleSheet, Text, View, FlatList, Platform } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import COLOR from '../../constants/colors';
 import { fetchSidoInfo } from '../../apis/fetchSidoInfo';
 import { fetchSigunguInfo } from '../../apis/fetchSigunguInfo';
 import { fetchEupmyeondongInfo } from '../../apis/fetchEupmyeondong';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import { ReportScreenProps } from '../../pages/Report';
 
 type SelectRegionBottomSheetProps = {
@@ -27,7 +28,7 @@ export default function NaturalDisasterBottomSheet({
   bottomSheetModalRef,
   navigation,
 }: SelectRegionBottomSheetProps & ReportScreenProps) {
-  const snapPoints = useMemo(() => ['25%', '65%'], []);
+  const snapPoints = useMemo(() => ['25%', '80%'], []);
 
   const showTabBar = useCallback(() => {
     navigation.setOptions({
@@ -58,18 +59,16 @@ export default function NaturalDisasterBottomSheet({
 
   const [selectedSido, setSelectedSido] = useState(0);
   const [selectedSigungu, setSelectedSigungu] = useState(0);
-  const [selectedEupmyeondong, setSelectedEupmyeondong] = useState(0);
+  const [selectedEupmyeondong, setSelectedEupmyeondong] = useState([]);
 
   const handleSidoItemClick = ({ item }: { item: SidoType }) => {
     if (item.id === selectedSido) {
       setSelectedSido(0);
       setSelectedSigungu(0);
-      setSelectedEupmyeondong(0);
       setSigunguList([]);
       setEupmyeondongList([]);
     } else {
       setSelectedSido(item.id);
-      setSelectedEupmyeondong(0);
       setEupmyeondongList([]);
       fetchSigunguInfo(item.name)
         .then((data) => {
@@ -87,7 +86,6 @@ export default function NaturalDisasterBottomSheet({
   const handleSigunguItemClick = ({ item }: { item: SigunguAndEupmyeondongType }) => {
     if (item.id === selectedSigungu) {
       setSelectedSigungu(0);
-      setSelectedEupmyeondong(0);
       setEupmyeondongList([]);
     } else {
       setSelectedSigungu(item.id);
@@ -105,7 +103,14 @@ export default function NaturalDisasterBottomSheet({
   };
 
   const handleEupmyeondongItemClick = ({ item }: { item: SigunguAndEupmyeondongType }) => {
-    setSelectedEupmyeondong(item.id === selectedEupmyeondong ? 0 : item.id);
+    setSelectedEupmyeondong((prev) => {
+      if (prev.some((selectedItem) => selectedItem.id === item.id)) {
+        return prev.filter((prevItem) => prevItem.id !== item.id);
+      } else {
+        return [...prev, item];
+      }
+    });
+    console.log(selectedEupmyeondong);
   };
 
   const renderSido = ({ item }: { item: SidoType }) => {
@@ -160,17 +165,26 @@ export default function NaturalDisasterBottomSheet({
         <View style={styles.eupmyeondongItem}>
           <Text
             style={
-              selectedEupmyeondong == item.id
+              selectedEupmyeondong.some((selectedItem) => selectedItem.id === item.id)
                 ? StyleSheet.compose(styles.regionItemtext, styles.selectedEupmyeondongText)
                 : styles.regionItemtext
             }
           >
             {item.singleName}
           </Text>
-          {item.id === selectedEupmyeondong && (
+          {selectedEupmyeondong.some((selectedItem) => selectedItem.id === item.id) && (
             <FeatherIcon name="check" size={18} style={styles.check} />
           )}
         </View>
+      </Pressable>
+    );
+  };
+
+  const renderSelectedEupmyeondong = ({ item }: { item: SigunguAndEupmyeondongType }) => {
+    return (
+      <Pressable style={styles.selectedRegionItem}>
+        <Text style={styles.selectedRegionItemText}>{item.singleName}</Text>
+        <AntIcon name="close" size={12} style={styles.close} />
       </Pressable>
     );
   };
@@ -253,6 +267,34 @@ export default function NaturalDisasterBottomSheet({
           <CenterComponent />
           <RightTable />
         </View>
+      </View>
+      <View style={styles.selecetdRegion}>
+        {selectedEupmyeondong.length !== 0 && (
+          <FlatList
+            data={selectedEupmyeondong}
+            renderItem={renderSelectedEupmyeondong}
+            numColumns={1}
+            contentContainerStyle={styles.selecetdRegionList}
+            horizontal={true} // 수평 스크롤 활성화
+          />
+        )}
+      </View>
+      <View
+        style={
+          selectedEupmyeondong.length === 0
+            ? styles.resultModal
+            : StyleSheet.compose(styles.resultModal, styles.resultModalActive)
+        }
+      >
+        <Pressable
+          style={
+            selectedEupmyeondong.length === 0
+              ? styles.completeButton
+              : StyleSheet.compose(styles.completeButton, styles.completeButtonActive)
+          }
+        >
+          <Text style={styles.completeButtonText}>완료</Text>
+        </Pressable>
       </View>
     </BottomSheetModal>
   );
@@ -340,5 +382,89 @@ const styles = StyleSheet.create({
   },
   selectedEupmyeondongText: {
     color: `${COLOR.blue}`,
+  },
+  resultModal: {
+    width: '100%',
+    height: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: `${COLOR.white}`,
+    ...Platform.select({
+      ios: {
+        shadowColor: `${COLOR.black}`,
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+
+  resultModalActive: {
+    shadowColor: 'transparent',
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    elevation: 0,
+  },
+
+  completeButton: {
+    width: '90%',
+    height: 50,
+    backgroundColor: `${COLOR.lightGray}`,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  completeButtonActive: { backgroundColor: `${COLOR.blue}` },
+  completeButtonText: { color: `${COLOR.white}` },
+  selecetdRegion: {
+    height: 56,
+    backgroundColor: `${COLOR.white}`,
+    justifyContent: 'center',
+    paddingLeft: 20,
+    borderBottomWidth: 1,
+    borderColor: `${COLOR.lightGray}`,
+    ...Platform.select({
+      ios: {
+        shadowColor: `${COLOR.black}`,
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  selecetdRegionList: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+  },
+  selectedRegionItem: {
+    backgroundColor: `${COLOR.lightGray}`,
+    height: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    gap: 4,
+    borderRadius: 5,
+  },
+  selectedRegionItemText: {
+    fontSize: 10,
+    color: `${COLOR.gray}`,
+  },
+  close: {
+    color: `${COLOR.gray}`,
   },
 });
