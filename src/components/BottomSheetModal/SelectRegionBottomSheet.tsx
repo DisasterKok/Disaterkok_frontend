@@ -110,7 +110,10 @@ export default function NaturalDisasterBottomSheet({
         return [...prev, item];
       }
     });
-    console.log(selectedEupmyeondong);
+  };
+
+  const handleEupmyeondongItemDelete = ({ item }: { item: SigunguAndEupmyeondongType }) => {
+    setSelectedEupmyeondong((prev) => prev.filter((prevItem) => prevItem.id !== item.id));
   };
 
   const renderSido = ({ item }: { item: SidoType }) => {
@@ -184,7 +187,12 @@ export default function NaturalDisasterBottomSheet({
     return (
       <Pressable style={styles.selectedRegionItem}>
         <Text style={styles.selectedRegionItemText}>{item.singleName}</Text>
-        <AntIcon name="close" size={12} style={styles.close} />
+        <AntIcon
+          name="close"
+          size={12}
+          style={styles.close}
+          onPress={() => handleEupmyeondongItemDelete({ item })}
+        />
       </Pressable>
     );
   };
@@ -268,17 +276,17 @@ export default function NaturalDisasterBottomSheet({
           <RightTable />
         </View>
       </View>
-      <View style={styles.selecetdRegion}>
-        {selectedEupmyeondong.length !== 0 && (
+      {selectedEupmyeondong.length !== 0 && (
+        <View style={styles.selecetdRegion}>
           <FlatList
             data={selectedEupmyeondong}
             renderItem={renderSelectedEupmyeondong}
             numColumns={1}
             contentContainerStyle={styles.selecetdRegionList}
-            horizontal={true} // 수평 스크롤 활성화
+            horizontal={true}
           />
-        )}
-      </View>
+        </View>
+      )}
       <View
         style={
           selectedEupmyeondong.length === 0
@@ -292,6 +300,7 @@ export default function NaturalDisasterBottomSheet({
               ? styles.completeButton
               : StyleSheet.compose(styles.completeButton, styles.completeButtonActive)
           }
+          onPress={() => handleCloseModalPress(bottomSheetModalRef)}
         >
           <Text style={styles.completeButtonText}>완료</Text>
         </Pressable>
