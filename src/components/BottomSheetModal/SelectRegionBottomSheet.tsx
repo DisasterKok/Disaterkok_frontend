@@ -6,6 +6,7 @@ import { fetchSidoInfo } from '../../apis/fetchSidoInfo';
 import { fetchSigunguInfo } from '../../apis/fetchSigunguInfo';
 import { fetchEupmyeondongInfo } from '../../apis/fetchEupmyeondong';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import { ReportScreenProps } from '../../pages/Report';
 
 type SelectRegionBottomSheetProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
@@ -24,8 +25,23 @@ type SigunguAndEupmyeondongType = {
 
 export default function NaturalDisasterBottomSheet({
   bottomSheetModalRef,
-}: SelectRegionBottomSheetProps) {
+  navigation,
+}: SelectRegionBottomSheetProps & ReportScreenProps) {
   const snapPoints = useMemo(() => ['25%', '65%'], []);
+
+  const showTabBar = useCallback(() => {
+    navigation.setOptions({
+      tabBarStyle: {
+        display: 'flex',
+      },
+    });
+  }, [navigation]);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    if (index === -1) {
+      showTabBar();
+    }
+  }, []);
 
   const handleCloseModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
     ref.current?.close();
@@ -53,6 +69,8 @@ export default function NaturalDisasterBottomSheet({
       setEupmyeondongList([]);
     } else {
       setSelectedSido(item.id);
+      setSelectedEupmyeondong(0);
+      setEupmyeondongList([]);
       fetchSigunguInfo(item.name)
         .then((data) => {
           const sigunguListFormatted = data.features.map((feature) => ({
@@ -226,6 +244,7 @@ export default function NaturalDisasterBottomSheet({
       snapPoints={snapPoints}
       backdropComponent={renderBackdrop}
       backgroundStyle={{ backgroundColor: `${COLOR.whiteBackground}` }}
+      onChange={handleSheetChanges}
     >
       <View style={styles.modalContainer}>
         <Text style={styles.title}>지역 선택</Text>
@@ -247,7 +266,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   tableLayout: {
     display: 'flex',
@@ -256,6 +275,7 @@ const styles = StyleSheet.create({
     height: '100%',
     borderTopWidth: 1,
     borderColor: `${COLOR.middleGray}`,
+    paddingBottom: 40,
   },
   tableTitle: {
     width: '100%',
@@ -283,7 +303,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   regionList: {
-    flex: 1,
     width: '100%',
     alignItems: 'stretch',
   },

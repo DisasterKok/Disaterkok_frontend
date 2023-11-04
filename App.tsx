@@ -23,6 +23,12 @@ export type LoggedInParamList = {
   Complete: { orderId: string };
 };
 
+export type RootTabParamList = {
+  Home: undefined;
+  Report: undefined;
+  Solution: undefined;
+};
+
 export type RootStackParamList = {
   Onboarding: undefined;
   DisasterNotiSettings: undefined;
@@ -33,7 +39,7 @@ export type RootStackParamList = {
   CompleteLogin: undefined;
 };
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<RootTabParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App() {
@@ -42,9 +48,9 @@ function App() {
     <NavigationContainer>
       {isLoggedIn ? (
         <Tab.Navigator>
-          <Tab.Screen name="home" component={Home} options={{ headerShown: false, title: '홈' }} />
-          <Tab.Screen name="report" component={Report} options={{ title: '실시간 제보' }} />
-          <Tab.Screen name="solution" component={Solution} options={{ title: '솔루션' }} />
+          <Tab.Screen name="Home" component={Home} options={{ headerShown: false, title: '홈' }} />
+          <Tab.Screen name="Report" component={Report} options={{ title: '실시간 제보' }} />
+          <Tab.Screen name="Solution" component={Solution} options={{ title: '솔루션' }} />
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
