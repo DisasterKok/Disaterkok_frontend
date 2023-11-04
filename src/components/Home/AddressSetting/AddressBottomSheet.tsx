@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { View, StyleSheet, Text } from 'react-native';
+import TownList from './TownList';
 
-const LocationBottomSheet = ({
+const AddressBottomSheet = ({
   bottomSheetModalRef,
 }: {
   bottomSheetModalRef: React.RefObject<BottomSheetModal>;
 }) => {
-  const snapPoints = React.useMemo(() => ['25%', '65%'], []);
+  const snapPoints = React.useMemo(() => ['25%', '60%', '90%'], []);
   const handleCloseModalPress = React.useCallback((ref: React.RefObject<BottomSheetModal>) => {
     ref.current?.close();
   }, []);
@@ -23,16 +24,15 @@ const LocationBottomSheet = ({
       index={1}
       backdropComponent={renderBackdrop}
       snapPoints={snapPoints}
-      style={{ zIndex: 2000 }}
     >
       <View style={styles.modalContainer}>
-        <Text>지역선택</Text>
+        <TownList/>
       </View>
     </BottomSheetModal>
   );
 };
 
-export default LocationBottomSheet;
+export default AddressBottomSheet;
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -40,5 +40,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '100%',
+    paddingTop: 8,
   },
 });

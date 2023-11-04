@@ -140,6 +140,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
 
   // 기본 주소로 설정하기
   const handleToggleDefault = (index: number) => {
+    if (addressDataList[index].default) return;
     const updatedAddressDataList = [...addressDataList];
 
     updatedAddressDataList[index].default = !updatedAddressDataList[index].default;

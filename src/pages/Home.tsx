@@ -5,7 +5,7 @@ import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-
 import SwitchButton from '../components/Home/SwitchButton';
 import WeatherSection from '../components/Home/WeatherSection';
 import IssueSection from '../components/Home/IssueSection';
-import LocationBottomSheet from '../components/Home/LocationSetting/LocationBottomSheet';
+import AddressBottomSheet from '../components/Home/AddressSetting/AddressBottomSheet';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 export default function Home() {
@@ -31,7 +31,6 @@ export default function Home() {
   });
 
   const handlePresentModalPress = React.useCallback((ref: React.RefObject<BottomSheetModal>) => {
-    console.log('clicking');
     ref.current?.present();
   }, []);
 
@@ -78,7 +77,7 @@ export default function Home() {
             <IssueSection isLocalSelected={isLocalSelected} />
           </View>
         </ScrollView>
-        <LocationBottomSheet bottomSheetModalRef={bottomSheetRef} />
+        <AddressBottomSheet bottomSheetModalRef={bottomSheetRef} />
       </SafeAreaView>
     </SafeAreaProvider>
   );
