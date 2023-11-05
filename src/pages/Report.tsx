@@ -12,6 +12,8 @@ import { RootTabParamList } from '../../App';
 import COLOR from '../constants/colors';
 import FaIcon from 'react-native-vector-icons/FontAwesome';
 import { SigunguAndEupmyeondongType } from '../components/SelectRegion/types';
+import SelectDisasterBottomSheet from '../components/BottomSheetModal/SelectDisasterBottomSheet';
+import { DisasterType } from '../components/SelectDisaster/types';
 
 export type ReportScreenProps = NativeStackScreenProps<RootTabParamList, 'Report'>;
 
@@ -23,6 +25,7 @@ export interface CustomNavigationOptions extends Partial<NativeStackNavigationOp
 
 export default function Report({ navigation }: ReportScreenProps) {
   const selectRegionModalRef = useRef<BottomSheetModal>(null);
+  const selectDisasterModalRef = useRef<BottomSheetModal>(null);
 
   const showTabBar = useCallback(() => {
     navigation.setOptions({
@@ -40,6 +43,7 @@ export default function Report({ navigation }: ReportScreenProps) {
   const [selectedEupmyeondong, setSelectedEupmyeondong] = useState<SigunguAndEupmyeondongType[]>(
     [],
   );
+  const [selectedDisaster, setSelectedDisaster] = useState<DisasterType[]>([]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -65,7 +69,7 @@ export default function Report({ navigation }: ReportScreenProps) {
             <FaIcon
               name="angle-down"
               size={20}
-              color={selectedEupmyeondong.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
+              color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
             />
           </Pressable>
           <SelectRegionBottomSheet
@@ -73,6 +77,37 @@ export default function Report({ navigation }: ReportScreenProps) {
             navigation={navigation}
             selectedEupmyeondong={selectedEupmyeondong}
             setSelectedEupmyeondong={setSelectedEupmyeondong}
+          />
+
+          <Pressable
+            onPress={() => handlePresentModalPress(selectDisasterModalRef)}
+            style={
+              selectedDisaster.length === 0
+                ? styles.regionSelect
+                : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
+            }
+          >
+            <Text
+              style={
+                selectedDisaster.length === 0
+                  ? styles.regionSelectText
+                  : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
+              }
+            >
+              재난
+            </Text>
+            <FaIcon
+              name="angle-down"
+              size={20}
+              color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
+            />
+          </Pressable>
+
+          <SelectDisasterBottomSheet
+            bottomSheetModalRef={selectDisasterModalRef}
+            navigation={navigation}
+            selectedDisaster={selectedDisaster}
+            setSelectedDisaster={setSelectedDisaster}
           />
         </View>
       </BottomSheetModalProvider>
