@@ -1,5 +1,4 @@
 export const fetchEupmyeondongInfo = async (fullName: string) => {
-  console.log(fullName);
   try {
     const apiKey = '894B966E-8DEA-3C4A-8616-49B9627E0FAD';
     const apiUrl =

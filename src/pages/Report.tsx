@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SelectRegionBottomSheet } from '../components/BottomSheetModal';
 
@@ -6,6 +6,8 @@ import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootTabParamList } from '../../App';
+import COLOR from '../constants/colors';
+import FaIcon from 'react-native-vector-icons/FontAwesome';
 
 export type ReportScreenProps = NativeStackScreenProps<RootTabParamList, 'Report'>;
 
@@ -20,16 +22,41 @@ export default function Report({ navigation }: ReportScreenProps) {
       },
     });
   }, []);
+
+  const [selectedEupmyeondong, setSelectedEupmyeondong] = useState([]);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheetModalProvider>
         <View>
-          <Pressable onPress={() => handlePresentModalPress(selectRegionModalRef)}>
-            <Text>지역선택</Text>
+          <Pressable
+            onPress={() => handlePresentModalPress(selectRegionModalRef)}
+            style={
+              selectedEupmyeondong.length === 0
+                ? styles.regionSelect
+                : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
+            }
+          >
+            <Text
+              style={
+                selectedEupmyeondong.length === 0
+                  ? styles.regionSelectText
+                  : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
+              }
+            >
+              지역
+            </Text>
+            <FaIcon
+              name="angle-down"
+              size={20}
+              color={selectedEupmyeondong.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
+            />
           </Pressable>
           <SelectRegionBottomSheet
             bottomSheetModalRef={selectRegionModalRef}
             navigation={navigation}
+            selectedEupmyeondong={selectedEupmyeondong}
+            setSelectedEupmyeondong={setSelectedEupmyeondong}
           />
         </View>
       </BottomSheetModalProvider>
@@ -37,4 +64,28 @@ export default function Report({ navigation }: ReportScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  regionSelect: {
+    borderWidth: 1,
+    borderColor: `${COLOR.gray}`,
+    borderRadius: 20,
+    width: 70,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 5,
+    paddingHorizontal: 10,
+  },
+  regionSelectActive: {
+    backgroundColor: `${COLOR.blue}`,
+    borderWidth: 0,
+  },
+  regionSelectText: {
+    fontSize: 12,
+    color: `${COLOR.gray}`,
+  },
+  regionSelectTextActive: {
+    color: `${COLOR.white}`,
+  },
+});

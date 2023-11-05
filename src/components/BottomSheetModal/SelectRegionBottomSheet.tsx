@@ -7,11 +7,8 @@ import { fetchSigunguInfo } from '../../apis/fetchSigunguInfo';
 import { fetchEupmyeondongInfo } from '../../apis/fetchEupmyeondong';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import { ReportScreenProps } from '../../pages/Report';
-
-type SelectRegionBottomSheetProps = {
-  bottomSheetModalRef: RefObject<BottomSheetModal>;
-};
+import { RootTabParamList } from '../../../App';
+import { NavigationProp } from '@react-navigation/native';
 
 type SidoType = {
   id: number;
@@ -24,10 +21,21 @@ type SigunguAndEupmyeondongType = {
   singleName: string;
 };
 
+type ReportScreenProps = {
+  bottomSheetModalRef: RefObject<BottomSheetModal>;
+
+  navigation: NavigationProp<RootTabParamList, 'Report'>;
+  selectedEupmyeondong: number[]; // 예시로 임의의 타입을 지정했습니다. 실제 타입에 맞게 수정하세요.
+  setSelectedEupmyeondong: React.Dispatch<React.SetStateAction<number[]>>;
+  // 다른 필요한 ReportScreenProps가 있다면 추가하세요.
+};
+
 export default function NaturalDisasterBottomSheet({
   bottomSheetModalRef,
   navigation,
-}: SelectRegionBottomSheetProps & ReportScreenProps) {
+  selectedEupmyeondong,
+  setSelectedEupmyeondong,
+}: ReportScreenProps) {
   const snapPoints = useMemo(() => ['25%', '80%'], []);
 
   const showTabBar = useCallback(() => {
@@ -59,7 +67,6 @@ export default function NaturalDisasterBottomSheet({
 
   const [selectedSido, setSelectedSido] = useState(0);
   const [selectedSigungu, setSelectedSigungu] = useState(0);
-  const [selectedEupmyeondong, setSelectedEupmyeondong] = useState([]);
 
   const handleSidoItemClick = ({ item }: { item: SidoType }) => {
     if (item.id === selectedSido) {
