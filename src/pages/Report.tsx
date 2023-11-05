@@ -4,26 +4,47 @@ import { SelectRegionBottomSheet } from '../components/BottomSheetModal';
 
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationOptions,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import { RootTabParamList } from '../../App';
 import COLOR from '../constants/colors';
 import FaIcon from 'react-native-vector-icons/FontAwesome';
 
 export type ReportScreenProps = NativeStackScreenProps<RootTabParamList, 'Report'>;
 
+export type SigunguAndEupmyeondongType = {
+  id: number;
+  fullName: string;
+  singleName: string;
+};
+
+export interface CustomNavigationOptions extends Partial<NativeStackNavigationOptions> {
+  tabBarStyle?: {
+    display: string;
+  };
+}
+
 export default function Report({ navigation }: ReportScreenProps) {
   const selectRegionModalRef = useRef<BottomSheetModal>(null);
 
-  const handlePresentModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
-    ref.current?.present();
+  const showTabBar = useCallback(() => {
     navigation.setOptions({
       tabBarStyle: {
         display: 'none',
       },
-    });
+    } as CustomNavigationOptions); // 타입 단언 사용
+  }, [navigation]);
+
+  const handlePresentModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
+    ref.current?.present();
+    showTabBar();
   }, []);
 
-  const [selectedEupmyeondong, setSelectedEupmyeondong] = useState([]);
+  const [selectedEupmyeondong, setSelectedEupmyeondong] = useState<SigunguAndEupmyeondongType[]>(
+    [],
+  );
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

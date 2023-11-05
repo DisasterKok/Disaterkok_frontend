@@ -9,25 +9,47 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { RootTabParamList } from '../../../App';
 import { NavigationProp } from '@react-navigation/native';
+import { CustomNavigationOptions, SigunguAndEupmyeondongType } from '../../pages/Report';
 
 type SidoType = {
   id: number;
   name: string;
 };
 
-type SigunguAndEupmyeondongType = {
-  id: number;
-  fullName: string;
-  singleName: string;
-};
-
 type ReportScreenProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
-
   navigation: NavigationProp<RootTabParamList, 'Report'>;
-  selectedEupmyeondong: number[]; // 예시로 임의의 타입을 지정했습니다. 실제 타입에 맞게 수정하세요.
-  setSelectedEupmyeondong: React.Dispatch<React.SetStateAction<number[]>>;
-  // 다른 필요한 ReportScreenProps가 있다면 추가하세요.
+  selectedEupmyeondong: SigunguAndEupmyeondongType[];
+  setSelectedEupmyeondong: React.Dispatch<React.SetStateAction<SigunguAndEupmyeondongType[]>>;
+};
+
+type SidoFeatureType = {
+  type: string;
+  properties: {
+    ctprvn_cd: string;
+    ctp_kor_nm: string;
+  };
+  id: string;
+};
+
+type SigunguFeatureType = {
+  type: string;
+  properties: {
+    sig_cd: string;
+    full_nm: string;
+    sig_kor_nm: string;
+  };
+  id: string;
+};
+
+type EupmyeondingFeatureType = {
+  type: string;
+  properties: {
+    emd_cd: string;
+    full_nm: string;
+    emd_kor_nm: string;
+  };
+  id: string;
 };
 
 export default function NaturalDisasterBottomSheet({
@@ -41,9 +63,9 @@ export default function NaturalDisasterBottomSheet({
   const showTabBar = useCallback(() => {
     navigation.setOptions({
       tabBarStyle: {
-        display: 'flex',
+        display: 'block',
       },
-    });
+    } as CustomNavigationOptions); // 타입 단언 사용
   }, [navigation]);
 
   const handleSheetChanges = useCallback((index: number) => {
@@ -79,7 +101,7 @@ export default function NaturalDisasterBottomSheet({
       setEupmyeondongList([]);
       fetchSigunguInfo(item.name)
         .then((data) => {
-          const sigunguListFormatted = data.features.map((feature) => ({
+          const sigunguListFormatted = data.features.map((feature: SigunguFeatureType) => ({
             id: feature.properties.sig_cd,
             fullName: feature.properties.full_nm,
             singleName: feature.properties.sig_kor_nm,
@@ -98,11 +120,13 @@ export default function NaturalDisasterBottomSheet({
       setSelectedSigungu(item.id);
       fetchEupmyeondongInfo(item.fullName)
         .then((data) => {
-          const eupmyeondongListFormatted = data.features.map((feature) => ({
-            id: feature.properties.emd_cd,
-            fullName: feature.properties.full_nm,
-            singleName: feature.properties.emd_kor_nm,
-          }));
+          const eupmyeondongListFormatted = data.features.map(
+            (feature: EupmyeondingFeatureType) => ({
+              id: feature.properties.emd_cd,
+              fullName: feature.properties.full_nm,
+              singleName: feature.properties.emd_kor_nm,
+            }),
+          );
           setEupmyeondongList(eupmyeondongListFormatted);
         })
         .catch((error) => console.log(error));
@@ -205,7 +229,6 @@ export default function NaturalDisasterBottomSheet({
   };
 
   const LeftTable = () => {
-    // 왼쪽 테이블 UI 및 핸들러 등 구현
     return (
       <View style={styles.tableLeft}>
         <View style={styles.tableTitle}>
@@ -221,7 +244,6 @@ export default function NaturalDisasterBottomSheet({
   };
 
   const CenterComponent = () => {
-    // 왼쪽 테이블 UI 및 핸들러 등 구현
     return (
       <View style={styles.tableCenter}>
         <View style={styles.tableTitle}>
@@ -238,7 +260,6 @@ export default function NaturalDisasterBottomSheet({
   };
 
   const RightTable = () => {
-    // 왼쪽 테이블 UI 및 핸들러 등 구현
     return (
       <View style={styles.tableRight}>
         <View style={styles.tableTitle}>
@@ -257,7 +278,7 @@ export default function NaturalDisasterBottomSheet({
   useEffect(() => {
     fetchSidoInfo()
       .then((data) => {
-        const sidoListFormatted = data.features.map((feature) => ({
+        const sidoListFormatted = data.features.map((feature: SidoFeatureType) => ({
           id: feature.properties.ctprvn_cd,
           name: feature.properties.ctp_kor_nm,
         }));
