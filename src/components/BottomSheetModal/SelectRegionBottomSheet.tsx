@@ -2,7 +2,7 @@ import React, { RefObject, useCallback, useEffect, useMemo, useState } from 'rea
 import { Pressable, StyleSheet, Text, View, FlatList, Platform } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import COLOR from '../../constants/colors';
-import { fetchSidoInfo } from '../../apis/fetchSidoInfo';
+import { fetchSidoInfo } from '../../apis/fetchRegionAPI/fetchSidoInfo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { RootTabParamList } from '../../../App';
 import { NavigationProp } from '@react-navigation/native';

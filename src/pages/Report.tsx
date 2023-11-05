@@ -2,8 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SelectRegionBottomSheet } from '../components/BottomSheetModal';
 
-import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import {
   NativeStackNavigationOptions,
   NativeStackScreenProps,
@@ -46,72 +45,68 @@ export default function Report({ navigation }: ReportScreenProps) {
   const [selectedDisaster, setSelectedDisaster] = useState<DisasterType[]>([]);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <BottomSheetModalProvider>
-        <View>
-          <Pressable
-            onPress={() => handlePresentModalPress(selectRegionModalRef)}
-            style={
-              selectedEupmyeondong.length === 0
-                ? styles.regionSelect
-                : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
-            }
-          >
-            <Text
-              style={
-                selectedEupmyeondong.length === 0
-                  ? styles.regionSelectText
-                  : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
-              }
-            >
-              지역
-            </Text>
-            <FaIcon
-              name="angle-down"
-              size={20}
-              color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
-            />
-          </Pressable>
-          <SelectRegionBottomSheet
-            bottomSheetModalRef={selectRegionModalRef}
-            navigation={navigation}
-            selectedEupmyeondong={selectedEupmyeondong}
-            setSelectedEupmyeondong={setSelectedEupmyeondong}
-          />
+    <View>
+      <Pressable
+        onPress={() => handlePresentModalPress(selectRegionModalRef)}
+        style={
+          selectedEupmyeondong.length === 0
+            ? styles.regionSelect
+            : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
+        }
+      >
+        <Text
+          style={
+            selectedEupmyeondong.length === 0
+              ? styles.regionSelectText
+              : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
+          }
+        >
+          지역
+        </Text>
+        <FaIcon
+          name="angle-down"
+          size={20}
+          color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
+        />
+      </Pressable>
+      <SelectRegionBottomSheet
+        bottomSheetModalRef={selectRegionModalRef}
+        navigation={navigation}
+        selectedEupmyeondong={selectedEupmyeondong}
+        setSelectedEupmyeondong={setSelectedEupmyeondong}
+      />
 
-          <Pressable
-            onPress={() => handlePresentModalPress(selectDisasterModalRef)}
-            style={
-              selectedDisaster.length === 0
-                ? styles.regionSelect
-                : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
-            }
-          >
-            <Text
-              style={
-                selectedDisaster.length === 0
-                  ? styles.regionSelectText
-                  : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
-              }
-            >
-              재난
-            </Text>
-            <FaIcon
-              name="angle-down"
-              size={20}
-              color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
-            />
-          </Pressable>
+      <Pressable
+        onPress={() => handlePresentModalPress(selectDisasterModalRef)}
+        style={
+          selectedDisaster.length === 0
+            ? styles.regionSelect
+            : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
+        }
+      >
+        <Text
+          style={
+            selectedDisaster.length === 0
+              ? styles.regionSelectText
+              : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
+          }
+        >
+          재난
+        </Text>
+        <FaIcon
+          name="angle-down"
+          size={20}
+          color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
+        />
+      </Pressable>
 
-          <SelectDisasterBottomSheet
-            bottomSheetModalRef={selectDisasterModalRef}
-            navigation={navigation}
-            selectedDisaster={selectedDisaster}
-            setSelectedDisaster={setSelectedDisaster}
-          />
-        </View>
-      </BottomSheetModalProvider>
-    </GestureHandlerRootView>
+      <SelectDisasterBottomSheet
+        bottomSheetModalRef={selectDisasterModalRef}
+        navigation={navigation}
+        selectedDisaster={selectedDisaster}
+        setSelectedDisaster={setSelectedDisaster}
+      />
+    </View>
   );
 }
 

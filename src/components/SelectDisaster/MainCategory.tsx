@@ -1,6 +1,5 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, FlatList } from 'react-native';
-import { fetchSigunguInfo } from '../../apis/fetchSigunguInfo';
 import COLOR from '../../constants/colors';
 import { DisasterCategoryType, DisasterType } from './types';
 import { NATURAL_DISASTER, SOCIAL_DISASTER } from '../../constants/DummyDisaster';
@@ -8,7 +7,7 @@ import { NATURAL_DISASTER, SOCIAL_DISASTER } from '../../constants/DummyDisaster
 type SidoTableProps = {
   disasterCategory: DisasterCategoryType[];
   selectedDisasterCategory: number;
-  setSelectedDisasterCategory: React.Dispatch<React.SetStateAction<number[]>>;
+  setSelectedDisasterCategory: React.Dispatch<React.SetStateAction<number>>;
   setDisasterList: React.Dispatch<React.SetStateAction<DisasterType[]>>;
 };
 

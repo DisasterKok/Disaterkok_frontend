@@ -48,7 +48,7 @@ export default function SubCategory({
   return (
     <View style={styles.tableRight}>
       <View style={styles.tableTitle}>
-        <Text>동,읍,면</Text>
+        <Text>소분류</Text>
       </View>
       <FlatList
         data={disasterList}

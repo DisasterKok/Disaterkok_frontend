@@ -7,7 +7,7 @@ import { RootTabParamList } from '../../../App';
 import { NavigationProp } from '@react-navigation/native';
 import { CustomNavigationOptions } from '../../pages/Report';
 import MainCategory from '../SelectDisaster/MainCategory';
-import { DisasterType } from '../SelectDisaster/types';
+import { DisasterCategoryType, DisasterType } from '../SelectDisaster/types';
 import { DISASTER_CATEGORY } from '../../constants/DummyDisaster';
 import SubCategory from '../SelectDisaster/SubCategory';
 
@@ -49,7 +49,7 @@ export default function SelectDisasterBottomSheet({
     [],
   );
 
-  const [disasterList, setDisasterList] = useState([]);
+  const [disasterList, setDisasterList] = useState<DisasterCategoryType[]>([]);
   const [selectedDisasterCategory, setSelectedDisasterCategory] = useState(0);
 
   const handleDisasterItemDelete = ({ item }: { item: DisasterType }) => {
@@ -86,7 +86,6 @@ export default function SelectDisasterBottomSheet({
             disasterCategory={DISASTER_CATEGORY}
             selectedDisasterCategory={selectedDisasterCategory}
             setSelectedDisasterCategory={setSelectedDisasterCategory}
-            disasterList={disasterList}
             setDisasterList={setDisasterList}
           />
           <SubCategory

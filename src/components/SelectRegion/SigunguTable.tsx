@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, FlatList } from 'react-native';
 import COLOR from '../../constants/colors';
-import { fetchEupmyeondongInfo } from '../../apis/fetchEupmyeondong';
+import { fetchEupmyeondongInfo } from '../../apis/fetchRegionAPI/fetchEupmyeondong';
 import { EupmyeondingFeatureType, SigunguAndEupmyeondongType } from './types';
 
 type SigunguTableProps = {
