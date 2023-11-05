@@ -3,18 +3,12 @@ import { Pressable, StyleSheet, Text, View, FlatList, Platform } from 'react-nat
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import COLOR from '../../constants/colors';
 import { fetchSidoInfo } from '../../apis/fetchSidoInfo';
-import { fetchSigunguInfo } from '../../apis/fetchSigunguInfo';
-import { fetchEupmyeondongInfo } from '../../apis/fetchEupmyeondong';
-import FeatherIcon from 'react-native-vector-icons/Feather';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { RootTabParamList } from '../../../App';
 import { NavigationProp } from '@react-navigation/native';
-import { CustomNavigationOptions, SigunguAndEupmyeondongType } from '../../pages/Report';
-
-type SidoType = {
-  id: number;
-  name: string;
-};
+import { EupmyeondongTable, SidoTable, SigunguTable } from '../SelectRegion';
+import { SidoType, SigunguAndEupmyeondongType } from '../SelectRegion/types';
+import { CustomNavigationOptions } from '../../pages/Report';
 
 type ReportScreenProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
@@ -32,26 +26,6 @@ type SidoFeatureType = {
   id: string;
 };
 
-type SigunguFeatureType = {
-  type: string;
-  properties: {
-    sig_cd: string;
-    full_nm: string;
-    sig_kor_nm: string;
-  };
-  id: string;
-};
-
-type EupmyeondingFeatureType = {
-  type: string;
-  properties: {
-    emd_cd: string;
-    full_nm: string;
-    emd_kor_nm: string;
-  };
-  id: string;
-};
-
 export default function NaturalDisasterBottomSheet({
   bottomSheetModalRef,
   navigation,
@@ -65,7 +39,7 @@ export default function NaturalDisasterBottomSheet({
       tabBarStyle: {
         display: 'block',
       },
-    } as CustomNavigationOptions); // 타입 단언 사용
+    } as CustomNavigationOptions);
   }, [navigation]);
 
   const handleSheetChanges = useCallback((index: number) => {
@@ -83,135 +57,15 @@ export default function NaturalDisasterBottomSheet({
     [],
   );
 
-  const [sidoList, setSidoList] = useState([]);
-  const [sigunguList, setSigunguList] = useState([]);
-  const [eupmyeondongList, setEupmyeondongList] = useState([]);
+  const [sidoList, setSidoList] = useState<SidoType[]>([]);
+  const [sigunguList, setSigunguList] = useState<SigunguAndEupmyeondongType[]>([]);
+  const [eupmyeondongList, setEupmyeondongList] = useState<SigunguAndEupmyeondongType[]>([]);
 
   const [selectedSido, setSelectedSido] = useState(0);
   const [selectedSigungu, setSelectedSigungu] = useState(0);
 
-  const handleSidoItemClick = ({ item }: { item: SidoType }) => {
-    if (item.id === selectedSido) {
-      setSelectedSido(0);
-      setSelectedSigungu(0);
-      setSigunguList([]);
-      setEupmyeondongList([]);
-    } else {
-      setSelectedSido(item.id);
-      setEupmyeondongList([]);
-      fetchSigunguInfo(item.name)
-        .then((data) => {
-          const sigunguListFormatted = data.features.map((feature: SigunguFeatureType) => ({
-            id: feature.properties.sig_cd,
-            fullName: feature.properties.full_nm,
-            singleName: feature.properties.sig_kor_nm,
-          }));
-          setSigunguList(sigunguListFormatted);
-        })
-        .catch((error) => console.log(error));
-    }
-  };
-
-  const handleSigunguItemClick = ({ item }: { item: SigunguAndEupmyeondongType }) => {
-    if (item.id === selectedSigungu) {
-      setSelectedSigungu(0);
-      setEupmyeondongList([]);
-    } else {
-      setSelectedSigungu(item.id);
-      fetchEupmyeondongInfo(item.fullName)
-        .then((data) => {
-          const eupmyeondongListFormatted = data.features.map(
-            (feature: EupmyeondingFeatureType) => ({
-              id: feature.properties.emd_cd,
-              fullName: feature.properties.full_nm,
-              singleName: feature.properties.emd_kor_nm,
-            }),
-          );
-          setEupmyeondongList(eupmyeondongListFormatted);
-        })
-        .catch((error) => console.log(error));
-    }
-  };
-
-  const handleEupmyeondongItemClick = ({ item }: { item: SigunguAndEupmyeondongType }) => {
-    setSelectedEupmyeondong((prev) => {
-      if (prev.some((selectedItem) => selectedItem.id === item.id)) {
-        return prev.filter((prevItem) => prevItem.id !== item.id);
-      } else {
-        return [...prev, item];
-      }
-    });
-  };
-
   const handleEupmyeondongItemDelete = ({ item }: { item: SigunguAndEupmyeondongType }) => {
     setSelectedEupmyeondong((prev) => prev.filter((prevItem) => prevItem.id !== item.id));
-  };
-
-  const renderSido = ({ item }: { item: SidoType }) => {
-    return (
-      <Pressable
-        style={
-          selectedSido == item.id
-            ? StyleSheet.compose(styles.regionItem, styles.selectedSido)
-            : styles.regionItem
-        }
-        onPress={() => handleSidoItemClick({ item })}
-      >
-        <Text
-          style={
-            selectedSido == item.id
-              ? StyleSheet.compose(styles.regionItemtext, styles.selectedSidoText)
-              : styles.regionItemtext
-          }
-        >
-          {item.name.slice(0, 2)}
-        </Text>
-      </Pressable>
-    );
-  };
-
-  const renderSigungu = ({ item }: { item: SigunguAndEupmyeondongType }) => {
-    return (
-      <Pressable
-        style={
-          selectedSigungu == item.id
-            ? StyleSheet.compose(styles.regionItem, styles.selectedSigungu)
-            : styles.regionItem
-        }
-        onPress={() => handleSigunguItemClick({ item })}
-      >
-        <Text
-          style={
-            selectedSigungu == item.id
-              ? StyleSheet.compose(styles.regionItemtext, styles.selectedSigunguText)
-              : styles.regionItemtext
-          }
-        >
-          {item.singleName}
-        </Text>
-      </Pressable>
-    );
-  };
-
-  const renderEupmyeondong = ({ item }: { item: SigunguAndEupmyeondongType }) => {
-    return (
-      <Pressable style={styles.regionItem} onPress={() => handleEupmyeondongItemClick({ item })}>
-        <View style={styles.eupmyeondongItem}>
-          <Text
-            style={
-              selectedEupmyeondong.some((selectedItem) => selectedItem.id === item.id)
-                ? StyleSheet.compose(styles.regionItemtext, styles.selectedEupmyeondongText)
-                : styles.regionItemtext
-            }
-          >
-            {item.singleName}
-          </Text>
-          {selectedEupmyeondong.some((selectedItem) => selectedItem.id === item.id) && (
-            <FeatherIcon name="check" size={18} style={styles.check} />
-          )}
-        </View>
-      </Pressable>
-    );
   };
 
   const renderSelectedEupmyeondong = ({ item }: { item: SigunguAndEupmyeondongType }) => {
@@ -225,53 +79,6 @@ export default function NaturalDisasterBottomSheet({
           onPress={() => handleEupmyeondongItemDelete({ item })}
         />
       </Pressable>
-    );
-  };
-
-  const LeftTable = () => {
-    return (
-      <View style={styles.tableLeft}>
-        <View style={styles.tableTitle}>
-          <Text>시,도</Text>
-        </View>
-        <FlatList
-          data={sidoList}
-          renderItem={renderSido}
-          contentContainerStyle={styles.regionList}
-        />
-      </View>
-    );
-  };
-
-  const CenterComponent = () => {
-    return (
-      <View style={styles.tableCenter}>
-        <View style={styles.tableTitle}>
-          <Text>시,군,구</Text>
-        </View>
-        <FlatList
-          data={sigunguList}
-          renderItem={renderSigungu}
-          numColumns={1}
-          contentContainerStyle={styles.regionList}
-        />
-      </View>
-    );
-  };
-
-  const RightTable = () => {
-    return (
-      <View style={styles.tableRight}>
-        <View style={styles.tableTitle}>
-          <Text>동,읍,면</Text>
-        </View>
-        <FlatList
-          data={eupmyeondongList}
-          renderItem={renderEupmyeondong}
-          numColumns={1}
-          contentContainerStyle={styles.regionList}
-        />
-      </View>
     );
   };
 
@@ -299,9 +106,26 @@ export default function NaturalDisasterBottomSheet({
       <View style={styles.modalContainer}>
         <Text style={styles.title}>지역 선택</Text>
         <View style={styles.tableLayout}>
-          <LeftTable />
-          <CenterComponent />
-          <RightTable />
+          <SidoTable
+            sidoList={sidoList}
+            setSidoList={setSidoList}
+            setSigunguList={setSigunguList}
+            setEupmyeondongList={setEupmyeondongList}
+            selectedSido={selectedSido}
+            setSelectedSido={setSelectedSido}
+            setSelectedSigungu={setSelectedSigungu}
+          />
+          <SigunguTable
+            sigunguList={sigunguList}
+            setEupmyeondongList={setEupmyeondongList}
+            selectedSigungu={selectedSigungu}
+            setSelectedSigungu={setSelectedSigungu}
+          />
+          <EupmyeondongTable
+            setSelectedEupmyeondong={setSelectedEupmyeondong}
+            selectedEupmyeondong={selectedEupmyeondong}
+            eupmyeondongList={eupmyeondongList}
+          />
         </View>
       </View>
       {selectedEupmyeondong.length !== 0 && (
@@ -355,70 +179,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: `${COLOR.middleGray}`,
     paddingBottom: 40,
-  },
-  tableTitle: {
-    width: '100%',
-    height: 42,
-    borderBottomWidth: 1,
-    borderColor: `${COLOR.middleGray}`,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  tableLeft: {
-    flex: 1.3,
-    width: '100%',
-  },
-
-  tableCenter: {
-    flex: 2,
-    width: '100%',
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderColor: `${COLOR.middleGray}`,
-  },
-  tableRight: {
-    flex: 2,
-    width: '100%',
-  },
-  regionList: {
-    width: '100%',
-    alignItems: 'stretch',
-  },
-  regionItem: {
-    width: '100%',
-    height: 34,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  eupmyeondongItem: {
-    position: 'relative',
-  },
-  check: {
-    position: 'absolute',
-    top: -3,
-    right: -30,
-    color: `${COLOR.blue}`,
-  },
-
-  regionItemtext: {
-    fontSize: 12,
-    color: `${COLOR.gray}`,
-  },
-  selectedSido: {
-    backgroundColor: `${COLOR.blue}`,
-  },
-  selectedSidoText: {
-    color: `${COLOR.white}`,
-  },
-  selectedSigungu: {
-    backgroundColor: `${COLOR.lightBlue}`,
-  },
-  selectedSigunguText: {
-    color: `${COLOR.white}`,
-  },
-  selectedEupmyeondongText: {
-    color: `${COLOR.blue}`,
   },
   resultModal: {
     width: '100%',

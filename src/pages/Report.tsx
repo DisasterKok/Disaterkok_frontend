@@ -11,14 +11,9 @@ import {
 import { RootTabParamList } from '../../App';
 import COLOR from '../constants/colors';
 import FaIcon from 'react-native-vector-icons/FontAwesome';
+import { SigunguAndEupmyeondongType } from '../components/SelectRegion/types';
 
 export type ReportScreenProps = NativeStackScreenProps<RootTabParamList, 'Report'>;
-
-export type SigunguAndEupmyeondongType = {
-  id: number;
-  fullName: string;
-  singleName: string;
-};
 
 export interface CustomNavigationOptions extends Partial<NativeStackNavigationOptions> {
   tabBarStyle?: {
