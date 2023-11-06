@@ -1,8 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, Platform } from 'react-native';
 import COLOR from '../constants/colors';
-import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   NaturalDisasterBottomSheet,
@@ -28,101 +27,97 @@ export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenPr
     navigation.navigate('CompleteLogin');
   };
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <BottomSheetModalProvider>
-        <View style={styles.layout}>
-          <View style={styles.topContainer}>
-            <View style={styles.titleContainer}>
-              <View style={styles.title}>
-                <Text style={styles.titleText}>알림 받고 싶은</Text>
-                <Text style={styles.titleText}>재난 종류를 선택해주세요</Text>
-              </View>
-              <View style={styles.subTitle}>
-                <Text style={styles.subTitleText}>이후 설정에서 편집할 수 있으며,</Text>
-                <Text style={styles.subTitleText}>
-                  재난 알림을 받고 싶지 않은 경우 건너뛰기를 할 수 있어요
-                </Text>
-              </View>
-            </View>
-            <View style={styles.tabContainer}>
-              <Pressable
-                style={
-                  !naturalSelectedTags.length
-                    ? styles.tab
-                    : StyleSheet.compose(styles.tab, styles.tabActive)
-                }
-                onPress={() => handlePresentModalPress(naturalDisasterModalRef)}
-              >
-                <Text
-                  style={
-                    !naturalSelectedTags.length
-                      ? styles.tabText
-                      : StyleSheet.compose(styles.tabText, styles.tabTextActive)
-                  }
-                >
-                  자연재난
-                </Text>
-                <Icon
-                  name="angle-down"
-                  size={25}
-                  color={!naturalSelectedTags.length ? 'gray' : 'white'}
-                />
-              </Pressable>
-              <NaturalDisasterBottomSheet
-                bottomSheetModalRef={naturalDisasterModalRef}
-                selectedTags={naturalSelectedTags}
-                setSelectedTags={naturalSetSelectedTags}
-              />
-              <Pressable
-                style={
-                  !soicalSelectedTags.length
-                    ? styles.tab
-                    : StyleSheet.compose(styles.tab, styles.tabActive)
-                }
-                onPress={() => handlePresentModalPress(socialDisasterModalRef)}
-              >
-                <Text
-                  style={
-                    !soicalSelectedTags.length
-                      ? styles.tabText
-                      : StyleSheet.compose(styles.tabText, styles.tabTextActive)
-                  }
-                >
-                  사회재난
-                </Text>
-                <Icon
-                  name="angle-down"
-                  size={25}
-                  color={!soicalSelectedTags.length ? 'gray' : 'white'}
-                />
-
-                <SocialDisasterBottomSheet
-                  bottomSheetModalRef={socialDisasterModalRef}
-                  selectedTags={soicalSelectedTags}
-                  setSelectedTags={soicalSetSelectedTags}
-                />
-              </Pressable>
-            </View>
+    <View style={styles.layout}>
+      <View style={styles.topContainer}>
+        <View style={styles.titleContainer}>
+          <View style={styles.title}>
+            <Text style={styles.titleText}>알림 받고 싶은</Text>
+            <Text style={styles.titleText}>재난 종류를 선택해주세요</Text>
           </View>
-          <View style={styles.bottomContainer}>
-            <View style={styles.skip}>
-              <Text style={styles.skipText}>건너뛰기 {'>'}</Text>
-            </View>
-            <Pressable
-              style={
-                naturalSelectedTags.length || soicalSelectedTags.length
-                  ? StyleSheet.compose(styles.completeButton, styles.completeButtonActive)
-                  : styles.completeButton
-              }
-              disabled={!naturalSelectedTags.length && !soicalSelectedTags.length}
-              onPress={() => onSubmit()}
-            >
-              <Text style={styles.completeButtonText}>완료</Text>
-            </Pressable>
+          <View style={styles.subTitle}>
+            <Text style={styles.subTitleText}>이후 설정에서 편집할 수 있으며,</Text>
+            <Text style={styles.subTitleText}>
+              재난 알림을 받고 싶지 않은 경우 건너뛰기를 할 수 있어요
+            </Text>
           </View>
         </View>
-      </BottomSheetModalProvider>
-    </GestureHandlerRootView>
+        <View style={styles.tabContainer}>
+          <Pressable
+            style={
+              !naturalSelectedTags.length
+                ? styles.tab
+                : StyleSheet.compose(styles.tab, styles.tabActive)
+            }
+            onPress={() => handlePresentModalPress(naturalDisasterModalRef)}
+          >
+            <Text
+              style={
+                !naturalSelectedTags.length
+                  ? styles.tabText
+                  : StyleSheet.compose(styles.tabText, styles.tabTextActive)
+              }
+            >
+              자연재난
+            </Text>
+            <Icon
+              name="angle-down"
+              size={25}
+              color={!naturalSelectedTags.length ? 'gray' : 'white'}
+            />
+          </Pressable>
+          <NaturalDisasterBottomSheet
+            bottomSheetModalRef={naturalDisasterModalRef}
+            selectedTags={naturalSelectedTags}
+            setSelectedTags={naturalSetSelectedTags}
+          />
+          <Pressable
+            style={
+              !soicalSelectedTags.length
+                ? styles.tab
+                : StyleSheet.compose(styles.tab, styles.tabActive)
+            }
+            onPress={() => handlePresentModalPress(socialDisasterModalRef)}
+          >
+            <Text
+              style={
+                !soicalSelectedTags.length
+                  ? styles.tabText
+                  : StyleSheet.compose(styles.tabText, styles.tabTextActive)
+              }
+            >
+              사회재난
+            </Text>
+            <Icon
+              name="angle-down"
+              size={25}
+              color={!soicalSelectedTags.length ? 'gray' : 'white'}
+            />
+
+            <SocialDisasterBottomSheet
+              bottomSheetModalRef={socialDisasterModalRef}
+              selectedTags={soicalSelectedTags}
+              setSelectedTags={soicalSetSelectedTags}
+            />
+          </Pressable>
+        </View>
+      </View>
+      <View style={styles.bottomContainer}>
+        <View style={styles.skip}>
+          <Text style={styles.skipText}>건너뛰기 {'>'}</Text>
+        </View>
+        <Pressable
+          style={
+            naturalSelectedTags.length || soicalSelectedTags.length
+              ? StyleSheet.compose(styles.completeButton, styles.completeButtonActive)
+              : styles.completeButton
+          }
+          disabled={!naturalSelectedTags.length && !soicalSelectedTags.length}
+          onPress={() => onSubmit()}
+        >
+          <Text style={styles.completeButtonText}>완료</Text>
+        </Pressable>
+      </View>
+    </View>
   );
 }
 
