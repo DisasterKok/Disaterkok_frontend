@@ -160,6 +160,7 @@ export default function Report({ navigation }: ReportScreenProps) {
           )}
           numColumns={1}
           contentContainerStyle={styles.articleList}
+          scrollEnabled={false}
         />
 
         {/* 모달 */}
