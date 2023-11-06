@@ -9,7 +9,8 @@ const COLOR = {
   lightGray: '#F0F0F0',
   red: '#F53535',
   blue: '#2C58F4',
-  lightBlue: '#8BA3F9',
+  middleBlue: '#8BA3F9',
+  lightBlue: '#ECF0FE',
 };
 
 export default COLOR;

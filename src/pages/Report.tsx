@@ -14,6 +14,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SigunguAndEupmyeondongType } from '../components/SelectRegion/types';
 import SelectDisasterBottomSheet from '../components/BottomSheetModal/SelectDisasterBottomSheet';
 import { DisasterType } from '../components/SelectDisaster/types';
+import ReportArticleCard from '../components/ReportArticle/ReportArticleCard';
 
 export type ReportScreenProps = NativeStackScreenProps<RootTabParamList, 'Report'>;
 
@@ -138,6 +139,8 @@ export default function Report({ navigation }: ReportScreenProps) {
           />
         </Pressable>
       </View>
+
+      <ReportArticleCard />
 
       {/* 모달 */}
       <SelectRegionBottomSheet
