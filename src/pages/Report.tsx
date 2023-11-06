@@ -13,6 +13,7 @@ import FaIcon from 'react-native-vector-icons/FontAwesome';
 import { SigunguAndEupmyeondongType } from '../components/SelectRegion/types';
 import SelectDisasterBottomSheet from '../components/BottomSheetModal/SelectDisasterBottomSheet';
 import { DisasterType } from '../components/SelectDisaster/types';
+import { TabActions } from '@react-navigation/native';
 
 export type ReportScreenProps = NativeStackScreenProps<RootTabParamList, 'Report'>;
 
@@ -31,7 +32,7 @@ export default function Report({ navigation }: ReportScreenProps) {
       tabBarStyle: {
         display: 'none',
       },
-    } as CustomNavigationOptions); // 타입 단언 사용
+    } as CustomNavigationOptions);
   }, [navigation]);
 
   const handlePresentModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
@@ -39,67 +40,111 @@ export default function Report({ navigation }: ReportScreenProps) {
     showTabBar();
   }, []);
 
+  const [selectedTab, setSelectedTab] = useState('전국');
   const [selectedEupmyeondong, setSelectedEupmyeondong] = useState<SigunguAndEupmyeondongType[]>(
     [],
   );
   const [selectedDisaster, setSelectedDisaster] = useState<DisasterType[]>([]);
 
+  const handleTabPress = (tabName: string) => {
+    setSelectedTab(tabName);
+  };
+
   return (
-    <View>
-      <Pressable
-        onPress={() => handlePresentModalPress(selectRegionModalRef)}
-        style={
-          selectedEupmyeondong.length === 0
-            ? styles.regionSelect
-            : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
-        }
-      >
-        <Text
+    <View style={styles.layout}>
+      <View style={styles.tabContainer}>
+        <Pressable
+          style={
+            selectedTab === '전국' ? StyleSheet.compose(styles.tab, styles.selectedTab) : styles.tab
+          }
+          onPress={() => handleTabPress('전국')}
+        >
+          <Text
+            style={
+              selectedTab === '전국'
+                ? StyleSheet.compose(styles.tabText, styles.selectedTabText)
+                : styles.tabText
+            }
+          >
+            전국
+          </Text>
+        </Pressable>
+        <Pressable
+          style={
+            selectedTab === '우리동네'
+              ? StyleSheet.compose(styles.tab, styles.selectedTab)
+              : styles.tab
+          }
+          onPress={() => handleTabPress('우리동네')}
+        >
+          <Text
+            style={
+              selectedTab === '우리동네'
+                ? StyleSheet.compose(styles.tabText, styles.selectedTabText)
+                : styles.tabText
+            }
+          >
+            우리동네
+          </Text>
+        </Pressable>
+      </View>
+      <View style={styles.filterButtonContainer}>
+        <Pressable
+          onPress={() => handlePresentModalPress(selectRegionModalRef)}
           style={
             selectedEupmyeondong.length === 0
-              ? styles.regionSelectText
-              : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
+              ? styles.regionSelect
+              : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
           }
         >
-          지역
-        </Text>
-        <FaIcon
-          name="angle-down"
-          size={20}
-          color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
-        />
-      </Pressable>
+          <Text
+            style={
+              selectedEupmyeondong.length === 0
+                ? styles.regionSelectText
+                : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
+            }
+          >
+            지역
+          </Text>
+          <FaIcon
+            name="angle-down"
+            size={20}
+            color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
+          />
+        </Pressable>
+
+        <Pressable
+          onPress={() => handlePresentModalPress(selectDisasterModalRef)}
+          style={
+            selectedDisaster.length === 0
+              ? styles.regionSelect
+              : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
+          }
+        >
+          <Text
+            style={
+              selectedDisaster.length === 0
+                ? styles.regionSelectText
+                : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
+            }
+          >
+            재난
+          </Text>
+          <FaIcon
+            name="angle-down"
+            size={20}
+            color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
+          />
+        </Pressable>
+      </View>
+
+      {/* 모달 */}
       <SelectRegionBottomSheet
         bottomSheetModalRef={selectRegionModalRef}
         navigation={navigation}
         selectedEupmyeondong={selectedEupmyeondong}
         setSelectedEupmyeondong={setSelectedEupmyeondong}
       />
-
-      <Pressable
-        onPress={() => handlePresentModalPress(selectDisasterModalRef)}
-        style={
-          selectedDisaster.length === 0
-            ? styles.regionSelect
-            : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
-        }
-      >
-        <Text
-          style={
-            selectedDisaster.length === 0
-              ? styles.regionSelectText
-              : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
-          }
-        >
-          재난
-        </Text>
-        <FaIcon
-          name="angle-down"
-          size={20}
-          color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
-        />
-      </Pressable>
-
       <SelectDisasterBottomSheet
         bottomSheetModalRef={selectDisasterModalRef}
         navigation={navigation}
@@ -111,6 +156,32 @@ export default function Report({ navigation }: ReportScreenProps) {
 }
 
 const styles = StyleSheet.create({
+  layout: {
+    padding: 20,
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 10,
+  },
+  tab: {
+    paddingBottom: 10,
+  },
+  tabText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: `${COLOR.middleGray}`,
+  },
+  selectedTab: {
+    borderBottomWidth: 2,
+  },
+  selectedTabText: {
+    color: `${COLOR.black}`,
+  },
+  filterButtonContainer: {
+    flexDirection: 'row',
+    gap: 5,
+  },
   regionSelect: {
     borderWidth: 1,
     borderColor: `${COLOR.gray}`,

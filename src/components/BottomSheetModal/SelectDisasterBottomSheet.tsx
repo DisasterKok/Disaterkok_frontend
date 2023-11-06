@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderTopWidth: 1,
-    borderColor: `${COLOR.middleGray}`,
+    borderColor: `${COLOR.lightGray}`,
     paddingBottom: 40,
   },
   resultModal: {

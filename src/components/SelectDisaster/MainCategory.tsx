@@ -76,14 +76,14 @@ const styles = StyleSheet.create({
     flex: 1.2,
     width: '100%',
     borderRightWidth: 1,
-    borderColor: `${COLOR.middleGray}`,
+    borderColor: `${COLOR.lightGray}`,
   },
 
   tableTitle: {
     width: '100%',
     height: 42,
     borderBottomWidth: 1,
-    borderColor: `${COLOR.middleGray}`,
+    borderColor: `${COLOR.lightGray}`,
     alignItems: 'center',
     justifyContent: 'center',
   },
