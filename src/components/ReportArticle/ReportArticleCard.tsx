@@ -1,29 +1,37 @@
 import React from 'react';
-import { StyleSheet, View, Text, Platform } from 'react-native';
+import { StyleSheet, View, Text, Platform, FlatList } from 'react-native';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import COLOR from '../../constants/colors';
+import { ReportArticleType } from './types';
 
-export default function ReportArticleCard() {
+export default function ReportArticleCard({
+  id,
+  elapsedTime,
+  viewCount,
+  likeCount,
+  title,
+  tags,
+}: ReportArticleType) {
   return (
     <View style={styles.cardLayout}>
       <View style={styles.img}>
         <View style={styles.topContainer}>
           <View style={styles.topLeftContainer}>
             <View style={styles.topLeftItem}>
-              <Text style={styles.topLeftItemText}>12초 전</Text>
+              <Text style={styles.topLeftItemText}>{elapsedTime}초 전</Text>
             </View>
             <View style={styles.topLeftItem}>
               <Text style={styles.topLeftItemText}>|</Text>
             </View>
             <View style={styles.topLeftItem}>
               <FoundationIcon name="eye" size={15} color={COLOR.white} />
-              <Text style={styles.topLeftItemText}>1,234</Text>
+              <Text style={styles.topLeftItemText}>{viewCount}</Text>
             </View>
             <View style={styles.topLeftItem}>
               <AntDesignIcon name="like2" size={10} color={COLOR.white} />
-              <Text style={styles.topLeftItemText}>1,234</Text>
+              <Text style={styles.topLeftItemText}>{likeCount}</Text>
             </View>
           </View>
           <EntypoIcon name="dots-three-vertical" size={15} color={COLOR.white} />
@@ -31,19 +39,19 @@ export default function ReportArticleCard() {
       </View>
       <View style={styles.bottomContainer}>
         <View style={styles.title}>
-          <Text style={styles.titleText}>제목입니다제목입니다제목입니다</Text>
+          <Text style={styles.titleText}>{title}</Text>
         </View>
-        <View style={styles.tagContainer}>
-          <View style={styles.tag}>
-            <Text style={styles.tagText}>태그1</Text>
-          </View>
-          <View style={styles.tag}>
-            <Text style={styles.tagText}>태그1123123</Text>
-          </View>
-          <View style={styles.tag}>
-            <Text style={styles.tagText}>태그11111</Text>
-          </View>
-        </View>
+        <FlatList
+          data={tags}
+          renderItem={({ item }) => (
+            <View style={styles.tag}>
+              <Text style={styles.tagText}>{item}</Text>
+            </View>
+          )}
+          numColumns={1}
+          horizontal
+          contentContainerStyle={styles.tagContainer}
+        />
       </View>
     </View>
   );
@@ -51,7 +59,7 @@ export default function ReportArticleCard() {
 
 const styles = StyleSheet.create({
   cardLayout: {
-    width: 346,
+    width: 335,
     height: 280,
     backgroundColor: `${COLOR.white}`,
     ...Platform.select({
