@@ -10,10 +10,10 @@ import {
 import { RootTabParamList } from '../../App';
 import COLOR from '../constants/colors';
 import FaIcon from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SigunguAndEupmyeondongType } from '../components/SelectRegion/types';
 import SelectDisasterBottomSheet from '../components/BottomSheetModal/SelectDisasterBottomSheet';
 import { DisasterType } from '../components/SelectDisaster/types';
-import { TabActions } from '@react-navigation/native';
 
 export type ReportScreenProps = NativeStackScreenProps<RootTabParamList, 'Report'>;
 
@@ -86,6 +86,7 @@ export default function Report({ navigation }: ReportScreenProps) {
           >
             우리동네
           </Text>
+          {selectedTab === '우리동네' && <FaIcon name="angle-down" size={15} color={COLOR.black} />}
         </Pressable>
       </View>
       <View style={styles.filterButtonContainer}>
@@ -151,13 +152,18 @@ export default function Report({ navigation }: ReportScreenProps) {
         selectedDisaster={selectedDisaster}
         setSelectedDisaster={setSelectedDisaster}
       />
+      <Pressable style={styles.refresh}>
+        <Ionicons name="refresh" size={20} color={COLOR.white} />
+      </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   layout: {
+    height: '100%',
     padding: 20,
+    position: 'relative',
   },
   tabContainer: {
     flexDirection: 'row',
@@ -166,6 +172,8 @@ const styles = StyleSheet.create({
   },
   tab: {
     paddingBottom: 10,
+    flexDirection: 'row',
+    gap: 7,
   },
   tabText: {
     fontSize: 16,
@@ -204,5 +212,16 @@ const styles = StyleSheet.create({
   },
   regionSelectTextActive: {
     color: `${COLOR.white}`,
+  },
+  refresh: {
+    position: 'absolute',
+    right: 15,
+    bottom: 15,
+    backgroundColor: `${COLOR.blue}`,
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
