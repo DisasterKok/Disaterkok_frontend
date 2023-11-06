@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
 
   selectedSigungu: {
-    backgroundColor: `${COLOR.lightBlue}`,
+    backgroundColor: `${COLOR.middleBlue}`,
   },
   selectedSigunguText: {
     color: `${COLOR.white}`,

@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View, ScrollView } from 'react-native';
 import { SelectRegionBottomSheet } from '../components/BottomSheetModal';
 
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
@@ -14,6 +14,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SigunguAndEupmyeondongType } from '../components/SelectRegion/types';
 import SelectDisasterBottomSheet from '../components/BottomSheetModal/SelectDisasterBottomSheet';
 import { DisasterType } from '../components/SelectDisaster/types';
+import ReportArticleCard from '../components/ReportArticle/ReportArticleCard';
+import { ARTICLE_LIST } from '../constants/DummyArticle';
 
 export type ReportScreenProps = NativeStackScreenProps<RootTabParamList, 'Report'>;
 
@@ -52,106 +54,128 @@ export default function Report({ navigation }: ReportScreenProps) {
 
   return (
     <View style={styles.layout}>
-      <View style={styles.tabContainer}>
-        <Pressable
-          style={
-            selectedTab === '전국' ? StyleSheet.compose(styles.tab, styles.selectedTab) : styles.tab
-          }
-          onPress={() => handleTabPress('전국')}
-        >
-          <Text
+      <ScrollView style={styles.contentLayout}>
+        <View style={styles.tabContainer}>
+          <Pressable
             style={
               selectedTab === '전국'
-                ? StyleSheet.compose(styles.tabText, styles.selectedTabText)
-                : styles.tabText
+                ? StyleSheet.compose(styles.tab, styles.selectedTab)
+                : styles.tab
             }
+            onPress={() => handleTabPress('전국')}
           >
-            전국
-          </Text>
-        </Pressable>
-        <Pressable
-          style={
-            selectedTab === '우리동네'
-              ? StyleSheet.compose(styles.tab, styles.selectedTab)
-              : styles.tab
-          }
-          onPress={() => handleTabPress('우리동네')}
-        >
-          <Text
+            <Text
+              style={
+                selectedTab === '전국'
+                  ? StyleSheet.compose(styles.tabText, styles.selectedTabText)
+                  : styles.tabText
+              }
+            >
+              전국
+            </Text>
+          </Pressable>
+          <Pressable
             style={
               selectedTab === '우리동네'
-                ? StyleSheet.compose(styles.tabText, styles.selectedTabText)
-                : styles.tabText
+                ? StyleSheet.compose(styles.tab, styles.selectedTab)
+                : styles.tab
             }
+            onPress={() => handleTabPress('우리동네')}
           >
-            우리동네
-          </Text>
-          {selectedTab === '우리동네' && <FaIcon name="angle-down" size={15} color={COLOR.black} />}
-        </Pressable>
-      </View>
-      <View style={styles.filterButtonContainer}>
-        <Pressable
-          onPress={() => handlePresentModalPress(selectRegionModalRef)}
-          style={
-            selectedEupmyeondong.length === 0
-              ? styles.regionSelect
-              : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
-          }
-        >
-          <Text
+            <Text
+              style={
+                selectedTab === '우리동네'
+                  ? StyleSheet.compose(styles.tabText, styles.selectedTabText)
+                  : styles.tabText
+              }
+            >
+              우리동네
+            </Text>
+            {selectedTab === '우리동네' && (
+              <FaIcon name="angle-down" size={15} color={COLOR.black} />
+            )}
+          </Pressable>
+        </View>
+        <View style={styles.filterButtonContainer}>
+          <Pressable
+            onPress={() => handlePresentModalPress(selectRegionModalRef)}
             style={
               selectedEupmyeondong.length === 0
-                ? styles.regionSelectText
-                : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
+                ? styles.regionSelect
+                : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
             }
           >
-            지역
-          </Text>
-          <FaIcon
-            name="angle-down"
-            size={20}
-            color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
-          />
-        </Pressable>
+            <Text
+              style={
+                selectedEupmyeondong.length === 0
+                  ? styles.regionSelectText
+                  : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
+              }
+            >
+              지역
+            </Text>
+            <FaIcon
+              name="angle-down"
+              size={20}
+              color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
+            />
+          </Pressable>
 
-        <Pressable
-          onPress={() => handlePresentModalPress(selectDisasterModalRef)}
-          style={
-            selectedDisaster.length === 0
-              ? styles.regionSelect
-              : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
-          }
-        >
-          <Text
+          <Pressable
+            onPress={() => handlePresentModalPress(selectDisasterModalRef)}
             style={
               selectedDisaster.length === 0
-                ? styles.regionSelectText
-                : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
+                ? styles.regionSelect
+                : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
             }
           >
-            재난
-          </Text>
-          <FaIcon
-            name="angle-down"
-            size={20}
-            color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
-          />
-        </Pressable>
-      </View>
+            <Text
+              style={
+                selectedDisaster.length === 0
+                  ? styles.regionSelectText
+                  : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
+              }
+            >
+              재난
+            </Text>
+            <FaIcon
+              name="angle-down"
+              size={20}
+              color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
+            />
+          </Pressable>
+        </View>
 
-      {/* 모달 */}
-      <SelectRegionBottomSheet
-        bottomSheetModalRef={selectRegionModalRef}
-        navigation={navigation}
-        selectedEupmyeondong={selectedEupmyeondong}
-        setSelectedEupmyeondong={setSelectedEupmyeondong}
-      />
-      <SelectDisasterBottomSheet
-        bottomSheetModalRef={selectDisasterModalRef}
-        navigation={navigation}
-        selectedDisaster={selectedDisaster}
-        setSelectedDisaster={setSelectedDisaster}
-      />
+        <FlatList
+          data={ARTICLE_LIST}
+          renderItem={({ item }) => (
+            <ReportArticleCard
+              id={item.id}
+              elapsedTime={item.elapsedTime}
+              viewCount={item.viewCount}
+              likeCount={item.likeCount}
+              title={item.title}
+              tags={item.tags}
+            />
+          )}
+          numColumns={1}
+          contentContainerStyle={styles.articleList}
+        />
+
+        {/* 모달 */}
+        <SelectRegionBottomSheet
+          bottomSheetModalRef={selectRegionModalRef}
+          navigation={navigation}
+          selectedEupmyeondong={selectedEupmyeondong}
+          setSelectedEupmyeondong={setSelectedEupmyeondong}
+        />
+        <SelectDisasterBottomSheet
+          bottomSheetModalRef={selectDisasterModalRef}
+          navigation={navigation}
+          selectedDisaster={selectedDisaster}
+          setSelectedDisaster={setSelectedDisaster}
+        />
+      </ScrollView>
       <Pressable style={styles.refresh}>
         <Ionicons name="refresh" size={20} color={COLOR.white} />
       </Pressable>
@@ -161,9 +185,11 @@ export default function Report({ navigation }: ReportScreenProps) {
 
 const styles = StyleSheet.create({
   layout: {
-    height: '100%',
-    padding: 20,
     position: 'relative',
+    height: '100%',
+  },
+  contentLayout: {
+    padding: 20,
   },
   tabContainer: {
     flexDirection: 'row',
@@ -189,6 +215,7 @@ const styles = StyleSheet.create({
   filterButtonContainer: {
     flexDirection: 'row',
     gap: 5,
+    marginBottom: 20,
   },
   regionSelect: {
     borderWidth: 1,
@@ -223,5 +250,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  articleList: {
+    gap: 10,
   },
 });
