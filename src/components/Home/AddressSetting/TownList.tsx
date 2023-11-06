@@ -11,6 +11,7 @@ import {
 import COLOR from '../../../constants/colors';
 import Separator from '../../Separator';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 const AddressDataList = [
   {
@@ -49,16 +50,36 @@ const AddressDataList = [
     default: false,
     alarm: true,
   },
+  {
+    addressData: {
+      address: '서울특별시 서초구 서초동',
+      roadAddress: '서울특별시 서초구 서초대로 396',
+      zoneCode: '06626',
+    },
+    detail: '',
+    aliasType: 'etc',
+    name: '본가',
+    default: false,
+    alarm: true,
+  },
 ];
 
-const TownList = ({ currentSnap }: { currentSnap?: number }) => {
+const TownList = ({ height }: { height: number }) => {
   const [addressDataList, setAddressDataList] = React.useState(AddressDataList);
+  const [isEditMode, setIsEditMode] = React.useState<boolean>(false);
   const [isUpdateAliasOpen, setIsUpdateAliasOpen] = React.useState(false);
   const [updatingIndex, setUpdatingIndex] = React.useState<number>(0);
 
+  const viewHeight = Dimensions.get('window').height * height - 130;
+
   const handleAddTown = () => {};
 
-  const handleEditTown = () => {};
+  const handleEditTown = () => {
+    setIsEditMode(!isEditMode);
+  };
+
+  const handleEditAlias = (index: number) => {};
+  const handleDeleteTown = (index: number) => {};
 
   const handleToggleDefault = (index: number) => {
     if (addressDataList[index].default) return;
@@ -80,31 +101,24 @@ const TownList = ({ currentSnap }: { currentSnap?: number }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { height: viewHeight }]}>
       <Text style={styles.pageName}>우리동네</Text>
       <View style={styles.buttonSection}>
         <TouchableOpacity onPress={handleAddTown} style={styles.addButton}>
-          <Text style={styles.addButtonText}>우리동네 추가히기</Text>
+          <EntypoIcon name="plus" size={16} />
+          <Text style={styles.addButtonText}>우리동네 추가하기</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleEditTown} style={styles.editButton}>
-          <Text style={styles.editButtonText}>편집</Text>
+          <Text style={styles.editButtonText}>{isEditMode ? '완료' : '편집'}</Text>
         </TouchableOpacity>
       </View>
 
       <Separator />
-      <ScrollView style={[styles.list, {}]}>
+      <ScrollView style={[styles.list]}>
         <View>
           {addressDataList &&
             addressDataList.map((data, index) => (
-              <TouchableOpacity
-                key={index}
-                activeOpacity={0.8}
-                style={styles.listItemContainer}
-                onPress={() => {
-                  setUpdatingIndex(index);
-                  setIsUpdateAliasOpen(true);
-                }}
-              >
+              <View key={index} style={styles.listItemContainer}>
                 <View style={styles.listItem}>
                   <Text style={styles.listName}>{data.name}</Text>
                   <View style={styles.roadBox}>
@@ -116,47 +130,69 @@ const TownList = ({ currentSnap }: { currentSnap?: number }) => {
                     </Text>
                   </View>
                 </View>
-                <View style={styles.listButton}>
-                  <Pressable onPress={() => handleToggleDefault(index)}>
-                    <FeatherIcon
-                      name="check-circle"
-                      size={24}
-                      style={[styles.itemButtonUnchecked, data.default && styles.itemButtonChecked]}
-                    />
-                  </Pressable>
-                  <Pressable
-                    onPress={() => handleCheckAlarm(index)}
-                    style={{
-                      position: 'relative',
-                      width: 24,
-                      height: 24,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <View
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        position: 'absolute',
-                        display: 'flex',
-                        borderWidth: 2,
-                        borderColor: data.alarm ? `${COLOR.primary}` : `${COLOR.lightGray}`,
-                        borderRadius: 12,
-                      }}
-                    />
-                    <FeatherIcon
-                      name="bell"
-                      size={16}
-                      style={[
-                        styles.itemButtonUnchecked,
-                        data.alarm && styles.itemButtonChecked,
-                        { position: 'absolute', top: 4, left: 4 },
-                      ]}
-                    />
-                  </Pressable>
+                <View style={[styles.listButton, { gap: isEditMode ? 5 : 10 }]}>
+                  {isEditMode ? (
+                    <>
+                      <TouchableOpacity
+                        onPress={() => handleEditAlias(index)}
+                        style={styles.editDeleteButton}
+                      >
+                        <Text style={styles.editDeleteText}>수정</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => handleDeleteTown(index)}
+                        style={styles.editDeleteButton}
+                      >
+                        <Text style={styles.editDeleteText}>삭제</Text>
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    <>
+                      <TouchableOpacity onPress={() => handleToggleDefault(index)}>
+                        <FeatherIcon
+                          name="check-circle"
+                          size={24}
+                          style={[
+                            styles.itemButtonUnchecked,
+                            data.default && styles.itemButtonChecked,
+                          ]}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => handleCheckAlarm(index)}
+                        style={{
+                          position: 'relative',
+                          width: 24,
+                          height: 24,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <View
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            position: 'absolute',
+                            display: 'flex',
+                            borderWidth: 2,
+                            borderColor: data.alarm ? `${COLOR.primary}` : `${COLOR.lightGray}`,
+                            borderRadius: 12,
+                          }}
+                        />
+                        <FeatherIcon
+                          name="bell"
+                          size={16}
+                          style={[
+                            styles.itemButtonUnchecked,
+                            data.alarm && styles.itemButtonChecked,
+                            { position: 'absolute', top: 4, left: 4 },
+                          ]}
+                        />
+                      </TouchableOpacity>
+                    </>
+                  )}
                 </View>
-              </TouchableOpacity>
+              </View>
             ))}
         </View>
       </ScrollView>
@@ -190,11 +226,13 @@ const styles = StyleSheet.create({
   addButton: {
     height: '100%',
     width: '80%',
+    display: 'flex',
+    flexDirection: 'row',
     paddingLeft: 24,
-    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 2,
   },
   addButtonText: {
-    color: `${COLOR.black}`,
     fontSize: 14,
     fontWeight: '500',
   },
@@ -210,6 +248,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   list: {
+    display: 'flex',
     paddingLeft: 22,
     paddingRight: 22,
     width: '100%',
@@ -227,14 +266,14 @@ const styles = StyleSheet.create({
   listItem: {
     display: 'flex',
     flexDirection: 'column',
-    width: '80%',
+    width: '68%',
   },
   listButton: {
-    width: '17%',
+    width: '32%',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
   },
   itemButtonUnchecked: {
     color: `${COLOR.lightGray}`,
@@ -277,6 +316,20 @@ const styles = StyleSheet.create({
     color: `${COLOR.gray}`,
     height: 15,
     alignItems: 'center',
+  },
+  editDeleteButton: {
+    width: 50,
+    height: 25,
+    padding: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: `${COLOR.lightGray}`,
+    borderRadius: 15,
+  },
+  editDeleteText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: `${COLOR.darkGray}`,
   },
   Button: {
     backgroundColor: `${COLOR.middleGray}`,
