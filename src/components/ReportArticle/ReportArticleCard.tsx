@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Platform, FlatList } from 'react-native';
+import { StyleSheet, View, Text, Platform, FlatList, Pressable } from 'react-native';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
@@ -15,7 +15,7 @@ export default function ReportArticleCard({
   tags,
 }: ReportArticleType) {
   return (
-    <View style={styles.cardLayout}>
+    <Pressable style={styles.cardLayout}>
       <View style={styles.img}>
         <View style={styles.topContainer}>
           <View style={styles.topLeftContainer}>
@@ -53,7 +53,7 @@ export default function ReportArticleCard({
           contentContainerStyle={styles.tagContainer}
         />
       </View>
-    </View>
+    </Pressable>
   );
 }
 

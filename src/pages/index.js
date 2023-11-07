@@ -7,3 +7,4 @@ export { default as SelectLocation } from './SelectLocation';
 export { default as SetName } from './SetName';
 export { default as DisasterNotiSettings } from './DisasterNotiSettings';
 export { default as CompleteLogin } from './CompleteLogin';
+export { default as ReportArticleDetail } from './ReportArticleDetail';
