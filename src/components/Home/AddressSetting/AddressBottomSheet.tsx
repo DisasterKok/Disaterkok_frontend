@@ -6,7 +6,7 @@ import {
   BottomSheetFooterProps,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Animated } from 'react-native';
 import TownList from './TownList';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -42,28 +42,30 @@ const AddressBottomSheet = ({
     setCurrentSnapPointIndex(toIndex);
   }, []);
 
-  const renderFooter = useCallback(
-    (props: any) => (
-      <BottomSheetFooter {...props} bottomInset={0}>
-        <View style={{ width: '100%', height: 126, backgroundColor: '#fff' }}></View>
-      </BottomSheetFooter>
-    ),
-    [],
-  );
+  // const renderFooter = useCallback(
+  //   (props: any) => (
+  //     <BottomSheetFooter {...props} bottomInset={0}>
+  //       <View style={{ width: '100%', height: 126, backgroundColor: '#fff' }}></View>
+  //     </BottomSheetFooter>
+  //   ),
+  //   [],
+  // );
 
   return (
-    <BottomSheetModal
-      ref={bottomSheetModalRef}
-      index={0}
-      backdropComponent={renderBackdrop}
-      snapPoints={snapPoints}
-      footerComponent={renderFooter}
-      onAnimate={handleSheetChanges}
-    >
-      <View style={styles.modalContainer}>
-        <TownList height={currentSnapPointIndex < 1 ? 0.6 : 0.9} />
-      </View>
-    </BottomSheetModal>
+    <>
+      <BottomSheetModal
+        ref={bottomSheetModalRef}
+        index={0}
+        backdropComponent={renderBackdrop}
+        snapPoints={snapPoints}
+        // footerComponent={renderFooter}
+        onAnimate={handleSheetChanges}
+      >
+        <View style={styles.modalContainer}>
+          <TownList height={currentSnapPointIndex < 1 ? 0.6 : 0.9} />
+        </View>
+      </BottomSheetModal>
+    </>
   );
 };
 
