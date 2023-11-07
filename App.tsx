@@ -18,6 +18,7 @@ import Onboarding from './src/pages/Onboarding';
 import useAuth from './src/states/useAuth';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import ReportPost from './src/pages/ReportPost';
 
 export type RootTabParamList = {
   Home: undefined;
@@ -52,11 +53,7 @@ function App() {
                 component={Home}
                 options={{ headerShown: false, title: '홈' }}
               />
-              <Tab.Screen
-                name="Report"
-                component={ReportArticleDetail}
-                options={{ title: '실시간 제보' }}
-              />
+              <Tab.Screen name="Report" component={ReportPost} options={{ title: '실시간 제보' }} />
               <Tab.Screen name="Solution" component={Solution} options={{ title: '솔루션' }} />
             </Tab.Navigator>
           ) : (

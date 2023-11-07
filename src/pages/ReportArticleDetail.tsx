@@ -6,24 +6,12 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import COLOR from '../constants/colors';
 import { FlatList } from 'react-native-gesture-handler';
-import { CustomNavigationOptions } from './Report';
-import { useNavigation } from '@react-navigation/native';
 
 export default function ReportArticleDetail() {
   //   const { postId, parms } = route.params; // 게시글 ID
   //   // 추후에 게시글 ID에 기반하여 해당 게시글의 상세 정보를 표시하도록 작업하기
 
   const { id, time, viewCount, likeCount, title, userName, tags, content, isLike } = ARTICLE;
-
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    navigation.setOptions({
-      tabBarStyle: {
-        display: 'none',
-      },
-    } as CustomNavigationOptions);
-  }, []);
 
   return (
     <ScrollView style={styles.layout}>
