@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native';
-import { ARTICLE_LIST } from '../constants/DummyArticle';
+import { ARTICLE } from '../constants/DummyArticle';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -13,7 +13,7 @@ export default function ReportArticleDetail() {
   //   const { postId, parms } = route.params; // 게시글 ID
   //   // 추후에 게시글 ID에 기반하여 해당 게시글의 상세 정보를 표시하도록 작업하기
 
-  const { id, elapsedTime, viewCount, likeCount, title, tags } = ARTICLE_LIST[0];
+  const { id, time, viewCount, likeCount, title, userName, tags, content, isLike } = ARTICLE;
 
   const navigation = useNavigation();
 
@@ -41,13 +41,13 @@ export default function ReportArticleDetail() {
         <Text style={styles.titleText}>{title}</Text>
       </View>
       <View style={styles.time}>
-        <Text style={styles.timeText}>2023년 9월 17일 16시 32분 58초</Text>
+        <Text style={styles.timeText}>{time}</Text>
       </View>
 
       <View style={styles.contentTop}>
         <View style={styles.user}>
           <AntDesignIcon name="user" size={20} color={COLOR.middleGray} />
-          <Text style={styles.userText}>익명 37</Text>
+          <Text style={styles.userText}>{userName}</Text>
         </View>
         <View style={styles.solutionGuide}>
           <FeatherIcon name="info" size={10} color={COLOR.blue} />
@@ -69,13 +69,25 @@ export default function ReportArticleDetail() {
       />
 
       <View style={styles.content}>
-        <Text style={styles.contentText}>내용입니다내용입니다내용입니다내용입니다내용입니다</Text>
+        <Text style={styles.contentText}>{content}</Text>
       </View>
 
       <View style={styles.likeWrapper}>
-        <View style={styles.likeContainer}>
-          <AntDesignIcon name="like2" size={20} color={COLOR.blue} />
-          <Text style={styles.likeText}>도움이 됐어요</Text>
+        <View
+          style={
+            isLike
+              ? StyleSheet.compose(styles.likeContainer, styles.likeContainerActive)
+              : styles.likeContainer
+          }
+        >
+          <AntDesignIcon name="like2" size={20} color={isLike ? COLOR.white : COLOR.blue} />
+          <Text
+            style={
+              isLike ? StyleSheet.compose(styles.likeText, styles.likeTextActive) : styles.likeText
+            }
+          >
+            도움이 됐어요
+          </Text>
         </View>
       </View>
     </ScrollView>
@@ -208,9 +220,16 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  likeContainerActive: {
+    backgroundColor: `${COLOR.blue}`,
+    borderWidth: 0,
+  },
   likeText: {
     fontSize: 12,
     fontWeight: '600',
     color: `${COLOR.blue}`,
+  },
+  likeTextActive: {
+    color: `${COLOR.white}`,
   },
 });
