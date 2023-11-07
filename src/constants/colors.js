@@ -5,10 +5,12 @@ const COLOR = {
   black: '#000000',
   gray: '#666666',
   darkGray: '#121212',
-  middleGray: '#DEDEDE',
-  lightGray: '#F4F4F4',
+  middleGray: '#9A9A9A',
+  lightGray: '#F0F0F0',
   red: '#F53535',
   blue: '#2C58F4',
+  middleBlue: '#8BA3F9',
+  lightBlue: '#ECF0FE',
 };
 
 export default COLOR;

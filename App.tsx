@@ -15,15 +15,20 @@ import {
 } from './src/pages';
 import Onboarding from './src/pages/Onboarding';
 import useAuth from './src/states/useAuth';
-
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export type LoggedInParamList = {
   Orders: undefined;
   Settings: undefined;
   Delivery: undefined;
   Complete: { orderId: string };
+};
+
+export type RootTabParamList = {
+  Home: undefined;
+  Report: undefined;
+  Solution: undefined;
 };
 
 export type RootStackParamList = {
@@ -36,7 +41,7 @@ export type RootStackParamList = {
   CompleteLogin: undefined;
 };
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<RootTabParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App() {
@@ -46,14 +51,14 @@ function App() {
       <BottomSheetModalProvider>
         <NavigationContainer>
           {isLoggedIn ? (
-            <Tab.Navigator screenOptions={{ tabBarStyle: { zIndex: 1000 } }}>
+            <Tab.Navigator>
               <Tab.Screen
-                name="home"
+                name="Home"
                 component={Home}
                 options={{ headerShown: false, title: '홈' }}
               />
-              <Tab.Screen name="report" component={Report} options={{ title: '제보' }} />
-              <Tab.Screen name="solution" component={Solution} options={{ title: '솔루션' }} />
+              <Tab.Screen name="Report" component={Report} options={{ title: '실시간 제보' }} />
+              <Tab.Screen name="Solution" component={Solution} options={{ title: '솔루션' }} />
             </Tab.Navigator>
           ) : (
             <Stack.Navigator>
