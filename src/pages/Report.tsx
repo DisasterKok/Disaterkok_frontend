@@ -16,6 +16,7 @@ import SelectDisasterBottomSheet from '../components/BottomSheetModal/SelectDisa
 import { DisasterType } from '../components/SelectDisaster/types';
 import ReportArticleCard from '../components/ReportArticle/ReportArticleCard';
 import { ARTICLE_LIST } from '../constants/DummyArticle';
+import { useNavigation } from '@react-navigation/native';
 
 export type ReportScreenProps = NativeStackScreenProps<RootTabParamList, 'Report'>;
 
