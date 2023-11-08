@@ -292,7 +292,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   layout: {
     display: 'flex',
     flexDirection: 'column',

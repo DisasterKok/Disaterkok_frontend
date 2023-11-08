@@ -16,6 +16,8 @@ import useAddressData from '../../../hooks/useAddressData';
 import SearchPostcode from '../../SelectAddress/SearchPostcode';
 import AliasPostcode from '../../SelectAddress/AliasPostcode';
 import DeleteConfirmModal from './DeleteConfirmModal';
+import AddAddress from './AddAdress';
+import getCurrentLocation from '../../SelectAddress/GetCurrentLocation';
 
 const AddressDataList = [
   {
@@ -129,7 +131,7 @@ const TownList = ({ height }: { height: number }) => {
       zoneCode: data.zonecode,
     });
     setIsSlideOpen(true);
-    setSlideNum(1);
+    setSlideNum(2);
   };
 
   const closeSlide = () => {
@@ -137,15 +139,38 @@ const TownList = ({ height }: { height: number }) => {
     setSlideNum(-1);
   };
 
-  const toggleSearch = () => {
-    setIsSlideOpen(true);
+  const toggleAdd = () => {
     setSlideNum(0);
+    setIsSlideOpen(true);
+  };
+
+  const toggleSearch = () => {
+    setSlideNum(1);
+    setIsSlideOpen(true);
   };
 
   const toggleEditAlias = (index: number) => {
     setIsSlideOpen(true);
     setUpdatingIndex(index);
-    setSlideNum(2);
+    setSlideNum(3);
+  };
+
+  // 현재 위치 가져오기
+  const handleCurrentSelect = () => {
+    getCurrentLocation()
+      .then((data: any) => {
+        setAddressData({
+          address: data.address,
+          roadAddress: data.roadAddress,
+          zoneCode: data.zoneCode,
+        });
+        setSlideNum(2);
+        setIsSlideOpen(true);
+      })
+      .catch((error) => {
+        // console.log(error);
+        console.log('위치를 얻는 도중 오류가 발생했습니다.');
+      });
   };
 
   const handleAddAddress = (data: any) => {
@@ -174,7 +199,7 @@ const TownList = ({ height }: { height: number }) => {
     <View style={[styles.container, { height: viewHeight }]}>
       <Text style={styles.pageName}>우리동네</Text>
       <View style={styles.buttonSection}>
-        <TouchableOpacity onPress={toggleSearch} style={styles.addButton}>
+        <TouchableOpacity onPress={toggleAdd} style={styles.addButton}>
           <EntypoIcon name="plus" size={16} />
           <Text style={styles.addButtonText}>우리동네 추가하기</Text>
         </TouchableOpacity>
@@ -280,15 +305,22 @@ const TownList = ({ height }: { height: number }) => {
               backgroundColor: '#fff',
             }}
           >
-            {slideNum === 0 && <SearchPostcode goBack={closeSlide} onSelected={handleSelect} />}
-            {slideNum === 1 && (
+            {slideNum === 0 && (
+              <AddAddress
+                openSearch={toggleSearch}
+                onCurrent={handleCurrentSelect}
+                goBack={closeSlide}
+              />
+            )}
+            {slideNum === 1 && <SearchPostcode goBack={closeSlide} onSelected={handleSelect} />}
+            {slideNum === 2 && (
               <AliasPostcode
                 addressData={data}
                 updateAddress={handleAddAddress}
                 goBack={() => setSlideNum(0)}
               />
             )}
-            {slideNum === 2 && (
+            {slideNum === 3 && (
               <AliasPostcode
                 addressData={addressDataList[updatingIndex].addressData}
                 aliasData={{
