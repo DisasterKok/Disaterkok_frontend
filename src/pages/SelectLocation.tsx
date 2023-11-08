@@ -32,10 +32,10 @@ const AddressDataList = [
       roadAddress: '서울특별시 서초구 서초대로 396',
       zoneCode: '06626',
     },
-    detail: '204호',
     aliasType: 'home',
     name: '집',
     default: true,
+    alarm: false,
   },
   {
     addressData: {
@@ -43,10 +43,10 @@ const AddressDataList = [
       roadAddress: '서울특별시 서초구 서초대로 396',
       zoneCode: '06626',
     },
-    detail: '204호',
     aliasType: 'work',
     name: '회사',
     default: false,
+    alarm: false,
   },
   {
     addressData: {
@@ -54,10 +54,10 @@ const AddressDataList = [
       roadAddress: '서울특별시 서초구 서초대로 396',
       zoneCode: '06626',
     },
-    detail: '',
     aliasType: 'etc',
     name: '칭구칑긔집',
     default: false,
+    alarm: false,
   },
 ];
 
@@ -119,10 +119,10 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
     const updatedAddressDataList = [...addressDataList];
     const newData = {
       addressData: data.addressData,
-      detail: data.detail,
       aliasType: data.aliasType,
       name: data.name,
       default: !updatedAddressDataList ? true : data.default,
+      alarm: false, //default false?
     };
     updatedAddressDataList.push(newData);
     setAddressDataList(updatedAddressDataList);
@@ -140,6 +140,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
 
   // 기본 주소로 설정하기
   const handleToggleDefault = (index: number) => {
+    if (addressDataList[index].default) return;
     const updatedAddressDataList = [...addressDataList];
 
     updatedAddressDataList[index].default = !updatedAddressDataList[index].default;
@@ -218,9 +219,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
                         <View style={styles.roadIcon}>
                           <Text style={styles.roadIconText}>도로명</Text>
                         </View>
-                        <Text style={styles.roadText}>
-                          {data.addressData.roadAddress + ' ' + data.detail}
-                        </Text>
+                        <Text style={styles.roadText}>{data.addressData.roadAddress}</Text>
                       </View>
                     </View>
                     <View style={styles.listButton}>
@@ -279,10 +278,10 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
           <AliasPostcode
             addressData={addressDataList[updatingIndex].addressData}
             aliasData={{
-              detail: addressDataList[updatingIndex].detail,
               aliasType: addressDataList[updatingIndex].aliasType,
               name: addressDataList[updatingIndex].name,
               default: addressDataList[updatingIndex].default,
+              alarm: addressDataList[updatingIndex].alarm,
             }}
             updateAddress={handleUpdateAddress}
             goBack={() => setIsUpdateAliasOpen(false)}
@@ -293,7 +292,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   layout: {
     display: 'flex',
     flexDirection: 'column',

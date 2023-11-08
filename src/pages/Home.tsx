@@ -1,17 +1,26 @@
-import React, { useEffect, useRef } from 'react';
-import { Text, View, StyleSheet, ScrollView, Animated } from 'react-native';
+import React from 'react';
+import { Text, View, StyleSheet, ScrollView, Animated, Platform } from 'react-native';
 import COLOR from '../constants/colors';
+import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import SwitchButton from '../components/Home/SwitchButton';
+import WeatherSection from '../components/Home/WeatherSection';
+import IssueSection from '../components/Home/IssueSection';
+import AddressBottomSheet from '../components/Home/AddressSetting/AddressBottomSheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 export default function Home() {
-  const scrollY = useRef(new Animated.Value(0)).current;
+  const bottomSheetRef = React.useRef<BottomSheetModal>(null);
 
-  // Define the scroll threshold where you want to change the header color
-  const colorChangeThreshold = 100; // Adjust this value as needed
+  const [isLocalSelected, setLocalSelected] = React.useState<boolean>(false);
+  const insets = useSafeAreaInsets();
+  const scrollY = React.useRef(new Animated.Value(0)).current;
+
+  const colorChangeThreshold = 110;
 
   // Function to interpolate the background color
   const headerBackgroundColor = scrollY.interpolate({
     inputRange: [0, colorChangeThreshold],
-    outputRange: [`${COLOR.primary}`, 'white'],
+    outputRange: [`${COLOR.primary}`, `${COLOR.lightGray}`],
     extrapolate: 'clamp',
   });
 
@@ -21,50 +30,56 @@ export default function Home() {
     extrapolate: 'clamp',
   });
 
-  useEffect(() => {
-    // Listen to the scroll position
-    scrollY.addListener(({ value }) => {
-      // Do something with the scroll position
-      // For example, you can change the background color or other styling
-    });
-
-    // Clean up the listener when the component unmounts
-    return () => {
-      scrollY.removeAllListeners();
-    };
-  }, [scrollY]);
+  const handlePresentModalPress = React.useCallback((ref: React.RefObject<BottomSheetModal>) => {
+    ref.current?.present();
+  }, []);
 
   return (
-    <View style={styles.layout}>
-      <Animated.View
-        style={{
-          backgroundColor: headerBackgroundColor,
-          position: 'absolute',
-          justifyContent: 'center',
-          alignItems: 'center',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 60,
-        }}
-      >
-        <Animated.Text style={{ color: headerTextColor }}>헤더입니다</Animated.Text>
-      </Animated.View>
-      <ScrollView
-        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
-          useNativeDriver: false,
-        })}
-        scrollEventThrottle={16} // Adjust as needed
-        style={{ position: 'absolute', top: 60, width: '100%' }}
-      >
-        <View style={{ height: 120, backgroundColor: `${COLOR.primary}` }}>
-          <Text>내용입니다</Text>
-        </View>
-        <View style={styles.contentSheet}>
-          <Text>내용입니다</Text>
-        </View>
-      </ScrollView>
-    </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.layout}>
+        <Animated.View
+          style={[
+            styles.header,
+            {
+              backgroundColor: headerBackgroundColor,
+            },
+          ]}
+        >
+          {/* 상단바 영역 */}
+          <View style={{ width: '100%', height: insets.top }}></View>
+          {/* 앱바 영역 */}
+          <Animated.View
+            style={{
+              width: '100%',
+              height: 42,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Animated.Text style={{ color: headerTextColor }}>앱바 영역 입니다</Animated.Text>
+          </Animated.View>
+        </Animated.View>
+        <ScrollView
+          onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
+            useNativeDriver: false,
+          })}
+          scrollEventThrottle={16}
+          style={{ marginTop: 42, width: '100%' }}
+        >
+          <WeatherSection />
+          <View style={styles.contentSheet}>
+            <SwitchButton
+              isLocalSelected={isLocalSelected}
+              onSelect={setLocalSelected}
+              handleSheet={() => handlePresentModalPress(bottomSheetRef)}
+              bottomSheetModalRef={bottomSheetRef}
+            />
+            <IssueSection isLocalSelected={isLocalSelected} />
+          </View>
+        </ScrollView>
+        <AddressBottomSheet bottomSheetModalRef={bottomSheetRef} />
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -77,13 +92,38 @@ const styles = StyleSheet.create({
     backgroundColor: `${COLOR.primary}`,
     position: 'relative',
   },
+  header: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 0,
+    left: 0,
+    right: 0,
+    display: 'flex',
+    flexDirection: 'column',
+  },
   contentSheet: {
+    display: 'flex',
     width: '100%',
-    height: 1200,
+    height: 3000,
+    alignItems: 'center',
     backgroundColor: `${COLOR.lightGray}`,
-    borderTopColor: `${COLOR.middleGray}`,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 20,
+    paddingLeft: 22,
+    paddingRight: 22,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+        backgroundColor: `${COLOR.lightGray}`,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
 });

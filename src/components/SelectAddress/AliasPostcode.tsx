@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet, TextInput, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import COLOR from '../../constants/colors';
@@ -13,10 +13,10 @@ interface AddressData {
 }
 
 interface AliasData {
-  detail: string;
   aliasType: string;
   name: string;
   default: boolean;
+  alarm: boolean;
 }
 
 const AliasPostcode = ({
@@ -31,17 +31,11 @@ const AliasPostcode = ({
   goBack: () => void;
 }) => {
   const { address, roadAddress, zoneCode } = addressData;
-  const [detail, setDetail] = useInput(aliasData?.detail || '');
   const [aliasType, setAliasType] = React.useState<string>(aliasData?.aliasType || '');
   const [name, setName] = useInput(aliasData?.name || '');
   const [isEtc, setIsEtc] = React.useState<boolean>(aliasData?.aliasType == 'etc' || false);
 
-  const [inputDetailFocused, setInputDetailFocused] = React.useState(false);
   const [inputNameFocused, setInputNameFocused] = React.useState(false);
-
-  const onChangeDetail = (text: string) => {
-    setDetail(text);
-  };
 
   const onChangeAliasType = (text: string) => {
     setAliasType(text);
@@ -76,10 +70,10 @@ const AliasPostcode = ({
         roadAddress,
         zoneCode,
       },
-      detail,
       aliasType,
       name,
       default: aliasData?.default || false,
+      alarm: aliasData?.alarm || false,
     };
     updateAddress(newAliasData);
   };
@@ -93,7 +87,7 @@ const AliasPostcode = ({
               <Icon name="chevron-back-outline" style={styles.gobackIcon} />
             </Pressable>
           </View>
-          <Text style={styles.headerText}>상세 주소와 주소 별명을 선택해주세요</Text>
+          <Text style={styles.headerText}>주소 별명을 선택해주세요</Text>
         </View>
         <Separator />
         <View style={styles.inputBox}>
@@ -106,20 +100,6 @@ const AliasPostcode = ({
               <Text style={styles.roadText}>{roadAddress}</Text>
             </View>
           </View>
-          <TextInput
-            style={
-              inputDetailFocused
-                ? StyleSheet.compose(styles.textInput, styles.textInputActive)
-                : styles.textInput
-            }
-            placeholder="예) 101동 204호"
-            clearButtonMode="always"
-            onFocus={() => setInputDetailFocused(true)}
-            onBlur={() => setInputDetailFocused(false)}
-            value={detail}
-            onChangeText={onChangeDetail}
-            autoCapitalize="none"
-          />
           <View style={styles.buttonGroup}>
             <AliasTypeButton
               selected={aliasType === 'home'}
