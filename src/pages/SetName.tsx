@@ -4,10 +4,13 @@ import COLOR from '../constants/colors';
 import useInput from '../hooks/useInput';
 import { RootStackParamList } from '../../App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import userAPI from '../apis/userAPI';
 
 type SetNameScreenProps = NativeStackScreenProps<RootStackParamList, 'SetName'>;
 
-export default function SetName({ navigation }: SetNameScreenProps) {
+export default function SetName({ route, navigation }: SetNameScreenProps) {
+  const { id, email, password } = route.params;
+  //console.log('check', id, email, password);
   const [inputNicknameFocused, setInputNicknameFocused] = useState(false);
 
   const [nickname, onChangeNickname] = useInput('');
@@ -29,8 +32,15 @@ export default function SetName({ navigation }: SetNameScreenProps) {
     else setCharError(false);
   };
 
-  const onSubmit = () => {
-    navigation.navigate('SelectLocation');
+  const onSubmit = async () => {
+    try {
+      console.log(id, email, password, nickname);
+      const response = await userAPI.register(id, email, password, nickname);
+      console.log(response);
+      navigation.navigate('SelectLocation');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {

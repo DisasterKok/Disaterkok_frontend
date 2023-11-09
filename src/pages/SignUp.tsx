@@ -80,11 +80,12 @@ export default function SignUp({ navigation }: SignUpScreenProps) {
   const onSubmit = () => {
     checkAllValidation(id, email, password);
     setCheckSubmit(true);
-    navigation.navigate('SetName');
+    navigation.navigate('SetName', { id: id, email: email, password: password });
   };
 
   useEffect(() => {
     checkActiveLoginButton();
+    
   }, [id, email, password, passwordConfirm]);
 
   return (
