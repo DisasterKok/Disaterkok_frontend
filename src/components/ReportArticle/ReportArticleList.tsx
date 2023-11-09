@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import { ARTICLE_LIST } from '../../constants/DummyArticle';
 import ReportArticleCard from './ReportArticleCard';
+import { useNavigation } from '@react-navigation/native';
+import HeaderLeftGoBack from '../Header/HeadrLeftGoBack';
 
-export default function ReportArticleList({ navigation }) {
+export default function ReportArticleList() {
+  const navigation = useNavigation();
   const navigateToReportDetail = () => {
     navigation.navigate('ReportArticleDetail');
   };
+
   return (
     <FlatList
       data={ARTICLE_LIST}

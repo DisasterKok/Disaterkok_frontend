@@ -13,7 +13,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export type HomeScreenProps = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
-export default function Home({ navigation }: HomeScreenProps) {
+export default function Home() {
   const bottomSheetRef = React.useRef<BottomSheetModal>(null);
 
   const [isLocalSelected, setLocalSelected] = React.useState<boolean>(false);
@@ -80,7 +80,7 @@ export default function Home({ navigation }: HomeScreenProps) {
               bottomSheetModalRef={bottomSheetRef}
             />
             <IssueSection isLocalSelected={isLocalSelected} />
-            <ReportSection navigation={navigation} />
+            <ReportSection />
           </View>
         </ScrollView>
         <AddressBottomSheet bottomSheetModalRef={bottomSheetRef} />

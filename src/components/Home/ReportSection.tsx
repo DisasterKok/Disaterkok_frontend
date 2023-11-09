@@ -6,10 +6,10 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '../../navigation/types';
 import { HomeScreenProps } from '../../pages/Home';
+import { useNavigation } from '@react-navigation/native';
 
-// type ReportScreenProps = NativeStackScreenProps<HomeStackParamList, 'ReportList'>;
-
-export default function ReportSection({ navigation }: HomeScreenProps) {
+export default function ReportSection() {
+  const navigation = useNavigation();
   const navigateToReportList = () => {
     navigation.navigate('ReportList');
   };
@@ -20,7 +20,7 @@ export default function ReportSection({ navigation }: HomeScreenProps) {
         <Text style={styles.title}>실시간 제보</Text>
         <Text style={styles.subTitle}>시민들의 실시간 제보를 통해 재난을 확인해요</Text>
       </View>
-      <ReportArticleList navigation={navigation} />
+      <ReportArticleList />
       <Pressable style={styles.moreView} onPress={navigateToReportList}>
         <Text style={styles.moreViewText}>더보기</Text>
         <AntIcon name="right" size={12} color={COLOR.gray} />
