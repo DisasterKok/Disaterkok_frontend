@@ -1,16 +1,30 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import COLOR from '../../constants/colors';
 import ReportArticleList from '../ReportArticle/ReportArticleList';
+import AntIcon from 'react-native-vector-icons/AntDesign';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { HomeStackParamList } from '../../navigation/types';
+import { HomeScreenProps } from '../../pages/Home';
 
-export default function ReportSection() {
+// type ReportScreenProps = NativeStackScreenProps<HomeStackParamList, 'ReportList'>;
+
+export default function ReportSection({ navigation }: HomeScreenProps) {
+  const navigateToReportList = () => {
+    navigation.navigate('ReportList');
+  };
+
   return (
     <View style={styles.reportWrapper}>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>실시간 제보</Text>
         <Text style={styles.subTitle}>시민들의 실시간 제보를 통해 재난을 확인해요</Text>
       </View>
-      <ReportArticleList />
+      <ReportArticleList navigation={navigation} />
+      <Pressable style={styles.moreView} onPress={navigateToReportList}>
+        <Text style={styles.moreViewText}>더보기</Text>
+        <AntIcon name="right" size={12} color={COLOR.gray} />
+      </Pressable>
     </View>
   );
 }
@@ -27,6 +41,17 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     fontSize: 10,
+    color: `${COLOR.gray}`,
+  },
+  moreView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 3,
+    marginTop: 50,
+  },
+  moreViewText: {
+    fontSize: 12,
     color: `${COLOR.gray}`,
   },
 });

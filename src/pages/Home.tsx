@@ -8,8 +8,12 @@ import IssueSection from '../components/Home/IssueSection';
 import AddressBottomSheet from '../components/Home/AddressSetting/AddressBottomSheet';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import ReportSection from '../components/Home/ReportSection';
+import { HomeStackParamList } from '../navigation/types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-export default function Home() {
+export type HomeScreenProps = NativeStackScreenProps<HomeStackParamList, 'Home'>;
+
+export default function Home({ navigation }: HomeScreenProps) {
   const bottomSheetRef = React.useRef<BottomSheetModal>(null);
 
   const [isLocalSelected, setLocalSelected] = React.useState<boolean>(false);
@@ -76,7 +80,7 @@ export default function Home() {
               bottomSheetModalRef={bottomSheetRef}
             />
             <IssueSection isLocalSelected={isLocalSelected} />
-            <ReportSection />
+            <ReportSection navigation={navigation} />
           </View>
         </ScrollView>
         <AddressBottomSheet bottomSheetModalRef={bottomSheetRef} />

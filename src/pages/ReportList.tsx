@@ -1,25 +1,16 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View, ScrollView } from 'react-native';
+import { Pressable, StyleSheet, Text, View, ScrollView } from 'react-native';
 import { SelectRegionBottomSheet } from '../components/BottomSheetModal';
 
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import {
-  NativeStackNavigationOptions,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack';
-import { RootTabParamList } from '../../App';
+import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import COLOR from '../constants/colors';
 import FaIcon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SigunguAndEupmyeondongType } from '../components/SelectRegion/types';
 import SelectDisasterBottomSheet from '../components/BottomSheetModal/SelectDisasterBottomSheet';
 import { DisasterType } from '../components/SelectDisaster/types';
-import ReportArticleCard from '../components/ReportArticle/ReportArticleCard';
-import { ARTICLE_LIST } from '../constants/DummyArticle';
-import { useNavigation } from '@react-navigation/native';
 import ReportArticleList from '../components/ReportArticle/ReportArticleList';
-
-export type ReportScreenProps = NativeStackScreenProps<RootTabParamList, 'Report'>;
 
 export interface CustomNavigationOptions extends Partial<NativeStackNavigationOptions> {
   tabBarStyle?: {
@@ -27,7 +18,7 @@ export interface CustomNavigationOptions extends Partial<NativeStackNavigationOp
   };
 }
 
-export default function Report({ navigation }: ReportScreenProps) {
+export default function ReportList({ navigation }) {
   const selectRegionModalRef = useRef<BottomSheetModal>(null);
   const selectDisasterModalRef = useRef<BottomSheetModal>(null);
 

@@ -8,7 +8,7 @@ import { RootTabParamList } from '../../../App';
 import { NavigationProp } from '@react-navigation/native';
 import { EupmyeondongTable, SidoTable, SigunguTable } from '../SelectRegion';
 import { SidoType, SigunguAndEupmyeondongType } from '../SelectRegion/types';
-import { CustomNavigationOptions } from '../../pages/Report';
+import { CustomNavigationOptions } from '../../pages/ReportList';
 
 type SelectRegionScreenProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;

@@ -3,7 +3,10 @@ import { FlatList, StyleSheet } from 'react-native';
 import { ARTICLE_LIST } from '../../constants/DummyArticle';
 import ReportArticleCard from './ReportArticleCard';
 
-export default function ReportArticleList() {
+export default function ReportArticleList({ navigation }) {
+  const navigateToReportDetail = () => {
+    navigation.navigate('ReportArticleDetail');
+  };
   return (
     <FlatList
       data={ARTICLE_LIST}
@@ -15,6 +18,7 @@ export default function ReportArticleList() {
           likeCount={item.likeCount}
           title={item.title}
           tags={item.tags}
+          navigation={navigation}
         />
       )}
       numColumns={1}

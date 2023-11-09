@@ -5,7 +5,7 @@ import COLOR from '../../constants/colors';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { RootTabParamList } from '../../../App';
 import { NavigationProp } from '@react-navigation/native';
-import { CustomNavigationOptions } from '../../pages/Report';
+import { CustomNavigationOptions } from '../../pages/ReportList';
 import MainCategory from '../SelectDisaster/MainCategory';
 import { DisasterCategoryType, DisasterType } from '../SelectDisaster/types';
 import { DISASTER_CATEGORY } from '../../constants/DummyDisaster';

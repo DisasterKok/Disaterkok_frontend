@@ -13,9 +13,14 @@ export default function ReportArticleCard({
   likeCount,
   title,
   tags,
+  navigation,
 }: ReportArticleType) {
+  const navigateToReportDetail = () => {
+    navigation.navigate('ReportArticleDetail');
+  };
+
   return (
-    <Pressable style={styles.cardLayout}>
+    <Pressable style={styles.cardLayout} onPress={navigateToReportDetail}>
       <View style={styles.img}>
         <View style={styles.topContainer}>
           <View style={styles.topLeftContainer}>
