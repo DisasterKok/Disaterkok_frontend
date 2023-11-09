@@ -31,7 +31,7 @@ export type RootStackParamList = {
   DisasterNotiSettings: undefined;
   SignIn: undefined;
   SignUp: undefined;
-  SetName: undefined;
+  SetName: { id: string; email: string; password: string };
   SelectLocation: undefined;
   CompleteLogin: undefined;
   ReportDetail: undefined;
