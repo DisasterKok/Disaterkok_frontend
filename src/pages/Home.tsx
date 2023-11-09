@@ -7,6 +7,7 @@ import WeatherSection from '../components/Home/WeatherSection';
 import IssueSection from '../components/Home/IssueSection';
 import AddressBottomSheet from '../components/Home/AddressSetting/AddressBottomSheet';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import ReportSection from '../components/Home/ReportSection';
 
 export default function Home() {
   const bottomSheetRef = React.useRef<BottomSheetModal>(null);
@@ -75,6 +76,7 @@ export default function Home() {
               bottomSheetModalRef={bottomSheetRef}
             />
             <IssueSection isLocalSelected={isLocalSelected} />
+            <ReportSection />
           </View>
         </ScrollView>
         <AddressBottomSheet bottomSheetModalRef={bottomSheetRef} />
@@ -87,7 +89,6 @@ const styles = StyleSheet.create({
   layout: {
     width: '100%',
     height: '100%',
-    display: 'flex',
     flexDirection: 'column',
     backgroundColor: `${COLOR.primary}`,
     position: 'relative',
@@ -99,14 +100,11 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    display: 'flex',
     flexDirection: 'column',
   },
   contentSheet: {
-    display: 'flex',
     width: '100%',
     height: 3000,
-    alignItems: 'center',
     backgroundColor: `${COLOR.lightGray}`,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

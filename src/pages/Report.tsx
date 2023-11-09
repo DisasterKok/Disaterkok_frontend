@@ -17,6 +17,7 @@ import { DisasterType } from '../components/SelectDisaster/types';
 import ReportArticleCard from '../components/ReportArticle/ReportArticleCard';
 import { ARTICLE_LIST } from '../constants/DummyArticle';
 import { useNavigation } from '@react-navigation/native';
+import ReportArticleList from '../components/ReportArticle/ReportArticleList';
 
 export type ReportScreenProps = NativeStackScreenProps<RootTabParamList, 'Report'>;
 
@@ -147,22 +148,7 @@ export default function Report({ navigation }: ReportScreenProps) {
           </Pressable>
         </View>
 
-        <FlatList
-          data={ARTICLE_LIST}
-          renderItem={({ item }) => (
-            <ReportArticleCard
-              id={item.id}
-              elapsedTime={item.elapsedTime}
-              viewCount={item.viewCount}
-              likeCount={item.likeCount}
-              title={item.title}
-              tags={item.tags}
-            />
-          )}
-          numColumns={1}
-          contentContainerStyle={styles.articleList}
-          scrollEnabled={false}
-        />
+        <ReportArticleList />
 
         {/* 모달 */}
         <SelectRegionBottomSheet
@@ -252,8 +238,5 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  articleList: {
-    gap: 10,
   },
 });

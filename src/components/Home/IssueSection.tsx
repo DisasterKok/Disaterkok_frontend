@@ -35,5 +35,6 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+    marginBottom: 30,
   },
 });
