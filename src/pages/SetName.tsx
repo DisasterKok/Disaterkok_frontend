@@ -37,10 +37,11 @@ export default function SetName({ route, navigation }: SetNameScreenProps) {
       console.log(id, email, password, nickname);
       const response = await userAPI.register(id, email, password, nickname);
       console.log(response);
-      navigation.navigate('SelectLocation');
+      //navigation.navigate('SelectLocation');
     } catch (error) {
       console.log(error);
     }
+    navigation.navigate('SelectLocation');
   };
 
   useEffect(() => {
