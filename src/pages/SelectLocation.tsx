@@ -10,7 +10,6 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import { RootStackParamList } from '../../App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import COLOR from '../constants/colors';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -21,9 +20,9 @@ import AliasPostcode from '../components/SelectAddress/AliasPostcode';
 import useAddressData from '../hooks/useAddressData';
 import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
 import Separator from '../components/Separator';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { LoggedOutStackParamList } from '../navigation/types';
 
-type SelectLocScreenProps = NativeStackScreenProps<RootStackParamList, 'SelectLocation'>;
+type SelectLocScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'SelectLocation'>;
 
 const AddressDataList = [
   {

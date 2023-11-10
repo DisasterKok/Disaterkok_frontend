@@ -7,9 +7,6 @@ import HeaderLeftGoBack from '../Header/HeadrLeftGoBack';
 
 export default function ReportArticleList() {
   const navigation = useNavigation();
-  const navigateToReportDetail = () => {
-    navigation.navigate('ReportArticleDetail');
-  };
 
   return (
     <FlatList

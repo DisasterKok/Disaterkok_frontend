@@ -7,10 +7,13 @@ import {
   NaturalDisasterBottomSheet,
   SocialDisasterBottomSheet,
 } from '../components/BottomSheetModal';
-import { RootStackParamList } from '../../App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { LoggedOutStackParamList } from '../navigation/types';
 
-type DstrNotiSetScreenProps = NativeStackScreenProps<RootStackParamList, 'DisasterNotiSettings'>;
+type DstrNotiSetScreenProps = NativeStackScreenProps<
+  LoggedOutStackParamList,
+  'DisasterNotiSettings'
+>;
 
 export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenProps) {
   const naturalDisasterModalRef = useRef<BottomSheetModal>(null);

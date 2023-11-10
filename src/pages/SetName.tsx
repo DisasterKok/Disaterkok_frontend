@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import COLOR from '../constants/colors';
 import useInput from '../hooks/useInput';
-import { RootStackParamList } from '../../App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import userAPI from '../apis/userAPI';
+import { LoggedOutStackParamList } from '../navigation/types';
 
-type SetNameScreenProps = NativeStackScreenProps<RootStackParamList, 'SetName'>;
+type SetNameScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'SetName'>;
 
 export default function SetName({ route, navigation }: SetNameScreenProps) {
   const { id, email, password } = route.params;

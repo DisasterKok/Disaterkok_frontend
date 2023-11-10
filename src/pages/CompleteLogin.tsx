@@ -1,11 +1,11 @@
 import React from 'react';
 import { Text, View, Image, StyleSheet, Pressable } from 'react-native';
 import COLOR from '../constants/colors';
-import { RootStackParamList } from '../../App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import useAuth from '../states/useAuth';
+import { LoggedOutStackParamList } from '../navigation/types';
 
-type CompleteLoginScreenProps = NativeStackScreenProps<RootStackParamList, 'CompleteLogin'>;
+type CompleteLoginScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'CompleteLogin'>;
 
 const CompleteLogin = ({ navigation }: CompleteLoginScreenProps) => {
   const { login } = useAuth();

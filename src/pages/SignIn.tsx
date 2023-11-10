@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import COLOR from '../constants/colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App';
 import useInput from '../hooks/useInput';
+import { LoggedOutStackParamList } from '../navigation/types';
 
-type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
+type SignInScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'SignIn'>;
 
 export default function SignIn({ navigation }: SignInScreenProps) {
   const [inputIdFocused, setInputIdFocused] = useState(false);

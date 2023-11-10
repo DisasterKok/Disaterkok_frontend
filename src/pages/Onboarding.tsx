@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import Swiper from 'react-native-swiper';
-import { RootStackParamList } from '../../App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import COLOR from '../constants/colors';
+import { LoggedOutStackParamList } from '../navigation/types';
 
-type OnboardingScreenProps = NativeStackScreenProps<RootStackParamList, 'Onboarding'>;
+type OnboardingScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'Onboarding'>;
 
 export const Onboarding = ({ navigation }: OnboardingScreenProps) => {
   const gotoSignIn = () => {

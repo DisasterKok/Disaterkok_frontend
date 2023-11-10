@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import COLOR from '../constants/colors';
 import useInput from '../hooks/useInput';
-import { RootStackParamList } from '../../App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { LoggedOutStackParamList } from '../navigation/types';
 
-type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
+type SignUpScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'SignUp'>;
 
 export default function SignUp({ navigation }: SignUpScreenProps) {
   const [inputIdFocused, setInputIdFocused] = useState(false);
@@ -85,7 +85,6 @@ export default function SignUp({ navigation }: SignUpScreenProps) {
 
   useEffect(() => {
     checkActiveLoginButton();
-    
   }, [id, email, password, passwordConfirm]);
 
   return (
