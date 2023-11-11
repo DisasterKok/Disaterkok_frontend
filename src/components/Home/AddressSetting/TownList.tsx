@@ -66,7 +66,12 @@ const AddressDataList = [
   },
 ];
 
-const TownList = ({ height }: { height: number }) => {
+interface TownListBottomSheetProps {
+  height: number;
+  isEditable: boolean;
+}
+
+const TownList = ({ height, isEditable }: TownListBottomSheetProps) => {
   const [addressDataList, setAddressDataList] = React.useState(AddressDataList);
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false);
   const [updatingIndex, setUpdatingIndex] = React.useState<number>(0);
@@ -198,15 +203,17 @@ const TownList = ({ height }: { height: number }) => {
   return (
     <View style={[styles.container, { height: viewHeight }]}>
       <Text style={styles.pageName}>우리동네</Text>
-      <View style={styles.buttonSection}>
-        <TouchableOpacity onPress={toggleAdd} style={styles.addButton}>
-          <EntypoIcon name="plus" size={16} />
-          <Text style={styles.addButtonText}>우리동네 추가하기</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleEditTown} style={styles.editButton}>
-          <Text style={styles.editButtonText}>{isEditMode ? '완료' : '편집'}</Text>
-        </TouchableOpacity>
-      </View>
+      {isEditable && (
+        <View style={styles.buttonSection}>
+          <TouchableOpacity onPress={toggleAdd} style={styles.addButton}>
+            <EntypoIcon name="plus" size={16} />
+            <Text style={styles.addButtonText}>우리동네 추가하기</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleEditTown} style={styles.editButton}>
+            <Text style={styles.editButtonText}>{isEditMode ? '완료' : '편집'}</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <Separator />
       <ScrollView style={[styles.list]}>
@@ -255,37 +262,39 @@ const TownList = ({ height }: { height: number }) => {
                           ]}
                         />
                       </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => handleCheckAlarm(index)}
-                        style={{
-                          position: 'relative',
-                          width: 24,
-                          height: 24,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <View
+                      {isEditable && (
+                        <TouchableOpacity
+                          onPress={() => handleCheckAlarm(index)}
                           style={{
-                            width: '100%',
-                            height: '100%',
-                            position: 'absolute',
-                            display: 'flex',
-                            borderWidth: 2,
-                            borderColor: data.alarm ? `${COLOR.primary}` : `${COLOR.lightGray}`,
-                            borderRadius: 12,
+                            position: 'relative',
+                            width: 24,
+                            height: 24,
+                            justifyContent: 'center',
+                            alignItems: 'center',
                           }}
-                        />
-                        <FeatherIcon
-                          name="bell"
-                          size={16}
-                          style={[
-                            styles.itemButtonUnchecked,
-                            data.alarm && styles.itemButtonChecked,
-                            { position: 'absolute', top: 4, left: 4 },
-                          ]}
-                        />
-                      </TouchableOpacity>
+                        >
+                          <View
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              position: 'absolute',
+                              display: 'flex',
+                              borderWidth: 2,
+                              borderColor: data.alarm ? `${COLOR.primary}` : `${COLOR.lightGray}`,
+                              borderRadius: 12,
+                            }}
+                          />
+                          <FeatherIcon
+                            name="bell"
+                            size={16}
+                            style={[
+                              styles.itemButtonUnchecked,
+                              data.alarm && styles.itemButtonChecked,
+                              { position: 'absolute', top: 4, left: 4 },
+                            ]}
+                          />
+                        </TouchableOpacity>
+                      )}
                     </>
                   )}
                 </View>

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, RefObject } from 'react';
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
@@ -12,19 +12,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface CustomFooterProps extends BottomSheetFooterProps {}
 
-const AddressBottomSheet = ({
-  bottomSheetModalRef,
-}: {
-  bottomSheetModalRef: React.RefObject<BottomSheetModal>;
-}) => {
-  const { bottom: bottomSafeArea } = useSafeAreaInsets();
+interface AdrressBottomSheetProps {
+  bottomSheetModalRef: RefObject<BottomSheetModal>;
+  isEditable: boolean;
+}
 
+const AddressBottomSheet = ({ bottomSheetModalRef, isEditable }: AdrressBottomSheetProps) => {
   const snapPoints = React.useMemo(() => ['60%', '90%'], []);
   const [currentSnapPointIndex, setCurrentSnapPointIndex] = React.useState<number>(-1);
-
-  const handleCloseModalPress = React.useCallback((ref: React.RefObject<BottomSheetModal>) => {
-    ref.current?.close();
-  }, []);
 
   const renderBackdrop = React.useCallback(
     (props: any) => (
@@ -42,15 +37,6 @@ const AddressBottomSheet = ({
     setCurrentSnapPointIndex(toIndex);
   }, []);
 
-  // const renderFooter = useCallback(
-  //   (props: any) => (
-  //     <BottomSheetFooter {...props} bottomInset={0}>
-  //       <View style={{ width: '100%', height: 126, backgroundColor: '#fff' }}></View>
-  //     </BottomSheetFooter>
-  //   ),
-  //   [],
-  // );
-
   return (
     <>
       <BottomSheetModal
@@ -62,7 +48,7 @@ const AddressBottomSheet = ({
         onAnimate={handleSheetChanges}
       >
         <View style={styles.modalContainer}>
-          <TownList height={currentSnapPointIndex < 1 ? 0.6 : 0.9} />
+          <TownList height={currentSnapPointIndex < 1 ? 0.6 : 0.9} isEditable={isEditable} />
         </View>
       </BottomSheetModal>
     </>

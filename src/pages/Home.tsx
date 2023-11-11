@@ -83,7 +83,7 @@ export default function Home() {
             <ReportSection />
           </View>
         </ScrollView>
-        <AddressBottomSheet bottomSheetModalRef={bottomSheetRef} />
+        <AddressBottomSheet bottomSheetModalRef={bottomSheetRef} isEditable />
       </SafeAreaView>
     </SafeAreaProvider>
   );
