@@ -11,6 +11,7 @@ import { SigunguAndEupmyeondongType } from '../components/SelectRegion/types';
 import SelectDisasterBottomSheet from '../components/BottomSheetModal/SelectDisasterBottomSheet';
 import { DisasterType } from '../components/SelectDisaster/types';
 import ReportArticleList from '../components/ReportArticle/ReportArticleList';
+import AddressBottomSheet from '../components/Home/AddressSetting/AddressBottomSheet';
 
 export interface CustomNavigationOptions extends Partial<NativeStackNavigationOptions> {
   tabBarStyle?: {
@@ -19,6 +20,7 @@ export interface CustomNavigationOptions extends Partial<NativeStackNavigationOp
 }
 
 export default function ReportList({ navigation }) {
+  const selectAddressModalRef = useRef<BottomSheetModal>(null);
   const selectRegionModalRef = useRef<BottomSheetModal>(null);
   const selectDisasterModalRef = useRef<BottomSheetModal>(null);
 
@@ -85,7 +87,12 @@ export default function ReportList({ navigation }) {
               우리동네
             </Text>
             {selectedTab === '우리동네' && (
-              <FaIcon name="angle-down" size={15} color={COLOR.black} />
+              <FaIcon
+                name="angle-down"
+                size={15}
+                color={COLOR.black}
+                onPress={() => handlePresentModalPress(selectAddressModalRef)}
+              />
             )}
           </Pressable>
         </View>
@@ -142,6 +149,7 @@ export default function ReportList({ navigation }) {
         <ReportArticleList />
 
         {/* 모달 */}
+        <AddressBottomSheet bottomSheetModalRef={selectAddressModalRef} isEditable={false} />
         <SelectRegionBottomSheet
           bottomSheetModalRef={selectRegionModalRef}
           navigation={navigation}

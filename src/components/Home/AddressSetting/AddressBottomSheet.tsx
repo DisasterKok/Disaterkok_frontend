@@ -48,7 +48,11 @@ const AddressBottomSheet = ({ bottomSheetModalRef, isEditable }: AdrressBottomSh
         onAnimate={handleSheetChanges}
       >
         <View style={styles.modalContainer}>
-          <TownList height={currentSnapPointIndex < 1 ? 0.6 : 0.9} isEditable={isEditable} />
+          <TownList
+            height={currentSnapPointIndex < 1 ? 0.6 : 0.9}
+            isEditable={isEditable}
+            bottomSheetModalRef={bottomSheetModalRef}
+          />
         </View>
       </BottomSheetModal>
     </>

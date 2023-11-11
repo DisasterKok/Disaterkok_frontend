@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { RefObject, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   Dimensions,
   Modal,
+  Pressable,
 } from 'react-native';
 import COLOR from '../../../constants/colors';
 import Separator from '../../Separator';
@@ -18,6 +19,7 @@ import AliasPostcode from '../../SelectAddress/AliasPostcode';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import AddAddress from './AddAdress';
 import getCurrentLocation from '../../SelectAddress/GetCurrentLocation';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 const AddressDataList = [
   {
@@ -69,9 +71,10 @@ const AddressDataList = [
 interface TownListBottomSheetProps {
   height: number;
   isEditable: boolean;
+  bottomSheetModalRef: RefObject<BottomSheetModal>;
 }
 
-const TownList = ({ height, isEditable }: TownListBottomSheetProps) => {
+const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomSheetProps) => {
   const [addressDataList, setAddressDataList] = React.useState(AddressDataList);
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false);
   const [updatingIndex, setUpdatingIndex] = React.useState<number>(0);
@@ -200,6 +203,10 @@ const TownList = ({ height, isEditable }: TownListBottomSheetProps) => {
     closeSlide();
   };
 
+  const handleCloseModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
+    ref.current?.close();
+  }, []);
+
   return (
     <View style={[styles.container, { height: viewHeight }]}>
       <Text style={styles.pageName}>우리동네</Text>
@@ -216,7 +223,7 @@ const TownList = ({ height, isEditable }: TownListBottomSheetProps) => {
       )}
 
       <Separator />
-      <ScrollView style={[styles.list]}>
+      <ScrollView style={isEditable ? styles.list : StyleSheet.compose(styles.list, styles.listMb)}>
         <View>
           {addressDataList &&
             addressDataList.map((data, index) => (
@@ -302,6 +309,14 @@ const TownList = ({ height, isEditable }: TownListBottomSheetProps) => {
             ))}
         </View>
       </ScrollView>
+      {!isEditable && (
+        <Pressable
+          style={styles.completeButton}
+          onPress={() => handleCloseModalPress(bottomSheetModalRef)}
+        >
+          <Text style={styles.completeButtonText}>완료</Text>
+        </Pressable>
+      )}
       {isSlideOpen && (
         <>
           <View
@@ -416,6 +431,9 @@ const styles = StyleSheet.create({
     paddingRight: 22,
     width: '100%',
   },
+  listMb: {
+    marginBottom: 20,
+  },
   listItemContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -512,4 +530,14 @@ const styles = StyleSheet.create({
   ButtonActive: {
     backgroundColor: `${COLOR.primary}`,
   },
+  completeButton: {
+    width: '90%',
+    height: 50,
+    backgroundColor: `${COLOR.blue}`,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 30,
+  },
+  completeButtonText: { color: `${COLOR.white}` },
 });
