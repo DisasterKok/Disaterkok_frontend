@@ -117,7 +117,7 @@ export default function ReportList({ navigation }) {
             <FaIcon
               name="angle-down"
               size={20}
-              color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
+              color={selectedEupmyeondong.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
             />
           </Pressable>
 

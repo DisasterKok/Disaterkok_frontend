@@ -6,11 +6,8 @@ import {
   BottomSheetFooterProps,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import { View, StyleSheet, Text, Animated } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import TownList from './TownList';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-interface CustomFooterProps extends BottomSheetFooterProps {}
 
 interface AdrressBottomSheetProps {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
