@@ -3,7 +3,6 @@ import React from 'react';
 import { Home, ReportArticleDetail, ReportList } from '../pages';
 import { HomeStackParamList } from './types';
 import HeaderLeftGoBack from '../components/Header/HeadrLeftGoBack';
-import { Image } from 'react-native';
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 

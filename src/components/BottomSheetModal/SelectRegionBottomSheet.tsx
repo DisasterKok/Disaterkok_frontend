@@ -4,15 +4,15 @@ import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import COLOR from '../../constants/colors';
 import { fetchSidoInfo } from '../../apis/fetchRegionAPI/fetchSidoInfo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import { RootTabParamList } from '../../../App';
 import { NavigationProp } from '@react-navigation/native';
 import { EupmyeondongTable, SidoTable, SigunguTable } from '../SelectRegion';
 import { SidoType, SigunguAndEupmyeondongType } from '../SelectRegion/types';
 import { CustomNavigationOptions } from '../../pages/ReportList';
+import { HomeStackParamList } from '../../navigation/types';
 
 type SelectRegionScreenProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
-  navigation: NavigationProp<RootTabParamList, 'Report'>;
+  navigation: NavigationProp<HomeStackParamList, 'ReportList'>;
   selectedEupmyeondong: SigunguAndEupmyeondongType[];
   setSelectedEupmyeondong: React.Dispatch<React.SetStateAction<SigunguAndEupmyeondongType[]>>;
 };

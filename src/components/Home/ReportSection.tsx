@@ -3,9 +3,6 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import COLOR from '../../constants/colors';
 import ReportArticleList from '../ReportArticle/ReportArticleList';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { HomeStackParamList } from '../../navigation/types';
-import { HomeScreenProps } from '../../pages/Home';
 import { useNavigation } from '@react-navigation/native';
 
 export default function ReportSection() {

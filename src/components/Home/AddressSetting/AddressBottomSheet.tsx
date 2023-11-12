@@ -1,11 +1,5 @@
-import React, { useEffect, useCallback, RefObject } from 'react';
-import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetFooter,
-  BottomSheetFooterProps,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
+import React, { useCallback, RefObject } from 'react';
+import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { View, StyleSheet } from 'react-native';
 import TownList from './TownList';
 

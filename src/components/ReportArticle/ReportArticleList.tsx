@@ -1,13 +1,9 @@
-import React, { useLayoutEffect } from 'react';
+import React from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import { ARTICLE_LIST } from '../../constants/DummyArticle';
 import ReportArticleCard from './ReportArticleCard';
-import { useNavigation } from '@react-navigation/native';
-import HeaderLeftGoBack from '../Header/HeadrLeftGoBack';
 
 export default function ReportArticleList() {
-  const navigation = useNavigation();
-
   return (
     <FlatList
       data={ARTICLE_LIST}
@@ -19,7 +15,6 @@ export default function ReportArticleList() {
           likeCount={item.likeCount}
           title={item.title}
           tags={item.tags}
-          navigation={navigation}
         />
       )}
       numColumns={1}

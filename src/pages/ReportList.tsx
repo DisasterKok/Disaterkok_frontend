@@ -12,14 +12,19 @@ import SelectDisasterBottomSheet from '../components/BottomSheetModal/SelectDisa
 import { DisasterType } from '../components/SelectDisaster/types';
 import ReportArticleList from '../components/ReportArticle/ReportArticleList';
 import AddressBottomSheet from '../components/Home/AddressSetting/AddressBottomSheet';
+import { HomeStackParamList } from '../navigation/types';
+import { NavigationProp } from '@react-navigation/native';
 
 export interface CustomNavigationOptions extends Partial<NativeStackNavigationOptions> {
   tabBarStyle?: {
     display: string;
   };
 }
+interface ReportListScreenProps {
+  navigation: NavigationProp<HomeStackParamList, 'ReportList'>;
+}
 
-export default function ReportList({ navigation }) {
+export default function ReportList({ navigation }: ReportListScreenProps) {
   const selectAddressModalRef = useRef<BottomSheetModal>(null);
   const selectRegionModalRef = useRef<BottomSheetModal>(null);
   const selectDisasterModalRef = useRef<BottomSheetModal>(null);

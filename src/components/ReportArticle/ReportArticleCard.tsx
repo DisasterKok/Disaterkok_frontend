@@ -5,6 +5,8 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import COLOR from '../../constants/colors';
 import { ReportArticleType } from './types';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { HomeStackParamList } from '../../navigation/types';
 
 export default function ReportArticleCard({
   id,
@@ -13,8 +15,9 @@ export default function ReportArticleCard({
   likeCount,
   title,
   tags,
-  navigation,
 }: ReportArticleType) {
+  const navigation: NavigationProp<HomeStackParamList> = useNavigation();
+
   const navigateToReportDetail = () => {
     navigation.navigate('ReportArticleDetail');
   };
