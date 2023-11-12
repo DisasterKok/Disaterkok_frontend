@@ -10,6 +10,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import ReportSection from '../components/Home/ReportSection';
 import { HomeStackParamList } from '../navigation/types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import AppBar from '../components/Home/AppBar';
 
 export type HomeScreenProps = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
@@ -25,13 +26,13 @@ export default function Home() {
   // Function to interpolate the background color
   const headerBackgroundColor = scrollY.interpolate({
     inputRange: [0, colorChangeThreshold],
-    outputRange: [`${COLOR.primary}`, `${COLOR.lightGray}`],
+    outputRange: [`${COLOR.secondary}`, `${COLOR.lightGray}`],
     extrapolate: 'clamp',
   });
 
   const headerTextColor = scrollY.interpolate({
     inputRange: [0, colorChangeThreshold],
-    outputRange: [`${COLOR.white}`, `${COLOR.primary}`],
+    outputRange: [`${COLOR.white}`, `${COLOR.secondary}`],
     extrapolate: 'clamp',
   });
 
@@ -56,12 +57,12 @@ export default function Home() {
           <Animated.View
             style={{
               width: '100%',
-              height: 42,
+              height: 50,
               justifyContent: 'center',
               alignItems: 'center',
             }}
           >
-            <Animated.Text style={{ color: headerTextColor }}>앱바 영역 입니다</Animated.Text>
+            <AppBar animatedColor={headerTextColor} />
           </Animated.View>
         </Animated.View>
         <ScrollView
@@ -69,7 +70,7 @@ export default function Home() {
             useNativeDriver: false,
           })}
           scrollEventThrottle={16}
-          style={{ marginTop: 42, width: '100%' }}
+          style={{ marginTop: 50, width: '100%' }}
         >
           <WeatherSection />
           <View style={styles.contentSheet}>
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     flexDirection: 'column',
-    backgroundColor: `${COLOR.primary}`,
+    backgroundColor: `${COLOR.secondary}`,
     position: 'relative',
   },
   header: {
