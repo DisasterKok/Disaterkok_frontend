@@ -3,10 +3,11 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import COLOR from '../../constants/colors';
 import ReportArticleList from '../ReportArticle/ReportArticleList';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { HomeStackParamList } from '../../navigation/types';
 
 export default function ReportSection() {
-  const navigation = useNavigation();
+  const navigation: NavigationProp<HomeStackParamList, 'ReportList'> = useNavigation();
   const navigateToReportList = () => {
     navigation.navigate('ReportList');
   };
