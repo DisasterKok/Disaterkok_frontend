@@ -5,6 +5,9 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import COLOR from '../../constants/colors';
 import { ReportArticleType } from './types';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { HomeStackParamList } from '../../navigation/types';
+import SharedModal from './SharedModal';
 
 export default function ReportArticleCard({
   id,
@@ -13,8 +16,15 @@ export default function ReportArticleCard({
   likeCount,
   title,
   tags,
-  navigation,
 }: ReportArticleType) {
+  const navigation: NavigationProp<HomeStackParamList> = useNavigation();
+
+  const [isSharedOpen, setIsSharedOpen] = React.useState<boolean>(false);
+
+  const handleSharedModal = () => {
+    setIsSharedOpen(!isSharedOpen);
+  };
+
   const navigateToReportDetail = () => {
     navigation.navigate('ReportArticleDetail');
   };
@@ -39,7 +49,12 @@ export default function ReportArticleCard({
               <Text style={styles.topLeftItemText}>{likeCount}</Text>
             </View>
           </View>
-          <EntypoIcon name="dots-three-vertical" size={15} color={COLOR.white} />
+          <EntypoIcon
+            name="dots-three-vertical"
+            size={15}
+            color={COLOR.white}
+            onPress={handleSharedModal}
+          />
         </View>
       </View>
       <View style={styles.bottomContainer}>
@@ -58,6 +73,7 @@ export default function ReportArticleCard({
           contentContainerStyle={styles.tagContainer}
         />
       </View>
+      <SharedModal isModalOpen={isSharedOpen} handleModal={handleSharedModal} />
     </Pressable>
   );
 }

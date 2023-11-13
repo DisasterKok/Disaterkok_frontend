@@ -1,17 +1,25 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native';
 import { ARTICLE } from '../constants/DummyArticle';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 import COLOR from '../constants/colors';
 import { FlatList } from 'react-native-gesture-handler';
+import SharedModal from '../components/ReportArticle/SharedModal';
 
 export default function ReportArticleDetail() {
   //   const { postId, parms } = route.params; // 게시글 ID
   //   // 추후에 게시글 ID에 기반하여 해당 게시글의 상세 정보를 표시하도록 작업하기
 
   const { id, time, viewCount, likeCount, title, userName, tags, content, isLike } = ARTICLE;
+
+  const [isSharedOpen, setIsSharedOpen] = React.useState<boolean>(false);
+
+  const handleSharedModal = () => {
+    setIsSharedOpen(!isSharedOpen);
+  };
 
   return (
     <ScrollView style={styles.layout}>
@@ -42,7 +50,16 @@ export default function ReportArticleDetail() {
           <Text style={styles.solutionGuideText}>이 재난과 관련된 솔루션이 궁금해요</Text>
         </View>
       </View>
-      <View style={styles.imgContainer}>{/* img */}</View>
+      <View style={styles.imgContainer}>
+        {/* img */}
+        <EntypoIcon
+          name="dots-three-vertical"
+          size={18}
+          color={COLOR.gray}
+          style={styles.shareDotBtn}
+          onPress={handleSharedModal}
+        />
+      </View>
 
       <FlatList
         data={tags}
@@ -78,6 +95,7 @@ export default function ReportArticleDetail() {
           </Text>
         </View>
       </View>
+      <SharedModal isModalOpen={isSharedOpen} handleModal={handleSharedModal} />
     </ScrollView>
   );
 }
@@ -144,11 +162,17 @@ const styles = StyleSheet.create({
     color: `${COLOR.blue}`,
   },
   imgContainer: {
+    position: 'relative',
     width: 346,
     height: 346,
     borderRadius: 5,
     backgroundColor: `${COLOR.lightGray}`,
     marginBottom: 10,
+  },
+  shareDotBtn: {
+    position: 'absolute',
+    top: 7,
+    right: 7,
   },
   tagContainer: {
     flexDirection: 'row',

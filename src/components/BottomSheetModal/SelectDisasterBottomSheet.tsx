@@ -3,17 +3,17 @@ import { Pressable, StyleSheet, Text, View, FlatList, Platform } from 'react-nat
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import COLOR from '../../constants/colors';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import { RootTabParamList } from '../../../App';
 import { NavigationProp } from '@react-navigation/native';
 import { CustomNavigationOptions } from '../../pages/ReportList';
 import MainCategory from '../SelectDisaster/MainCategory';
 import { DisasterCategoryType, DisasterType } from '../SelectDisaster/types';
 import { DISASTER_CATEGORY } from '../../constants/DummyDisaster';
 import SubCategory from '../SelectDisaster/SubCategory';
+import { HomeStackParamList } from '../../navigation/types';
 
 type SelectDisasterScreenProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
-  navigation: NavigationProp<RootTabParamList, 'Report'>;
+  navigation: NavigationProp<HomeStackParamList, 'ReportList'>;
   selectedDisaster: DisasterType[];
   setSelectedDisaster: React.Dispatch<React.SetStateAction<DisasterType[]>>;
 };

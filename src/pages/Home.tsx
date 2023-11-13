@@ -1,7 +1,8 @@
 import React from 'react';
-import { Text, View, StyleSheet, ScrollView, Animated, Platform } from 'react-native';
+import { View, StyleSheet, ScrollView, Animated, Platform } from 'react-native';
 import COLOR from '../constants/colors';
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import SwitchButton from '../components/Home/SwitchButton';
 import WeatherSection from '../components/Home/WeatherSection';
 import IssueSection from '../components/Home/IssueSection';
@@ -11,10 +12,13 @@ import ReportSection from '../components/Home/ReportSection';
 import { HomeStackParamList } from '../navigation/types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AppBar from '../components/Home/AppBar';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 export type HomeScreenProps = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
 export default function Home() {
+  const navigation: NavigationProp<HomeStackParamList, 'Home'> = useNavigation();
+
   const bottomSheetRef = React.useRef<BottomSheetModal>(null);
 
   const [isLocalSelected, setLocalSelected] = React.useState<boolean>(false);
@@ -35,6 +39,10 @@ export default function Home() {
     outputRange: [`${COLOR.white}`, `${COLOR.secondary}`],
     extrapolate: 'clamp',
   });
+
+  const navigateToSetting = () => {
+    navigation.navigate('Setting');
+  };
 
   const handlePresentModalPress = React.useCallback((ref: React.RefObject<BottomSheetModal>) => {
     ref.current?.present();
@@ -84,7 +92,7 @@ export default function Home() {
             <ReportSection />
           </View>
         </ScrollView>
-        <AddressBottomSheet bottomSheetModalRef={bottomSheetRef} />
+        <AddressBottomSheet bottomSheetModalRef={bottomSheetRef} isEditable />
       </SafeAreaView>
     </SafeAreaProvider>
   );

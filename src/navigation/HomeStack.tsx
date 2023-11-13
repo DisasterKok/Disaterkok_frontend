@@ -1,9 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { Home, ReportArticleDetail, ReportList } from '../pages';
+import { Home, ReportArticleDetail, ReportList, Setting } from '../pages';
 import { HomeStackParamList } from './types';
 import HeaderLeftGoBack from '../components/Header/HeadrLeftGoBack';
-import { Image } from 'react-native';
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
@@ -23,6 +22,11 @@ export default function HomeStack() {
         name="ReportArticleDetail"
         component={ReportArticleDetail}
         options={{ title: '실시간 제보', headerLeft: () => <HeaderLeftGoBack /> }}
+      />
+      <Stack.Screen
+        name="Setting"
+        component={Setting}
+        options={{ title: '알림', headerLeft: () => <HeaderLeftGoBack /> }}
       />
     </Stack.Navigator>
   );
