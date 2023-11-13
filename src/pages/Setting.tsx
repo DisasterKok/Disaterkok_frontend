@@ -1,47 +1,40 @@
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Pressable, ScrollView, Platform } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FaIcon from 'react-native-vector-icons/FontAwesome';
 
 import COLOR from '../constants/colors';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { HomeStackParamList } from '../navigation/types';
+import { NotiContentBottomSheet } from '../components/BottomSheetModal';
 
-const NOTI_DATA = [
-  {
-    id: 1,
-    date: '2023-11-12 09:30:12',
-    catecory: '전국',
-    title: '재난재난제목',
-    content:
-      '재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용',
-  },
-  {
-    id: 2,
-    date: '2023-11-13 09:30 09:30:12',
-    catecory: '우리동네',
-    title: '재난재난제목',
-    content:
-      '재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용',
-  },
-  {
-    id: 3,
-    date: '2023-11-13 09:30 09:30:12',
-    catecory: '전국',
-    title: '재난재난제목',
-    content:
-      '재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용',
-  },
-  {
-    id: 4,
-    date: '2023-11-13 09:30 09:30:12',
-    catecory: '전국',
-    title: '재난재난제목',
-    content:
-      '재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용 재난에 대한 상세 내용재난에 대한 상세 내용',
-  },
-];
+export interface CustomNavigationOptions extends Partial<NativeStackNavigationOptions> {
+  tabBarStyle?: {
+    display: string;
+  };
+}
 
 export default function Setting() {
   const [selectedTab, setSelectedTab] = useState('전체');
+
+  const notiModalRef = useRef<BottomSheetModal>(null);
+
+  const navigation: NavigationProp<HomeStackParamList, 'Setting'> = useNavigation();
+
+  const showTabBar = useCallback(() => {
+    navigation.setOptions({
+      tabBarStyle: {
+        display: 'none',
+      },
+    } as CustomNavigationOptions);
+  }, [navigation]);
+
+  const handlePresentModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
+    ref.current?.present();
+    showTabBar();
+  }, []);
 
   const handleTabPress = (tabName: string) => {
     setSelectedTab(tabName);
@@ -123,7 +116,12 @@ export default function Setting() {
             </View>
             <View style={styles.notiContent}>
               <Text style={styles.notiContentText}>재난내용에 대한 것 재난 내용에 대한 것</Text>
-              <FaIcon name="angle-down" size={20} color={COLOR.middleGray} />
+              <FaIcon
+                name="angle-down"
+                size={20}
+                color={COLOR.middleGray}
+                onPress={() => handlePresentModalPress(notiModalRef)}
+              />
             </View>
           </View>
           <View style={styles.notiContainer}>
@@ -136,7 +134,12 @@ export default function Setting() {
             </View>
             <View style={styles.notiContent}>
               <Text style={styles.notiContentText}>재난내용에 대한 것 재난 내용에 대한 것</Text>
-              <FaIcon name="angle-down" size={20} color={COLOR.middleGray} />
+              <FaIcon
+                name="angle-down"
+                size={20}
+                color={COLOR.middleGray}
+                onPress={() => handlePresentModalPress(notiModalRef)}
+              />
             </View>
           </View>
           <View style={styles.notiContainer}>
@@ -149,7 +152,12 @@ export default function Setting() {
             </View>
             <View style={styles.notiContent}>
               <Text style={styles.notiContentText}>재난내용에 대한 것 재난 내용에 대한 것</Text>
-              <FaIcon name="angle-down" size={20} color={COLOR.middleGray} />
+              <FaIcon
+                name="angle-down"
+                size={20}
+                color={COLOR.middleGray}
+                onPress={() => handlePresentModalPress(notiModalRef)}
+              />
             </View>
           </View>
         </View>
@@ -169,11 +177,19 @@ export default function Setting() {
             </View>
             <View style={styles.notiContent}>
               <Text style={styles.notiContentText}>재난내용에 대한 것 재난 내용에 대한 것</Text>
-              <FaIcon name="angle-down" size={20} color={COLOR.middleGray} />
+              <FaIcon
+                name="angle-down"
+                size={20}
+                color={COLOR.middleGray}
+                onPress={() => handlePresentModalPress(notiModalRef)}
+              />
             </View>
           </View>
         </View>
       </View>
+
+      {/* 모달 */}
+      <NotiContentBottomSheet bottomSheetModalRef={notiModalRef} />
     </ScrollView>
   );
 }
