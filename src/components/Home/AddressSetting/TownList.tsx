@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { RefObject, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   Dimensions,
   Modal,
+  Pressable,
 } from 'react-native';
 import COLOR from '../../../constants/colors';
 import Separator from '../../Separator';
@@ -18,6 +19,7 @@ import AliasPostcode from '../../SelectAddress/AliasPostcode';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import AddAddress from './AddAdress';
 import getCurrentLocation from '../../SelectAddress/GetCurrentLocation';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 const AddressDataList = [
   {
@@ -66,7 +68,13 @@ const AddressDataList = [
   },
 ];
 
-const TownList = ({ height }: { height: number }) => {
+interface TownListBottomSheetProps {
+  height: number;
+  isEditable: boolean;
+  bottomSheetModalRef: RefObject<BottomSheetModal>;
+}
+
+const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomSheetProps) => {
   const [addressDataList, setAddressDataList] = React.useState(AddressDataList);
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false);
   const [updatingIndex, setUpdatingIndex] = React.useState<number>(0);
@@ -195,21 +203,27 @@ const TownList = ({ height }: { height: number }) => {
     closeSlide();
   };
 
+  const handleCloseModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
+    ref.current?.close();
+  }, []);
+
   return (
     <View style={[styles.container, { height: viewHeight }]}>
       <Text style={styles.pageName}>우리동네</Text>
-      <View style={styles.buttonSection}>
-        <TouchableOpacity onPress={toggleAdd} style={styles.addButton}>
-          <EntypoIcon name="plus" size={16} />
-          <Text style={styles.addButtonText}>우리동네 추가하기</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleEditTown} style={styles.editButton}>
-          <Text style={styles.editButtonText}>{isEditMode ? '완료' : '편집'}</Text>
-        </TouchableOpacity>
-      </View>
+      {isEditable && (
+        <View style={styles.buttonSection}>
+          <TouchableOpacity onPress={toggleAdd} style={styles.addButton}>
+            <EntypoIcon name="plus" size={16} />
+            <Text style={styles.addButtonText}>우리동네 추가하기</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleEditTown} style={styles.editButton}>
+            <Text style={styles.editButtonText}>{isEditMode ? '완료' : '편집'}</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <Separator />
-      <ScrollView style={[styles.list]}>
+      <ScrollView style={isEditable ? styles.list : StyleSheet.compose(styles.list, styles.listMb)}>
         <View>
           {addressDataList &&
             addressDataList.map((data, index) => (
@@ -255,37 +269,39 @@ const TownList = ({ height }: { height: number }) => {
                           ]}
                         />
                       </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => handleCheckAlarm(index)}
-                        style={{
-                          position: 'relative',
-                          width: 24,
-                          height: 24,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <View
+                      {isEditable && (
+                        <TouchableOpacity
+                          onPress={() => handleCheckAlarm(index)}
                           style={{
-                            width: '100%',
-                            height: '100%',
-                            position: 'absolute',
-                            display: 'flex',
-                            borderWidth: 2,
-                            borderColor: data.alarm ? `${COLOR.primary}` : `${COLOR.lightGray}`,
-                            borderRadius: 12,
+                            position: 'relative',
+                            width: 24,
+                            height: 24,
+                            justifyContent: 'center',
+                            alignItems: 'center',
                           }}
-                        />
-                        <FeatherIcon
-                          name="bell"
-                          size={16}
-                          style={[
-                            styles.itemButtonUnchecked,
-                            data.alarm && styles.itemButtonChecked,
-                            { position: 'absolute', top: 4, left: 4 },
-                          ]}
-                        />
-                      </TouchableOpacity>
+                        >
+                          <View
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              position: 'absolute',
+                              display: 'flex',
+                              borderWidth: 2,
+                              borderColor: data.alarm ? `${COLOR.primary}` : `${COLOR.lightGray}`,
+                              borderRadius: 12,
+                            }}
+                          />
+                          <FeatherIcon
+                            name="bell"
+                            size={16}
+                            style={[
+                              styles.itemButtonUnchecked,
+                              data.alarm && styles.itemButtonChecked,
+                              { position: 'absolute', top: 4, left: 4 },
+                            ]}
+                          />
+                        </TouchableOpacity>
+                      )}
                     </>
                   )}
                 </View>
@@ -293,6 +309,14 @@ const TownList = ({ height }: { height: number }) => {
             ))}
         </View>
       </ScrollView>
+      {!isEditable && (
+        <Pressable
+          style={styles.completeButton}
+          onPress={() => handleCloseModalPress(bottomSheetModalRef)}
+        >
+          <Text style={styles.completeButtonText}>완료</Text>
+        </Pressable>
+      )}
       {isSlideOpen && (
         <>
           <View
@@ -407,6 +431,9 @@ const styles = StyleSheet.create({
     paddingRight: 22,
     width: '100%',
   },
+  listMb: {
+    marginBottom: 20,
+  },
   listItemContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -503,4 +530,14 @@ const styles = StyleSheet.create({
   ButtonActive: {
     backgroundColor: `${COLOR.primary}`,
   },
+  completeButton: {
+    width: '90%',
+    height: 50,
+    backgroundColor: `${COLOR.blue}`,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 30,
+  },
+  completeButtonText: { color: `${COLOR.white}` },
 });
