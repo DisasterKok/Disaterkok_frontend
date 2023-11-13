@@ -13,10 +13,13 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import ReportSection from '../components/Home/ReportSection';
 import { HomeStackParamList } from '../navigation/types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 export type HomeScreenProps = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
 export default function Home() {
+  const navigation: NavigationProp<HomeStackParamList, 'Home'> = useNavigation();
+
   const bottomSheetRef = React.useRef<BottomSheetModal>(null);
 
   const [isLocalSelected, setLocalSelected] = React.useState<boolean>(false);
@@ -38,6 +41,10 @@ export default function Home() {
     extrapolate: 'clamp',
   });
 
+  const navigateToSetting = () => {
+    navigation.navigate('Setting');
+  };
+
   const handlePresentModalPress = React.useCallback((ref: React.RefObject<BottomSheetModal>) => {
     ref.current?.present();
   }, []);
@@ -58,7 +65,7 @@ export default function Home() {
           {/* 앱바 영역 */}
           <Animated.View style={styles.appBarContainer}>
             <Animated.View>
-              <Ionicons name="notifications-outline" size={22} />
+              <Ionicons name="notifications-outline" size={22} onPress={navigateToSetting} />
             </Animated.View>
             <Animated.View style={styles.appBarRightContainer}>
               <AntDesignIcon name="search1" size={22} />
