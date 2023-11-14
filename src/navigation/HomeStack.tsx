@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { Home, ReportArticleDetail, ReportList, Setting } from '../pages';
+import { Home, ReportArticleDetail, ReportList, Setting } from '../screens';
 import { HomeStackParamList } from './types';
-import HeaderLeftGoBack from '../components/Header/HeadrLeftGoBack';
+import HeaderLeftGoBack from '../components/common/Header/HeadrLeftGoBack';
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import COLOR from '../../constants/colors';
+import COLOR from '../../../constants/colors';
 
 const HeaderLeftGoBack = () => {
   const navigation = useNavigation();

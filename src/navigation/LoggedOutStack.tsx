@@ -9,7 +9,7 @@ import {
   DisasterNotiSettings,
   CompleteLogin,
   Onboarding,
-} from '../pages';
+} from '../screens';
 import { LoggedOutStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<LoggedOutStackParamList>();

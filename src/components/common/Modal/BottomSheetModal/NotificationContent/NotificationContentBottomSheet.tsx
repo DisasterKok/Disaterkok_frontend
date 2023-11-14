@@ -1,8 +1,7 @@
 import React, { RefObject, useCallback, useMemo } from 'react';
-import { Pressable, StyleSheet, Text, View, Platform, FlatList } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import COLOR from '../../constants/colors';
+import COLOR from '../../../../../constants/colors';
 
 type NotiContentBottomSheetProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
@@ -25,7 +24,7 @@ const SOCIAL_DISASTER: SocialDisasterType[] = [
   { id: 9, text: '인파사고' },
 ];
 
-export default function NotiContentBottomSheet({
+export default function NotificationContentBottomSheet({
   bottomSheetModalRef,
 }: NotiContentBottomSheetProps) {
   const snapPoints = useMemo(() => ['25%', '40%'], []);

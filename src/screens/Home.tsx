@@ -8,12 +8,12 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import SwitchButton from '../components/Home/SwitchButton';
 import WeatherSection from '../components/Home/WeatherSection';
 import IssueSection from '../components/Home/IssueSection';
-import AddressBottomSheet from '../components/Home/AddressSetting/AddressBottomSheet';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import ReportSection from '../components/Home/ReportSection';
 import { HomeStackParamList } from '../navigation/types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import AddressBottomSheet from '../components/common/Modal/BottomSheetModal/AddressSetting/AddressBottomSheet';
 
 export type HomeScreenProps = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 

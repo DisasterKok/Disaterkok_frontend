@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Text, View, Pressable, StyleSheet } from 'react-native';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import COLOR from '../../constants/colors';
-import ClipBoard from '../ClipBoard/ClipBoard';
+import ClipBoard from '../common/ClipBoard/ClipBoard';
 
 interface SharedModalProps {
   isModalOpen: boolean;

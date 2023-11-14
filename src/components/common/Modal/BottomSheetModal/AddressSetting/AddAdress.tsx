@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Pressable } from '
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
-import COLOR from '../../../constants/colors';
+import COLOR from '../../../../../constants/colors';
 
 const AddAddress = ({
   openSearch,

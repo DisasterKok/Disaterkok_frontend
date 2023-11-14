@@ -8,7 +8,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '../navigation/types';
-import { NotiContentBottomSheet } from '../components/BottomSheetModal';
+import { NotiContentBottomSheet } from '../components/common/Modal/BottomSheetModal';
 
 export interface CustomNavigationOptions extends Partial<NativeStackNavigationOptions> {
   tabBarStyle?: {

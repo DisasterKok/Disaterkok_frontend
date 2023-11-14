@@ -9,16 +9,16 @@ import {
   Modal,
   Pressable,
 } from 'react-native';
-import COLOR from '../../../constants/colors';
-import Separator from '../../Separator';
+import COLOR from '../../../../../constants/colors';
+import Separator from '../../../../Separator';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import useAddressData from '../../../hooks/useAddressData';
-import SearchPostcode from '../../SelectAddress/SearchPostcode';
-import AliasPostcode from '../../SelectAddress/AliasPostcode';
+import useAddressData from '../../../../../hooks/useAddressData';
+import SearchPostcode from '../../../../SelectAddress/SearchPostcode';
+import AliasPostcode from '../../../../SelectAddress/AliasPostcode';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import AddAddress from './AddAdress';
-import getCurrentLocation from '../../SelectAddress/GetCurrentLocation';
+import getCurrentLocation from '../../../../SelectAddress/GetCurrentLocation';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 const AddressDataList = [

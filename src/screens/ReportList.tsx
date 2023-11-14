@@ -1,6 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, ScrollView } from 'react-native';
-import { SelectRegionBottomSheet } from '../components/BottomSheetModal';
 
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
@@ -8,12 +7,15 @@ import COLOR from '../constants/colors';
 import FaIcon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SigunguAndEupmyeondongType } from '../components/SelectRegion/types';
-import SelectDisasterBottomSheet from '../components/BottomSheetModal/SelectDisasterBottomSheet';
 import { DisasterType } from '../components/SelectDisaster/types';
 import ReportArticleList from '../components/ReportArticle/ReportArticleList';
-import AddressBottomSheet from '../components/Home/AddressSetting/AddressBottomSheet';
 import { HomeStackParamList } from '../navigation/types';
 import { NavigationProp } from '@react-navigation/native';
+import {
+  FilterDisasterBottomSheet,
+  FilterRegionBottomSheet,
+  AddressBottomSheet,
+} from '../components/common/Modal/BottomSheetModal';
 
 export interface CustomNavigationOptions extends Partial<NativeStackNavigationOptions> {
   tabBarStyle?: {
@@ -26,8 +28,8 @@ interface ReportListScreenProps {
 
 export default function ReportList({ navigation }: ReportListScreenProps) {
   const selectAddressModalRef = useRef<BottomSheetModal>(null);
-  const selectRegionModalRef = useRef<BottomSheetModal>(null);
-  const selectDisasterModalRef = useRef<BottomSheetModal>(null);
+  const filterRegionModalRef = useRef<BottomSheetModal>(null);
+  const filterDisasterModalRef = useRef<BottomSheetModal>(null);
 
   const showTabBar = useCallback(() => {
     navigation.setOptions({
@@ -103,7 +105,7 @@ export default function ReportList({ navigation }: ReportListScreenProps) {
         </View>
         <View style={styles.filterButtonContainer}>
           <Pressable
-            onPress={() => handlePresentModalPress(selectRegionModalRef)}
+            onPress={() => handlePresentModalPress(filterRegionModalRef)}
             style={
               selectedEupmyeondong.length === 0
                 ? styles.regionSelect
@@ -127,7 +129,7 @@ export default function ReportList({ navigation }: ReportListScreenProps) {
           </Pressable>
 
           <Pressable
-            onPress={() => handlePresentModalPress(selectDisasterModalRef)}
+            onPress={() => handlePresentModalPress(filterDisasterModalRef)}
             style={
               selectedDisaster.length === 0
                 ? styles.regionSelect
@@ -155,14 +157,14 @@ export default function ReportList({ navigation }: ReportListScreenProps) {
 
         {/* 모달 */}
         <AddressBottomSheet bottomSheetModalRef={selectAddressModalRef} isEditable={false} />
-        <SelectRegionBottomSheet
-          bottomSheetModalRef={selectRegionModalRef}
+        <FilterRegionBottomSheet
+          bottomSheetModalRef={filterRegionModalRef}
           navigation={navigation}
           selectedEupmyeondong={selectedEupmyeondong}
           setSelectedEupmyeondong={setSelectedEupmyeondong}
         />
-        <SelectDisasterBottomSheet
-          bottomSheetModalRef={selectDisasterModalRef}
+        <FilterDisasterBottomSheet
+          bottomSheetModalRef={filterDisasterModalRef}
           navigation={navigation}
           selectedDisaster={selectedDisaster}
           setSelectedDisaster={setSelectedDisaster}

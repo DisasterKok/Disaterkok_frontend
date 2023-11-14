@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   NaturalDisasterBottomSheet,
   SocialDisasterBottomSheet,
-} from '../components/BottomSheetModal';
+} from '../components/common/Modal/BottomSheetModal';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LoggedOutStackParamList } from '../navigation/types';
 

@@ -2,7 +2,7 @@ import React, { RefObject, useCallback, useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View, Platform, FlatList } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import COLOR from '../../constants/colors';
+import COLOR from '../../../../../constants/colors';
 
 type NaturalDisasterBottomSheetProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;

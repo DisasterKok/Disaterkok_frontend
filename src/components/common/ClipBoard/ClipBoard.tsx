@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { SafeAreaView, View, Text, Pressable, StyleSheet } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
-import COLOR from '../../constants/colors';
+import COLOR from '../../../constants/colors';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 const ClipBoard = () => {
