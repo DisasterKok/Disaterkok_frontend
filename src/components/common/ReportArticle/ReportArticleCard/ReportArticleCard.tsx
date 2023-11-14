@@ -3,10 +3,10 @@ import { StyleSheet, View, Text, Platform, FlatList, Pressable } from 'react-nat
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-import COLOR from '../../constants/colors';
+import COLOR from '../../../../constants/colors';
 import { ReportArticleType } from './types';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { HomeStackParamList } from '../../navigation/types';
+import { HomeStackParamList } from '../../../../navigation/types';
 import SharedModal from './SharedModal';
 
 export default function ReportArticleCard({

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, StyleSheet } from 'react-native';
-import { ARTICLE_LIST } from '../../constants/DummyArticle';
-import ReportArticleCard from './ReportArticleCard';
+import { ARTICLE_LIST } from '../../../../constants/DummyArticle';
+import ReportArticleCard from '../ReportArticleCard/ReportArticleCard';
 
 export default function ReportArticleList() {
   return (

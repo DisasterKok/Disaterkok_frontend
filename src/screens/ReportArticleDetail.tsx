@@ -7,7 +7,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import COLOR from '../constants/colors';
 import { FlatList } from 'react-native-gesture-handler';
-import SharedModal from '../components/ReportArticle/SharedModal';
+import SharedModal from '../components/common/ReportArticle/ReportArticleCard/SharedModal';
 
 export default function ReportArticleDetail() {
   //   const { postId, parms } = route.params; // 게시글 ID

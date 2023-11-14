@@ -1,4 +1,7 @@
-import { ReportArticleDetailType, ReportArticleType } from '../components/ReportArticle/types';
+import {
+  ReportArticleDetailType,
+  ReportArticleType,
+} from '../components/common/ReportArticle/ReportArticleCard/types';
 
 export const ARTICLE_LIST: ReportArticleType[] = [
   {

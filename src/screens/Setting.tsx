@@ -8,7 +8,8 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '../navigation/types';
-import { NotiContentBottomSheet } from '../components/common/Modal/BottomSheetModal';
+import { NotificationContentBottomSheet } from '../components/common/Modal/BottomSheetModal';
+import TabBar from '../components/common/TabBar/TabBar';
 
 export interface CustomNavigationOptions extends Partial<NativeStackNavigationOptions> {
   tabBarStyle?: {
@@ -17,8 +18,6 @@ export interface CustomNavigationOptions extends Partial<NativeStackNavigationOp
 }
 
 export default function Setting() {
-  const [selectedTab, setSelectedTab] = useState('전체');
-
   const notiModalRef = useRef<BottomSheetModal>(null);
 
   const navigation: NavigationProp<HomeStackParamList, 'Setting'> = useNavigation();
@@ -36,65 +35,9 @@ export default function Setting() {
     showTabBar();
   }, []);
 
-  const handleTabPress = (tabName: string) => {
-    setSelectedTab(tabName);
-  };
-
   return (
     <ScrollView style={styles.layout}>
-      <View style={styles.tabContainer}>
-        <Pressable
-          style={
-            selectedTab === '전체' ? StyleSheet.compose(styles.tab, styles.selectedTab) : styles.tab
-          }
-          onPress={() => handleTabPress('전체')}
-        >
-          <Text
-            style={
-              selectedTab === '전체'
-                ? StyleSheet.compose(styles.tabText, styles.selectedTabText)
-                : styles.tabText
-            }
-          >
-            전체
-          </Text>
-        </Pressable>
-        <Pressable
-          style={
-            selectedTab === '전국' ? StyleSheet.compose(styles.tab, styles.selectedTab) : styles.tab
-          }
-          onPress={() => handleTabPress('전국')}
-        >
-          <Text
-            style={
-              selectedTab === '전국'
-                ? StyleSheet.compose(styles.tabText, styles.selectedTabText)
-                : styles.tabText
-            }
-          >
-            전국
-          </Text>
-        </Pressable>
-        <Pressable
-          style={
-            selectedTab === '우리동네'
-              ? StyleSheet.compose(styles.tab, styles.selectedTab)
-              : styles.tab
-          }
-          onPress={() => handleTabPress('우리동네')}
-        >
-          <Text
-            style={
-              selectedTab === '우리동네'
-                ? StyleSheet.compose(styles.tabText, styles.selectedTabText)
-                : styles.tabText
-            }
-          >
-            우리동네
-          </Text>
-        </Pressable>
-      </View>
-
+      <TabBar tabList={['전체', '전국', '우리동네']} />
       <View style={styles.cautionContainer}>
         <FeatherIcon name="info" size={12} color={COLOR.gray} />
         <Text style={styles.cautionText}>알림 내역은 30일 후, 자동 삭제 돼요</Text>
@@ -189,7 +132,7 @@ export default function Setting() {
       </View>
 
       {/* 모달 */}
-      <NotiContentBottomSheet bottomSheetModalRef={notiModalRef} />
+      <NotificationContentBottomSheet bottomSheetModalRef={notiModalRef} />
     </ScrollView>
   );
 }

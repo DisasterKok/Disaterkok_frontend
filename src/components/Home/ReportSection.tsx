@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import COLOR from '../../constants/colors';
-import ReportArticleList from '../ReportArticle/ReportArticleList';
+import ReportArticleList from '../common/ReportArticle/ReportArticleList/ReportArticleList';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '../../navigation/types';

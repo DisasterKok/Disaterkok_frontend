@@ -8,7 +8,7 @@ import FaIcon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SigunguAndEupmyeondongType } from '../components/SelectRegion/types';
 import { DisasterType } from '../components/SelectDisaster/types';
-import ReportArticleList from '../components/ReportArticle/ReportArticleList';
+import ReportArticleList from '../components/common/ReportArticle/ReportArticleList/ReportArticleList';
 import { HomeStackParamList } from '../navigation/types';
 import { NavigationProp } from '@react-navigation/native';
 import {
@@ -16,6 +16,7 @@ import {
   FilterRegionBottomSheet,
   AddressBottomSheet,
 } from '../components/common/Modal/BottomSheetModal';
+import TabBar from '../components/common/TabBar/TabBar';
 
 export interface CustomNavigationOptions extends Partial<NativeStackNavigationOptions> {
   tabBarStyle?: {
@@ -44,65 +45,15 @@ export default function ReportList({ navigation }: ReportListScreenProps) {
     showTabBar();
   }, []);
 
-  const [selectedTab, setSelectedTab] = useState('전국');
   const [selectedEupmyeondong, setSelectedEupmyeondong] = useState<SigunguAndEupmyeondongType[]>(
     [],
   );
   const [selectedDisaster, setSelectedDisaster] = useState<DisasterType[]>([]);
 
-  const handleTabPress = (tabName: string) => {
-    setSelectedTab(tabName);
-  };
-
   return (
     <View style={styles.layout}>
       <ScrollView style={styles.contentLayout}>
-        <View style={styles.tabContainer}>
-          <Pressable
-            style={
-              selectedTab === '전국'
-                ? StyleSheet.compose(styles.tab, styles.selectedTab)
-                : styles.tab
-            }
-            onPress={() => handleTabPress('전국')}
-          >
-            <Text
-              style={
-                selectedTab === '전국'
-                  ? StyleSheet.compose(styles.tabText, styles.selectedTabText)
-                  : styles.tabText
-              }
-            >
-              전국
-            </Text>
-          </Pressable>
-          <Pressable
-            style={
-              selectedTab === '우리동네'
-                ? StyleSheet.compose(styles.tab, styles.selectedTab)
-                : styles.tab
-            }
-            onPress={() => handleTabPress('우리동네')}
-          >
-            <Text
-              style={
-                selectedTab === '우리동네'
-                  ? StyleSheet.compose(styles.tabText, styles.selectedTabText)
-                  : styles.tabText
-              }
-            >
-              우리동네
-            </Text>
-            {selectedTab === '우리동네' && (
-              <FaIcon
-                name="angle-down"
-                size={15}
-                color={COLOR.black}
-                onPress={() => handlePresentModalPress(selectAddressModalRef)}
-              />
-            )}
-          </Pressable>
-        </View>
+        <TabBar tabList={['전국', '우리동네']} />
         <View style={styles.filterButtonContainer}>
           <Pressable
             onPress={() => handlePresentModalPress(filterRegionModalRef)}
