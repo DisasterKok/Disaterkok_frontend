@@ -1,19 +1,14 @@
-import React, { RefObject, useState } from 'react';
+import React from 'react';
 import { Pressable, StyleSheet, View, Text, FlatList } from 'react-native';
 import COLOR from '../../../constants/colors';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 interface TabBarProps {
   tabList: string[];
+  selectedTab: string;
+  handleTabPress: (tabName: string) => void;
 }
 
-export default function TabBar({ tabList }: TabBarProps) {
-  const [selectedTab, setSelectedTab] = useState(tabList[0]);
-
-  const handleTabPress = (tabName: string) => {
-    setSelectedTab(tabName);
-  };
-
+export default function TabBar({ tabList, selectedTab, handleTabPress }: TabBarProps) {
   const renderTabBar = ({ item }: { item: string }) => (
     <Pressable
       style={selectedTab === item ? StyleSheet.compose(styles.tab, styles.selectedTab) : styles.tab}

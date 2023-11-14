@@ -10,6 +10,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '../navigation/types';
 import { NotificationContentBottomSheet } from '../components/common/Modal/BottomSheetModal';
 import TabBar from '../components/common/TabBar/TabBar';
+import useTabBar from '../hooks/useTabBar';
 
 export interface CustomNavigationOptions extends Partial<NativeStackNavigationOptions> {
   tabBarStyle?: {
@@ -35,9 +36,15 @@ export default function Setting() {
     showTabBar();
   }, []);
 
+  const { selectedTab, handleTabPress } = useTabBar({ tabList: ['전체', '전국', '우리동네'] });
+
   return (
     <ScrollView style={styles.layout}>
-      <TabBar tabList={['전체', '전국', '우리동네']} />
+      <TabBar
+        tabList={['전체', '전국', '우리동네']}
+        selectedTab={selectedTab}
+        handleTabPress={handleTabPress}
+      />
       <View style={styles.cautionContainer}>
         <FeatherIcon name="info" size={12} color={COLOR.gray} />
         <Text style={styles.cautionText}>알림 내역은 30일 후, 자동 삭제 돼요</Text>

@@ -17,6 +17,7 @@ import {
   AddressBottomSheet,
 } from '../components/common/Modal/BottomSheetModal';
 import TabBar from '../components/common/TabBar/TabBar';
+import useTabBar from '../hooks/useTabBar';
 
 export interface CustomNavigationOptions extends Partial<NativeStackNavigationOptions> {
   tabBarStyle?: {
@@ -50,10 +51,16 @@ export default function ReportList({ navigation }: ReportListScreenProps) {
   );
   const [selectedDisaster, setSelectedDisaster] = useState<DisasterType[]>([]);
 
+  const { selectedTab, handleTabPress } = useTabBar({ tabList: ['전국', '우리동네'] });
+
   return (
     <View style={styles.layout}>
       <ScrollView style={styles.contentLayout}>
-        <TabBar tabList={['전국', '우리동네']} />
+        <TabBar
+          tabList={['전국', '우리동네']}
+          selectedTab={selectedTab}
+          handleTabPress={handleTabPress}
+        />
         <View style={styles.filterButtonContainer}>
           <Pressable
             onPress={() => handlePresentModalPress(filterRegionModalRef)}
