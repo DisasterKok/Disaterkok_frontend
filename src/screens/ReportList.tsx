@@ -1,50 +1,19 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View, ScrollView } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Pressable, StyleSheet, View, ScrollView } from 'react-native';
 
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import COLOR from '../constants/colors';
-import FaIcon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SigunguAndEupmyeondongType } from '../components/SelectRegion/types';
 import { DisasterType } from '../components/SelectDisaster/types';
 import ReportArticleList from '../components/common/ReportArticle/ReportArticleList/ReportArticleList';
-import { HomeStackParamList } from '../navigation/types';
-import { NavigationProp } from '@react-navigation/native';
-import {
-  FilterDisasterBottomSheet,
-  FilterRegionBottomSheet,
-  AddressBottomSheet,
-} from '../components/common/Modal/BottomSheetModal';
+import { AddressBottomSheet } from '../components/common/Modal/BottomSheetModal';
 import TabBar from '../components/common/TabBar/TabBar';
 import useTabBar from '../hooks/useTabBar';
+import FilterButtons from '../components/ReportList/FilterButtons';
 
-export interface CustomNavigationOptions extends Partial<NativeStackNavigationOptions> {
-  tabBarStyle?: {
-    display: string;
-  };
-}
-interface ReportListScreenProps {
-  navigation: NavigationProp<HomeStackParamList, 'ReportList'>;
-}
-
-export default function ReportList({ navigation }: ReportListScreenProps) {
+export default function ReportList() {
   const selectAddressModalRef = useRef<BottomSheetModal>(null);
-  const filterRegionModalRef = useRef<BottomSheetModal>(null);
-  const filterDisasterModalRef = useRef<BottomSheetModal>(null);
-
-  const showTabBar = useCallback(() => {
-    navigation.setOptions({
-      tabBarStyle: {
-        display: 'none',
-      },
-    } as CustomNavigationOptions);
-  }, [navigation]);
-
-  const handlePresentModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
-    ref.current?.present();
-    showTabBar();
-  }, []);
 
   const [selectedEupmyeondong, setSelectedEupmyeondong] = useState<SigunguAndEupmyeondongType[]>(
     [],
@@ -52,7 +21,6 @@ export default function ReportList({ navigation }: ReportListScreenProps) {
   const [selectedDisaster, setSelectedDisaster] = useState<DisasterType[]>([]);
 
   const { selectedTab, handleTabPress } = useTabBar({ tabList: ['전국', '우리동네'] });
-
   return (
     <View style={styles.layout}>
       <ScrollView style={styles.contentLayout}>
@@ -61,72 +29,17 @@ export default function ReportList({ navigation }: ReportListScreenProps) {
           selectedTab={selectedTab}
           handleTabPress={handleTabPress}
         />
-        <View style={styles.filterButtonContainer}>
-          <Pressable
-            onPress={() => handlePresentModalPress(filterRegionModalRef)}
-            style={
-              selectedEupmyeondong.length === 0
-                ? styles.regionSelect
-                : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
-            }
-          >
-            <Text
-              style={
-                selectedEupmyeondong.length === 0
-                  ? styles.regionSelectText
-                  : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
-              }
-            >
-              지역
-            </Text>
-            <FaIcon
-              name="angle-down"
-              size={20}
-              color={selectedEupmyeondong.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
-            />
-          </Pressable>
-
-          <Pressable
-            onPress={() => handlePresentModalPress(filterDisasterModalRef)}
-            style={
-              selectedDisaster.length === 0
-                ? styles.regionSelect
-                : StyleSheet.compose(styles.regionSelect, styles.regionSelectActive)
-            }
-          >
-            <Text
-              style={
-                selectedDisaster.length === 0
-                  ? styles.regionSelectText
-                  : StyleSheet.compose(styles.regionSelectText, styles.regionSelectTextActive)
-              }
-            >
-              재난
-            </Text>
-            <FaIcon
-              name="angle-down"
-              size={20}
-              color={selectedDisaster.length === 0 ? `${COLOR.gray}` : `${COLOR.white}`}
-            />
-          </Pressable>
-        </View>
+        <FilterButtons
+          selectedEupmyeondong={selectedEupmyeondong}
+          setSelectedEupmyeondong={setSelectedEupmyeondong}
+          selectedDisaster={selectedDisaster}
+          setSelectedDisaster={setSelectedDisaster}
+        />
 
         <ReportArticleList />
 
         {/* 모달 */}
         <AddressBottomSheet bottomSheetModalRef={selectAddressModalRef} isEditable={false} />
-        <FilterRegionBottomSheet
-          bottomSheetModalRef={filterRegionModalRef}
-          navigation={navigation}
-          selectedEupmyeondong={selectedEupmyeondong}
-          setSelectedEupmyeondong={setSelectedEupmyeondong}
-        />
-        <FilterDisasterBottomSheet
-          bottomSheetModalRef={filterDisasterModalRef}
-          navigation={navigation}
-          selectedDisaster={selectedDisaster}
-          setSelectedDisaster={setSelectedDisaster}
-        />
       </ScrollView>
       <Pressable style={styles.refresh}>
         <Ionicons name="refresh" size={20} color={COLOR.white} />
