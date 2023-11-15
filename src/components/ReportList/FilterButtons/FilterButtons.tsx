@@ -6,8 +6,8 @@ import FaIcon from 'react-native-vector-icons/FontAwesome';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
-import { SigunguAndEupmyeondongType } from '../../SelectRegion/types';
-import { DisasterType } from '../../SelectDisaster/types';
+import { SigunguAndEupmyeondongType } from '../FilterRegion/SelectRegion/types';
+import { DisasterType } from '../FilterDisaster/SelectDisaster/types';
 import { HomeStackParamList } from '../../../navigation/types';
 import { FilterDisasterBottomSheet, FilterRegionBottomSheet } from '../index';
 

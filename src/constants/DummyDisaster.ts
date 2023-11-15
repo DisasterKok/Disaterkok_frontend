@@ -1,4 +1,7 @@
-import { DisasterCategoryType, DisasterType } from '../components/SelectDisaster/types';
+import {
+  DisasterCategoryType,
+  DisasterType,
+} from '../components/ReportList/FilterDisaster/SelectDisaster/types';
 
 export const DISASTER_CATEGORY: DisasterCategoryType[] = [
   { id: 1, text: '자연재난' },

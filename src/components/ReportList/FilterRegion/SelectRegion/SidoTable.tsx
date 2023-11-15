@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, FlatList } from 'react-native';
-import { fetchSigunguInfo } from '../../apis/fetchRegionAPI/fetchSigunguInfo';
-import COLOR from '../../constants/colors';
+import { fetchSigunguInfo } from '../../../../apis/fetchRegionAPI/fetchSigunguInfo';
+import COLOR from '../../../../constants/colors';
 import { SidoType, SigunguAndEupmyeondongType, SigunguFeatureType } from './types';
 
 type SidoTableProps = {

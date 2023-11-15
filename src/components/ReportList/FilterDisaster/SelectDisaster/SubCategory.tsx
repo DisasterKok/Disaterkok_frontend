@@ -1,22 +1,22 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, FlatList } from 'react-native';
-import COLOR from '../../constants/colors';
+import COLOR from '../../../../constants/colors';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { SigunguAndEupmyeondongType } from './types';
+import { DisasterType } from './types';
 
-type EupmyeondongTableProps = {
-  selectedEupmyeondong: SigunguAndEupmyeondongType[];
-  setSelectedEupmyeondong: React.Dispatch<React.SetStateAction<SigunguAndEupmyeondongType[]>>;
-  eupmyeondongList: SigunguAndEupmyeondongType[];
+type SubCategoryTableProps = {
+  selectedDisaster: DisasterType[];
+  setSelectedDisaster: React.Dispatch<React.SetStateAction<DisasterType[]>>;
+  disasterList: DisasterType[];
 };
 
-export default function EupmyeondongTable({
-  selectedEupmyeondong,
-  setSelectedEupmyeondong,
-  eupmyeondongList,
-}: EupmyeondongTableProps) {
-  const handleEupmyeondongItemClick = ({ item }: { item: SigunguAndEupmyeondongType }) => {
-    setSelectedEupmyeondong((prev) => {
+export default function SubCategory({
+  selectedDisaster,
+  setSelectedDisaster,
+  disasterList,
+}: SubCategoryTableProps) {
+  const handleDisasterItemClick = ({ item }: { item: DisasterType }) => {
+    setSelectedDisaster((prev) => {
       if (prev.some((selectedItem) => selectedItem.id === item.id)) {
         return prev.filter((prevItem) => prevItem.id !== item.id);
       } else {
@@ -25,20 +25,20 @@ export default function EupmyeondongTable({
     });
   };
 
-  const renderEupmyeondong = ({ item }: { item: SigunguAndEupmyeondongType }) => {
+  const renderEupmyeondong = ({ item }: { item: DisasterType }) => {
     return (
-      <Pressable style={styles.regionItem} onPress={() => handleEupmyeondongItemClick({ item })}>
+      <Pressable style={styles.regionItem} onPress={() => handleDisasterItemClick({ item })}>
         <View style={styles.eupmyeondongItem}>
           <Text
             style={
-              selectedEupmyeondong.some((selectedItem) => selectedItem.id === item.id)
+              selectedDisaster.some((selectedItem) => selectedItem.id === item.id)
                 ? StyleSheet.compose(styles.regionItemtext, styles.selectedEupmyeondongText)
                 : styles.regionItemtext
             }
           >
-            {item.singleName}
+            {item.text}
           </Text>
-          {selectedEupmyeondong.some((selectedItem) => selectedItem.id === item.id) && (
+          {selectedDisaster.some((selectedItem) => selectedItem.id === item.id) && (
             <FeatherIcon name="check" size={18} style={styles.check} />
           )}
         </View>
@@ -48,10 +48,10 @@ export default function EupmyeondongTable({
   return (
     <View style={styles.tableRight}>
       <View style={styles.tableTitle}>
-        <Text>동,읍,면</Text>
+        <Text>소분류</Text>
       </View>
       <FlatList
-        data={eupmyeondongList}
+        data={disasterList}
         renderItem={renderEupmyeondong}
         numColumns={1}
         contentContainerStyle={styles.regionList}

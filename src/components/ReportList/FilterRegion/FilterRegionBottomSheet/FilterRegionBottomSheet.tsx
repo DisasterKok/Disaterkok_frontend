@@ -1,29 +1,37 @@
-import React, { RefObject, useCallback, useMemo, useState } from 'react';
+import React, { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, FlatList, Platform } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
-import COLOR from '../../../constants/colors';
+import COLOR from '../../../../constants/colors';
+import { fetchSidoInfo } from '../../../../apis/fetchRegionAPI/fetchSidoInfo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { NavigationProp } from '@react-navigation/native';
-import { CustomNavigationOptions } from '../../../screens/ReportList';
-import MainCategory from '../../SelectDisaster/MainCategory';
-import { DisasterCategoryType, DisasterType } from '../../SelectDisaster/types';
-import { DISASTER_CATEGORY } from '../../../constants/DummyDisaster';
-import SubCategory from '../../SelectDisaster/SubCategory';
-import { HomeStackParamList } from '../../../navigation/types';
+import { EupmyeondongTable, SidoTable, SigunguTable } from '../SelectRegion';
+import { SidoType, SigunguAndEupmyeondongType } from '../SelectRegion/types';
+import { HomeStackParamList } from '../../../../navigation/types';
+import { CustomNavigationOptions } from '../../FilterButtons/FilterButtons';
 
-type SelectDisasterScreenProps = {
+type SelectRegionScreenProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
   navigation: NavigationProp<HomeStackParamList, 'ReportList'>;
-  selectedDisaster: DisasterType[];
-  setSelectedDisaster: React.Dispatch<React.SetStateAction<DisasterType[]>>;
+  selectedEupmyeondong: SigunguAndEupmyeondongType[];
+  setSelectedEupmyeondong: React.Dispatch<React.SetStateAction<SigunguAndEupmyeondongType[]>>;
 };
 
-export default function FilterDisasterBottomSheet({
+type SidoFeatureType = {
+  type: string;
+  properties: {
+    ctprvn_cd: string;
+    ctp_kor_nm: string;
+  };
+  id: string;
+};
+
+export default function FilterRegionBottomSheet({
   bottomSheetModalRef,
   navigation,
-  selectedDisaster,
-  setSelectedDisaster,
-}: SelectDisasterScreenProps) {
+  selectedEupmyeondong,
+  setSelectedEupmyeondong,
+}: SelectRegionScreenProps) {
   const snapPoints = useMemo(() => ['25%', '80%'], []);
 
   const showTabBar = useCallback(() => {
@@ -49,26 +57,42 @@ export default function FilterDisasterBottomSheet({
     [],
   );
 
-  const [disasterList, setDisasterList] = useState<DisasterCategoryType[]>([]);
-  const [selectedDisasterCategory, setSelectedDisasterCategory] = useState(0);
+  const [sidoList, setSidoList] = useState<SidoType[]>([]);
+  const [sigunguList, setSigunguList] = useState<SigunguAndEupmyeondongType[]>([]);
+  const [eupmyeondongList, setEupmyeondongList] = useState<SigunguAndEupmyeondongType[]>([]);
 
-  const handleDisasterItemDelete = ({ item }: { item: DisasterType }) => {
-    setSelectedDisaster((prev) => prev.filter((prevItem) => prevItem.id !== item.id));
+  const [selectedSido, setSelectedSido] = useState(0);
+  const [selectedSigungu, setSelectedSigungu] = useState(0);
+
+  const handleEupmyeondongItemDelete = ({ item }: { item: SigunguAndEupmyeondongType }) => {
+    setSelectedEupmyeondong((prev) => prev.filter((prevItem) => prevItem.id !== item.id));
   };
 
-  const renderSelectedDisaster = ({ item }: { item: DisasterType }) => {
+  const renderSelectedEupmyeondong = ({ item }: { item: SigunguAndEupmyeondongType }) => {
     return (
       <Pressable style={styles.selectedRegionItem}>
-        <Text style={styles.selectedRegionItemText}>{item.text}</Text>
+        <Text style={styles.selectedRegionItemText}>{item.singleName}</Text>
         <AntIcon
           name="close"
           size={12}
           style={styles.close}
-          onPress={() => handleDisasterItemDelete({ item })}
+          onPress={() => handleEupmyeondongItemDelete({ item })}
         />
       </Pressable>
     );
   };
+
+  useEffect(() => {
+    fetchSidoInfo()
+      .then((data) => {
+        const sidoListFormatted = data.features.map((feature: SidoFeatureType) => ({
+          id: feature.properties.ctprvn_cd,
+          name: feature.properties.ctp_kor_nm,
+        }));
+        setSidoList(sidoListFormatted);
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   return (
     <BottomSheetModal
@@ -80,26 +104,35 @@ export default function FilterDisasterBottomSheet({
       onChange={handleSheetChanges}
     >
       <View style={styles.modalContainer}>
-        <Text style={styles.title}>재난 선택</Text>
+        <Text style={styles.title}>지역 선택</Text>
         <View style={styles.tableLayout}>
-          <MainCategory
-            disasterCategory={DISASTER_CATEGORY}
-            selectedDisasterCategory={selectedDisasterCategory}
-            setSelectedDisasterCategory={setSelectedDisasterCategory}
-            setDisasterList={setDisasterList}
+          <SidoTable
+            sidoList={sidoList}
+            setSidoList={setSidoList}
+            setSigunguList={setSigunguList}
+            setEupmyeondongList={setEupmyeondongList}
+            selectedSido={selectedSido}
+            setSelectedSido={setSelectedSido}
+            setSelectedSigungu={setSelectedSigungu}
           />
-          <SubCategory
-            selectedDisaster={selectedDisaster}
-            setSelectedDisaster={setSelectedDisaster}
-            disasterList={disasterList}
+          <SigunguTable
+            sigunguList={sigunguList}
+            setEupmyeondongList={setEupmyeondongList}
+            selectedSigungu={selectedSigungu}
+            setSelectedSigungu={setSelectedSigungu}
+          />
+          <EupmyeondongTable
+            setSelectedEupmyeondong={setSelectedEupmyeondong}
+            selectedEupmyeondong={selectedEupmyeondong}
+            eupmyeondongList={eupmyeondongList}
           />
         </View>
       </View>
-      {selectedDisaster.length !== 0 && (
+      {selectedEupmyeondong.length !== 0 && (
         <View style={styles.selecetdRegion}>
           <FlatList
-            data={selectedDisaster}
-            renderItem={renderSelectedDisaster}
+            data={selectedEupmyeondong}
+            renderItem={renderSelectedEupmyeondong}
             numColumns={1}
             contentContainerStyle={styles.selecetdRegionList}
             horizontal={true}
@@ -108,14 +141,14 @@ export default function FilterDisasterBottomSheet({
       )}
       <View
         style={
-          selectedDisaster.length === 0
+          selectedEupmyeondong.length === 0
             ? styles.resultModal
             : StyleSheet.compose(styles.resultModal, styles.resultModalActive)
         }
       >
         <Pressable
           style={
-            selectedDisaster.length === 0
+            selectedEupmyeondong.length === 0
               ? styles.completeButton
               : StyleSheet.compose(styles.completeButton, styles.completeButtonActive)
           }

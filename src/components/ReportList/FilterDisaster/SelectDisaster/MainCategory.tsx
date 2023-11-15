@@ -1,8 +1,8 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, FlatList } from 'react-native';
-import COLOR from '../../constants/colors';
+import COLOR from '../../../../constants/colors';
 import { DisasterCategoryType, DisasterType } from './types';
-import { NATURAL_DISASTER, SOCIAL_DISASTER } from '../../constants/DummyDisaster';
+import { NATURAL_DISASTER, SOCIAL_DISASTER } from '../../../../constants/DummyDisaster';
 
 type SidoTableProps = {
   disasterCategory: DisasterCategoryType[];
