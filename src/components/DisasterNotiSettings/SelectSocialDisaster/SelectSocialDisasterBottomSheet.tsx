@@ -2,40 +2,36 @@ import React, { RefObject, useCallback, useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View, Platform, FlatList } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import COLOR from '../../../../../constants/colors';
+import COLOR from '../../../constants/colors';
 
-type NaturalDisasterBottomSheetProps = {
+type SocialDisasterBottomSheetProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
   selectedTags: number[];
   setSelectedTags: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
-type NaturalDisasterType = {
+type SocialDisasterType = {
   id: number;
   text: string;
 };
 
-const NATURAL_DISASTER: NaturalDisasterType[] = [
-  { id: 1, text: '태풍' },
-  { id: 2, text: '호우' },
-  { id: 3, text: '폭설' },
-  { id: 4, text: '지진/해일' },
-  { id: 5, text: '산사태' },
-  { id: 6, text: '우박' },
-  { id: 7, text: '낙뢰/뇌우' },
-  { id: 8, text: '황사/미세먼지' },
-  { id: 9, text: '한파' },
-  { id: 10, text: '강풍' },
-  { id: 11, text: '가뭄' },
-  { id: 12, text: '산불' },
-  { id: 13, text: '폭염' },
+const SOCIAL_DISASTER: SocialDisasterType[] = [
+  { id: 1, text: '화재' },
+  { id: 2, text: '건축물붕괴' },
+  { id: 3, text: '폭발' },
+  { id: 4, text: '도로교통사고' },
+  { id: 5, text: '철도/지하철 사고' },
+  { id: 6, text: '정전/전력부족' },
+  { id: 7, text: '감염병' },
+  { id: 8, text: '테러사고' },
+  { id: 9, text: '인파사고' },
 ];
 
-export default function NaturalDisasterBottomSheet({
+export default function SocialDisasterBottomSheet({
   bottomSheetModalRef,
   selectedTags,
   setSelectedTags,
-}: NaturalDisasterBottomSheetProps) {
+}: SocialDisasterBottomSheetProps) {
   const toggleTag = (tagId: number) => {
     setSelectedTags((prevSelectedTags) => {
       if (prevSelectedTags.includes(tagId)) {
@@ -44,20 +40,17 @@ export default function NaturalDisasterBottomSheet({
         return [...prevSelectedTags, tagId];
       }
     });
-
-    if (selectedTags.length === NATURAL_DISASTER.length) {
-    }
   };
 
   const toggleAllTags = () => {
-    if (selectedTags.length === NATURAL_DISASTER.length) {
+    if (selectedTags.length === SOCIAL_DISASTER.length) {
       setSelectedTags([]);
     } else {
-      setSelectedTags(NATURAL_DISASTER.map((tag) => tag.id));
+      setSelectedTags(SOCIAL_DISASTER.map((tag) => tag.id));
     }
   };
 
-  const snapPoints = useMemo(() => ['25%', '65%'], []);
+  const snapPoints = useMemo(() => ['25%', '50%'], []);
 
   const handleCloseModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
     ref.current?.close();
@@ -68,7 +61,7 @@ export default function NaturalDisasterBottomSheet({
     [],
   );
 
-  const renderItem = ({ item }: { item: NaturalDisasterType }) => (
+  const renderItem = ({ item }: { item: SocialDisasterType }) => (
     <Pressable
       onPress={() => toggleTag(item.id)}
       style={
@@ -88,7 +81,6 @@ export default function NaturalDisasterBottomSheet({
       </Text>
     </Pressable>
   );
-
   return (
     <BottomSheetModal
       ref={bottomSheetModalRef}
@@ -99,7 +91,7 @@ export default function NaturalDisasterBottomSheet({
     >
       <View style={styles.modalContainer}>
         <FlatList
-          data={NATURAL_DISASTER}
+          data={SOCIAL_DISASTER}
           renderItem={renderItem}
           numColumns={3}
           style={styles.tagContainer}
@@ -115,7 +107,7 @@ export default function NaturalDisasterBottomSheet({
           textStyle={styles.selectAllText}
           onPress={toggleAllTags}
           disableBuiltInState={true}
-          isChecked={selectedTags.length === NATURAL_DISASTER.length}
+          isChecked={selectedTags.length === SOCIAL_DISASTER.length}
         />
         <Pressable
           onPress={() => handleCloseModalPress(bottomSheetModalRef)}

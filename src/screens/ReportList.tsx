@@ -10,7 +10,7 @@ import ReportArticleList from '../components/common/ReportArticle/ReportArticleL
 import { AddressBottomSheet } from '../components/common/Modal/BottomSheetModal';
 import TabBar from '../components/common/TabBar/TabBar';
 import useTabBar from '../hooks/useTabBar';
-import FilterButtons from '../components/ReportList/FilterButtons';
+import FilterButtons from '../components/ReportList/FilterButtons/FilterButtons';
 
 export default function ReportList() {
   const selectAddressModalRef = useRef<BottomSheetModal>(null);

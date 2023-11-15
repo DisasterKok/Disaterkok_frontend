@@ -1,7 +1,7 @@
 import React, { RefObject, useCallback, useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
-import COLOR from '../../../../../constants/colors';
+import COLOR from '../../../constants/colors';
 
 type NotiContentBottomSheetProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;

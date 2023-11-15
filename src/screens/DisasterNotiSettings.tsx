@@ -3,12 +3,12 @@ import { Pressable, StyleSheet, Text, View, Platform } from 'react-native';
 import COLOR from '../constants/colors';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {
-  NaturalDisasterBottomSheet,
-  SocialDisasterBottomSheet,
-} from '../components/common/Modal/BottomSheetModal';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LoggedOutStackParamList } from '../navigation/types';
+import {
+  SelectNaturalDisasterBottomSheet,
+  SelectSocialDisasterBottomSheet,
+} from '../components/DisasterNotiSettings';
 
 type DstrNotiSetScreenProps = NativeStackScreenProps<
   LoggedOutStackParamList,
@@ -68,11 +68,7 @@ export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenPr
               color={!naturalSelectedTags.length ? 'gray' : 'white'}
             />
           </Pressable>
-          <NaturalDisasterBottomSheet
-            bottomSheetModalRef={naturalDisasterModalRef}
-            selectedTags={naturalSelectedTags}
-            setSelectedTags={naturalSetSelectedTags}
-          />
+
           <Pressable
             style={
               !soicalSelectedTags.length
@@ -95,12 +91,6 @@ export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenPr
               size={25}
               color={!soicalSelectedTags.length ? 'gray' : 'white'}
             />
-
-            <SocialDisasterBottomSheet
-              bottomSheetModalRef={socialDisasterModalRef}
-              selectedTags={soicalSelectedTags}
-              setSelectedTags={soicalSetSelectedTags}
-            />
           </Pressable>
         </View>
       </View>
@@ -120,6 +110,18 @@ export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenPr
           <Text style={styles.completeButtonText}>완료</Text>
         </Pressable>
       </View>
+
+      {/* 모달 */}
+      <SelectNaturalDisasterBottomSheet
+        bottomSheetModalRef={naturalDisasterModalRef}
+        selectedTags={naturalSelectedTags}
+        setSelectedTags={naturalSetSelectedTags}
+      />
+      <SelectSocialDisasterBottomSheet
+        bottomSheetModalRef={socialDisasterModalRef}
+        selectedTags={soicalSelectedTags}
+        setSelectedTags={soicalSetSelectedTags}
+      />
     </View>
   );
 }

@@ -1,14 +1,14 @@
 import React, { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, FlatList, Platform } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
-import COLOR from '../../../../../constants/colors';
-import { fetchSidoInfo } from '../../../../../apis/fetchRegionAPI/fetchSidoInfo';
+import COLOR from '../../../constants/colors';
+import { fetchSidoInfo } from '../../../apis/fetchRegionAPI/fetchSidoInfo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { NavigationProp } from '@react-navigation/native';
-import { EupmyeondongTable, SidoTable, SigunguTable } from '../../../../SelectRegion';
-import { SidoType, SigunguAndEupmyeondongType } from '../../../../SelectRegion/types';
-import { CustomNavigationOptions } from '../../../../../screens/ReportList';
-import { HomeStackParamList } from '../../../../../navigation/types';
+import { EupmyeondongTable, SidoTable, SigunguTable } from '../../SelectRegion';
+import { SidoType, SigunguAndEupmyeondongType } from '../../SelectRegion/types';
+import { HomeStackParamList } from '../../../navigation/types';
+import { CustomNavigationOptions } from '../FilterButtons/FilterButtons';
 
 type SelectRegionScreenProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;

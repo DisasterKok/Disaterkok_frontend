@@ -1,18 +1,15 @@
 import React, { useCallback, useRef } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-import COLOR from '../../constants/colors';
+import COLOR from '../../../constants/colors';
 import { View, Text } from 'react-native';
 import FaIcon from 'react-native-vector-icons/FontAwesome';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
-import {
-  FilterDisasterBottomSheet,
-  FilterRegionBottomSheet,
-} from '../common/Modal/BottomSheetModal';
-import { SigunguAndEupmyeondongType } from '../SelectRegion/types';
-import { DisasterType } from '../SelectDisaster/types';
-import { HomeStackParamList } from '../../navigation/types';
+import { SigunguAndEupmyeondongType } from '../../SelectRegion/types';
+import { DisasterType } from '../../SelectDisaster/types';
+import { HomeStackParamList } from '../../../navigation/types';
+import { FilterDisasterBottomSheet, FilterRegionBottomSheet } from '../index';
 
 export interface CustomNavigationOptions extends Partial<NativeStackNavigationOptions> {
   tabBarStyle?: {

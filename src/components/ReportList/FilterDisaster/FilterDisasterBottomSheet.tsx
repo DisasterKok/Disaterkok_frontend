@@ -1,15 +1,15 @@
 import React, { RefObject, useCallback, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, FlatList, Platform } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
-import COLOR from '../../../../../constants/colors';
+import COLOR from '../../../constants/colors';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { NavigationProp } from '@react-navigation/native';
-import { CustomNavigationOptions } from '../../../../../screens/ReportList';
-import MainCategory from '../../../../SelectDisaster/MainCategory';
-import { DisasterCategoryType, DisasterType } from '../../../../SelectDisaster/types';
-import { DISASTER_CATEGORY } from '../../../../../constants/DummyDisaster';
-import SubCategory from '../../../../SelectDisaster/SubCategory';
-import { HomeStackParamList } from '../../../../../navigation/types';
+import { CustomNavigationOptions } from '../../../screens/ReportList';
+import MainCategory from '../../SelectDisaster/MainCategory';
+import { DisasterCategoryType, DisasterType } from '../../SelectDisaster/types';
+import { DISASTER_CATEGORY } from '../../../constants/DummyDisaster';
+import SubCategory from '../../SelectDisaster/SubCategory';
+import { HomeStackParamList } from '../../../navigation/types';
 
 type SelectDisasterScreenProps = {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
