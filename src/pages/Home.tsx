@@ -1,10 +1,7 @@
 import React from 'react';
-import { Text, View, StyleSheet, ScrollView, Animated, Platform } from 'react-native';
+import { View, StyleSheet, ScrollView, Animated, Platform } from 'react-native';
 import COLOR from '../constants/colors';
-import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import SwitchButton from '../components/Home/SwitchButton';
 import WeatherSection from '../components/Home/WeatherSection';
 import IssueSection from '../components/Home/IssueSection';
@@ -13,6 +10,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import ReportSection from '../components/Home/ReportSection';
 import { HomeStackParamList } from '../navigation/types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import AppBar from '../components/Home/AppBar';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 export type HomeScreenProps = NativeStackScreenProps<HomeStackParamList, 'Home'>;
@@ -31,13 +29,13 @@ export default function Home() {
   // Function to interpolate the background color
   const headerBackgroundColor = scrollY.interpolate({
     inputRange: [0, colorChangeThreshold],
-    outputRange: [`${COLOR.primary}`, `${COLOR.lightGray}`],
+    outputRange: [`${COLOR.secondary}`, `${COLOR.lightGray}`],
     extrapolate: 'clamp',
   });
 
   const headerTextColor = scrollY.interpolate({
     inputRange: [0, colorChangeThreshold],
-    outputRange: [`${COLOR.white}`, `${COLOR.primary}`],
+    outputRange: [`${COLOR.white}`, `${COLOR.secondary}`],
     extrapolate: 'clamp',
   });
 
@@ -50,52 +48,50 @@ export default function Home() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.layout}>
+    <SafeAreaView style={styles.layout}>
+      <Animated.View
+        style={[
+          styles.header,
+          {
+            backgroundColor: headerBackgroundColor,
+          },
+        ]}
+      >
+        {/* 상단바 영역 */}
+        <View style={{ width: '100%', height: insets.top }}></View>
+        {/* 앱바 영역 */}
         <Animated.View
-          style={[
-            styles.header,
-            {
-              backgroundColor: headerBackgroundColor,
-            },
-          ]}
+          style={{
+            width: '100%',
+            height: 50,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
-          {/* 상단바 영역 */}
-          <View style={{ width: '100%', height: insets.top }}></View>
-          {/* 앱바 영역 */}
-          <Animated.View style={styles.appBarContainer}>
-            <Animated.View>
-              <Ionicons name="notifications-outline" size={22} onPress={navigateToSetting} />
-            </Animated.View>
-            <Animated.View style={styles.appBarRightContainer}>
-              <AntDesignIcon name="search1" size={22} />
-              <AntDesignIcon name="setting" size={22} />
-            </Animated.View>
-            {/* <Animated.Text style={{ color: headerTextColor }}>앱바 영역 입니다</Animated.Text> */}
-          </Animated.View>
+          <AppBar animatedColor={headerTextColor} />
         </Animated.View>
-        <ScrollView
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
-            useNativeDriver: false,
-          })}
-          scrollEventThrottle={16}
-          style={{ marginTop: 42, width: '100%' }}
-        >
-          <WeatherSection />
-          <View style={styles.contentSheet}>
-            <SwitchButton
-              isLocalSelected={isLocalSelected}
-              onSelect={setLocalSelected}
-              handleSheet={() => handlePresentModalPress(bottomSheetRef)}
-              bottomSheetModalRef={bottomSheetRef}
-            />
-            <IssueSection isLocalSelected={isLocalSelected} />
-            <ReportSection />
-          </View>
-        </ScrollView>
-        <AddressBottomSheet bottomSheetModalRef={bottomSheetRef} isEditable />
-      </SafeAreaView>
-    </SafeAreaProvider>
+      </Animated.View>
+      <ScrollView
+        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
+          useNativeDriver: false,
+        })}
+        scrollEventThrottle={16}
+        style={{ marginTop: 50, width: '100%' }}
+      >
+        <WeatherSection />
+        <View style={styles.contentSheet}>
+          <SwitchButton
+            isLocalSelected={isLocalSelected}
+            onSelect={setLocalSelected}
+            handleSheet={() => handlePresentModalPress(bottomSheetRef)}
+            bottomSheetModalRef={bottomSheetRef}
+          />
+          <IssueSection isLocalSelected={isLocalSelected} />
+          <ReportSection />
+        </View>
+      </ScrollView>
+      <AddressBottomSheet bottomSheetModalRef={bottomSheetRef} isEditable />
+    </SafeAreaView>
   );
 }
 
@@ -104,7 +100,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     flexDirection: 'column',
-    backgroundColor: `${COLOR.primary}`,
+    backgroundColor: `${COLOR.secondary}`,
     position: 'relative',
   },
   header: {
@@ -115,20 +111,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     flexDirection: 'column',
-  },
-  appBarContainer: {
-    width: '100%',
-    height: 54,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 15,
-  },
-  appBarRightContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: 10,
   },
   contentSheet: {
     width: '100%',
