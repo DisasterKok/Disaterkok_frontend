@@ -1,5 +1,6 @@
 const COLOR = {
   primary: '#2C58F4',
+  secondary: '#3D66F5',
   white: '#ffffff',
   whiteBackground: '#FAFAFA',
   black: '#000000',
@@ -11,6 +12,9 @@ const COLOR = {
   blue: '#2C58F4',
   middleBlue: '#8BA3F9',
   lightBlue: '#ECF0FE',
+  skyBlue: '#BBC9FB',
+  deactivated: '#DEDEDE',
+  activated: '#2A56F4',
   notiNationWide: `#F53535`,
   notiHomeTown: '#FFD336',
 };

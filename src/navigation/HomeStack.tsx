@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { Home, ReportArticleDetail, ReportList, Setting } from '../screens';
+import { Home, ReportArticleDetail, ReportList, Setting, Search } from '../screens';
 import { HomeStackParamList } from './types';
 import HeaderLeftGoBack from '../components/common/Header/HeadrLeftGoBack';
 
@@ -24,9 +24,14 @@ export default function HomeStack() {
         options={{ title: '실시간 제보', headerLeft: () => <HeaderLeftGoBack /> }}
       />
       <Stack.Screen
-        name="Setting"
+        name="Notification"
         component={Setting}
         options={{ title: '알림', headerLeft: () => <HeaderLeftGoBack /> }}
+      />
+      <Stack.Screen
+        name="Search"
+        component={Search}
+        options={{ title: '검색', headerShown: false }}
       />
     </Stack.Navigator>
   );
