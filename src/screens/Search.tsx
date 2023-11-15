@@ -7,6 +7,7 @@ import SearchBar from '../components/Search/SearchBar';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '../navigation/types';
 import KeywordList from '../components/Search/KeywordsList';
+import SearchResult from '../components/Search/SearchResult';
 
 const Search = () => {
   const insets = useSafeAreaInsets();
@@ -73,9 +74,7 @@ const Search = () => {
         keyword={searchKeyword ? searchKeyword : ''}
       />
       {isSearched ? (
-        <View>
-          <Text>검색 결과</Text>
-        </View>
+        <SearchResult searchInput={searchInput} />
       ) : (
         <KeywordList history={searchHistory} onKeywordClick={handleKeywordSearch} />
       )}
@@ -90,5 +89,6 @@ const styles = StyleSheet.create({
     height: '100%',
     flexDirection: 'column',
     backgroundColor: `${COLOR.whiteBackground}`,
+    columnGap: 10,
   },
 });

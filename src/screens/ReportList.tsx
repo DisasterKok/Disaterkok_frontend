@@ -20,15 +20,11 @@ export default function ReportList() {
   );
   const [selectedDisaster, setSelectedDisaster] = useState<DisasterType[]>([]);
 
-  const { selectedTab, handleTabPress } = useTabBar({ tabList: ['전국', '우리동네'] });
+  const { tabList, selectedTab, handleTabPress } = useTabBar({ tabList: ['전국', '우리동네'] });
   return (
     <View style={styles.layout}>
       <ScrollView style={styles.contentLayout}>
-        <TabBar
-          tabList={['전국', '우리동네']}
-          selectedTab={selectedTab}
-          handleTabPress={handleTabPress}
-        />
+        <TabBar tabList={tabList} selectedTab={selectedTab} handleTabPress={handleTabPress} />
         <FilterButtons
           selectedEupmyeondong={selectedEupmyeondong}
           setSelectedEupmyeondong={setSelectedEupmyeondong}

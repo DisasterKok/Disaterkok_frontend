@@ -1,14 +1,22 @@
 import React from 'react';
-import { Pressable, StyleSheet, View, Text, FlatList } from 'react-native';
+import { Pressable, StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import COLOR from '../../../constants/colors';
 
 interface TabBarProps {
   tabList: string[];
   selectedTab: string;
   handleTabPress: (tabName: string) => void;
+  gap?: number;
+  renderType?: 'default' | 'button';
 }
 
-export default function TabBar({ tabList, selectedTab, handleTabPress }: TabBarProps) {
+export default function TabBar({
+  tabList,
+  selectedTab,
+  handleTabPress,
+  gap,
+  renderType,
+}: TabBarProps) {
   const renderTabBar = ({ item }: { item: string }) => (
     <Pressable
       style={selectedTab === item ? StyleSheet.compose(styles.tab, styles.selectedTab) : styles.tab}
@@ -26,13 +34,36 @@ export default function TabBar({ tabList, selectedTab, handleTabPress }: TabBarP
     </Pressable>
   );
 
+  const renderButton = ({ item }: { item: string }) => (
+    <TouchableOpacity
+      style={
+        selectedTab === item
+          ? StyleSheet.compose(styles.button, styles.selectedButton)
+          : styles.button
+      }
+      onPress={() => handleTabPress(item)}
+    >
+      <Text
+        style={
+          selectedTab === item
+            ? StyleSheet.compose(styles.buttonText, styles.selectedButtonText)
+            : styles.buttonText
+        }
+      >
+        {item}
+      </Text>
+    </TouchableOpacity>
+  );
+
   return (
     <View>
       <FlatList
         data={tabList}
-        renderItem={renderTabBar}
+        renderItem={
+          renderType ? (renderType == 'button' ? renderButton : renderTabBar) : renderTabBar
+        }
         numColumns={1}
-        contentContainerStyle={styles.tabContainer}
+        contentContainerStyle={StyleSheet.compose(styles.tabContainer, { gap: gap || 10 })}
         horizontal={true}
       />
 
@@ -103,5 +134,28 @@ const styles = StyleSheet.create({
   },
   selectedTabText: {
     color: `${COLOR.black}`,
+  },
+  button: {
+    height: 30,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: `${COLOR.whiteBackground}`,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: `${COLOR.deactivated}`,
+  },
+  buttonText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: `${COLOR.gray}`,
+  },
+  selectedButton: {
+    backgroundColor: `${COLOR.blue}`,
+    borderColor: `${COLOR.blue}`,
+  },
+  selectedButtonText: {
+    color: `${COLOR.white}`,
   },
 });

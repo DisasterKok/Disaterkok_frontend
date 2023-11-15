@@ -80,7 +80,7 @@ export default function ReportArticleCard({
 
 const styles = StyleSheet.create({
   cardLayout: {
-    width: 335,
+    width: '100%',
     height: 280,
     backgroundColor: `${COLOR.white}`,
     ...Platform.select({

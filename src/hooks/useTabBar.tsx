@@ -11,6 +11,6 @@ const useTabBar = ({ tabList }: TabBarProps) => {
     setSelectedTab(tabName);
   };
 
-  return { selectedTab, handleTabPress };
+  return { tabList, selectedTab, handleTabPress };
 };
 export default useTabBar;
