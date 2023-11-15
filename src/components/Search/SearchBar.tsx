@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Touchable } from 'react-native';
-import HeaderLeftGoBack from '../Header/HeadrLeftGoBack';
+import { View, Text, StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import COLOR from '../../constants/colors';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import HeaderLeftGoBack from '../common/Header/HeadrLeftGoBack';
 
 const SearchBar = ({
   onSearch,

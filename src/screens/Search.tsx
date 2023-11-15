@@ -4,7 +4,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import COLOR from '../constants/colors';
 import SearchBar from '../components/Search/SearchBar';
-import ReportList from './ReportList';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '../navigation/types';
 import KeywordList from '../components/Search/KeywordsList';
