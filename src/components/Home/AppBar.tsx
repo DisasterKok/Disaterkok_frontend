@@ -4,7 +4,8 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import COLOR from '../../constants/colors';
 import { View, Animated, StyleSheet, TouchableOpacity } from 'react-native';
-
+import { HomeStackParamList } from '../../navigation/types';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 const FeatherAnimatedIcon = Animated.createAnimatedComponent(FeatherIcon);
 const AntAnimatedIcon = Animated.createAnimatedComponent(AntDesignIcon);
 
@@ -13,12 +14,21 @@ const AppBar = ({
 }: {
   animatedColor: Animated.AnimatedInterpolation<string | number>;
 }) => {
+  const navigation: NavigationProp<HomeStackParamList, 'Home'> = useNavigation();
   const [hasNewNoti, setHasNewNoti] = React.useState<boolean>(true);
+
+  const navigateToSetting = () => {
+    navigation.navigate('Notification');
+  };
+
+  const navigateToSearch = () => {
+    navigation.navigate('Search');
+  };
 
   return (
     <View style={styles.appBar}>
       <View style={styles.appBarLeft}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={navigateToSetting}>
           <FeatherAnimatedIcon name="bell" size={22} color={animatedColor} />
         </TouchableOpacity>
         {hasNewNoti && (
@@ -28,7 +38,7 @@ const AppBar = ({
         )}
       </View>
       <View style={styles.appBarRight}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={navigateToSearch}>
           <AntAnimatedIcon name="search1" size={22} color={animatedColor} />
         </TouchableOpacity>
         <TouchableOpacity>

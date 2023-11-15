@@ -2,7 +2,9 @@ export type HomeStackParamList = {
   Home: undefined;
   ReportList: undefined;
   ReportArticleDetail: undefined;
+  Notification: undefined;
   Setting: undefined;
+  Search: undefined;
 };
 
 export type LoggedOutStackParamList = {

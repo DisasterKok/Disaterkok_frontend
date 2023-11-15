@@ -12,6 +12,9 @@ const COLOR = {
   blue: '#2C58F4',
   middleBlue: '#8BA3F9',
   lightBlue: '#ECF0FE',
+  skyBlue: '#BBC9FB',
+  deactivated: '#DEDEDE',
+  activated: '#2A56F4',
   notiNationWide: `#F53535`,
   notiHomeTown: '#FFD336',
 };

@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, Animated, Platform } from 'react-native';
 import COLOR from '../constants/colors';
-import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import SwitchButton from '../components/Home/SwitchButton';
 import WeatherSection from '../components/Home/WeatherSection';
 import IssueSection from '../components/Home/IssueSection';
@@ -49,52 +48,50 @@ export default function Home() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.layout}>
+    <SafeAreaView style={styles.layout}>
+      <Animated.View
+        style={[
+          styles.header,
+          {
+            backgroundColor: headerBackgroundColor,
+          },
+        ]}
+      >
+        {/* 상단바 영역 */}
+        <View style={{ width: '100%', height: insets.top }}></View>
+        {/* 앱바 영역 */}
         <Animated.View
-          style={[
-            styles.header,
-            {
-              backgroundColor: headerBackgroundColor,
-            },
-          ]}
+          style={{
+            width: '100%',
+            height: 50,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
-          {/* 상단바 영역 */}
-          <View style={{ width: '100%', height: insets.top }}></View>
-          {/* 앱바 영역 */}
-          <Animated.View
-            style={{
-              width: '100%',
-              height: 50,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <AppBar animatedColor={headerTextColor} />
-          </Animated.View>
+          <AppBar animatedColor={headerTextColor} />
         </Animated.View>
-        <ScrollView
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
-            useNativeDriver: false,
-          })}
-          scrollEventThrottle={16}
-          style={{ marginTop: 50, width: '100%' }}
-        >
-          <WeatherSection />
-          <View style={styles.contentSheet}>
-            <SwitchButton
-              isLocalSelected={isLocalSelected}
-              onSelect={setLocalSelected}
-              handleSheet={() => handlePresentModalPress(bottomSheetRef)}
-              bottomSheetModalRef={bottomSheetRef}
-            />
-            <IssueSection isLocalSelected={isLocalSelected} />
-            <ReportSection />
-          </View>
-        </ScrollView>
-        <AddressBottomSheet bottomSheetModalRef={bottomSheetRef} isEditable />
-      </SafeAreaView>
-    </SafeAreaProvider>
+      </Animated.View>
+      <ScrollView
+        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
+          useNativeDriver: false,
+        })}
+        scrollEventThrottle={16}
+        style={{ marginTop: 50, width: '100%' }}
+      >
+        <WeatherSection />
+        <View style={styles.contentSheet}>
+          <SwitchButton
+            isLocalSelected={isLocalSelected}
+            onSelect={setLocalSelected}
+            handleSheet={() => handlePresentModalPress(bottomSheetRef)}
+            bottomSheetModalRef={bottomSheetRef}
+          />
+          <IssueSection isLocalSelected={isLocalSelected} />
+          <ReportSection />
+        </View>
+      </ScrollView>
+      <AddressBottomSheet bottomSheetModalRef={bottomSheetRef} isEditable />
+    </SafeAreaView>
   );
 }
 
