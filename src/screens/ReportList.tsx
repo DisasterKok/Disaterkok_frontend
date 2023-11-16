@@ -11,6 +11,7 @@ import { AddressBottomSheet } from '../components/common/Modal/BottomSheetModal'
 import TabBar from '../components/common/TabBar/TabBar';
 import useTabBar from '../hooks/useTabBar';
 import FilterButtons from '../components/ReportList/FilterButtons/FilterButtons';
+import { ARTICLE_LIST } from '../constants/DummyArticle';
 
 export default function ReportList() {
   const selectAddressModalRef = useRef<BottomSheetModal>(null);
@@ -32,7 +33,7 @@ export default function ReportList() {
           setSelectedDisaster={setSelectedDisaster}
         />
 
-        <ReportArticleList />
+        <ReportArticleList reportList={ARTICLE_LIST} />
 
         {/* 모달 */}
         <AddressBottomSheet bottomSheetModalRef={selectAddressModalRef} isEditable={false} />

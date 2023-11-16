@@ -5,6 +5,7 @@ import { ReportArticleType } from '../common/ReportArticle/ReportArticleCard/typ
 import ReportArticleCard from '../common/ReportArticle/ReportArticleCard/ReportArticleCard';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import COLOR from '../../constants/colors';
+import ReportArticleList from '../common/ReportArticle/ReportArticleList/ReportArticleList';
 
 interface ReportListPreviewProps {
   searchInput: string;
@@ -40,22 +41,7 @@ const ReportListPreview = ({
           <IonIcon name="chevron-forward" size={12} color={`${COLOR.gray}`} />
         </Pressable>
       </View>
-      <FlatList
-        data={ARTICLE_LIST}
-        renderItem={({ item }) => (
-          <ReportArticleCard
-            id={item.id}
-            elapsedTime={item.elapsedTime}
-            viewCount={item.viewCount}
-            likeCount={item.likeCount}
-            title={item.title}
-            tags={item.tags}
-          />
-        )}
-        numColumns={1}
-        contentContainerStyle={{ gap: 12 }}
-        scrollEnabled={false}
-      />
+      <ReportArticleList reportList={reports} />
     </View>
   );
 };
