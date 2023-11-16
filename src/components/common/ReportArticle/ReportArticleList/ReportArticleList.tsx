@@ -1,12 +1,12 @@
 import React from 'react';
 import { FlatList, StyleSheet } from 'react-native';
-import { ARTICLE_LIST } from '../../../../constants/DummyArticle';
 import ReportArticleCard from '../ReportArticleCard/ReportArticleCard';
+import { ReportArticleType } from '../ReportArticleCard/types';
 
-export default function ReportArticleList() {
+export default function ReportArticleList({ reportList }: { reportList: ReportArticleType[] }) {
   return (
     <FlatList
-      data={ARTICLE_LIST}
+      data={reportList}
       renderItem={({ item }) => (
         <ReportArticleCard
           id={item.id}

@@ -11,6 +11,7 @@ import { AddressBottomSheet } from '../components/common/Modal/BottomSheetModal'
 import TabBar from '../components/common/TabBar/TabBar';
 import useTabBar from '../hooks/useTabBar';
 import FilterButtons from '../components/ReportList/FilterButtons/FilterButtons';
+import { ARTICLE_LIST } from '../constants/DummyArticle';
 
 export default function ReportList() {
   const selectAddressModalRef = useRef<BottomSheetModal>(null);
@@ -20,15 +21,11 @@ export default function ReportList() {
   );
   const [selectedDisaster, setSelectedDisaster] = useState<DisasterType[]>([]);
 
-  const { selectedTab, handleTabPress } = useTabBar({ tabList: ['전국', '우리동네'] });
+  const { tabList, selectedTab, handleTabPress } = useTabBar({ tabList: ['전국', '우리동네'] });
   return (
     <View style={styles.layout}>
       <ScrollView style={styles.contentLayout}>
-        <TabBar
-          tabList={['전국', '우리동네']}
-          selectedTab={selectedTab}
-          handleTabPress={handleTabPress}
-        />
+        <TabBar tabList={tabList} selectedTab={selectedTab} handleTabPress={handleTabPress} />
         <FilterButtons
           selectedEupmyeondong={selectedEupmyeondong}
           setSelectedEupmyeondong={setSelectedEupmyeondong}
@@ -36,7 +33,7 @@ export default function ReportList() {
           setSelectedDisaster={setSelectedDisaster}
         />
 
-        <ReportArticleList />
+        <ReportArticleList reportList={ARTICLE_LIST} />
 
         {/* 모달 */}
         <AddressBottomSheet bottomSheetModalRef={selectAddressModalRef} isEditable={false} />
