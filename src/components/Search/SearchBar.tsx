@@ -29,8 +29,17 @@ const SearchBar = ({
   React.useEffect(() => {
     if (keyword) {
       setSearchText(keyword);
+      detactHashtag(keyword);
     }
   }, [keyword]);
+
+  const detactHashtag = (text: string) => {
+    if (text.startsWith('#')) {
+      setHashtagActive(true);
+    } else {
+      setHashtagActive(false);
+    }
+  };
 
   const addHashtag = () => {
     setSearchText(`#${searchText}`);
@@ -52,11 +61,7 @@ const SearchBar = ({
   const handleChangeText = (text: string) => {
     onSearching();
     setSearchText(text);
-    if (text.startsWith('#')) {
-      setHashtagActive(true);
-    } else {
-      setHashtagActive(false);
-    }
+    detactHashtag(text);
   };
 
   return (

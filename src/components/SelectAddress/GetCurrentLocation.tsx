@@ -23,7 +23,7 @@ const getCurrentLocation = () => {
           .then((response) => response.json())
           .then((data: any) => {
             if (data.documents.length === 0) reject('위치를 얻는 도중 오류가 발생했습니다.');
-            
+
             const address = data.documents[0].address.address_name;
             const roadAddress = data.documents[0].road_address.address_name;
             const zoneCode = data.documents[0].road_address.zone_no;
@@ -32,6 +32,8 @@ const getCurrentLocation = () => {
               address,
               roadAddress,
               zoneCode,
+              xCoordinate: longitude,
+              yCoordinate: latitude,
             };
 
             resolve(locationData);
