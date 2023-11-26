@@ -240,31 +240,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  typeButton: {
-    width: 76,
-    height: 40,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: `${COLOR.gray}`,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: `${COLOR.white}`,
-    color: `${COLOR.gray}`,
-  },
-  typeButtonSelected: {
-    borderColor: `${COLOR.blue}`,
-    backgroundColor: `${COLOR.blue}`,
-    color: `${COLOR.white}`,
-  },
-  typeText: {
-    fontSize: 14,
-    fontWeight: '400',
-    lineHeight: 22,
-    color: `${COLOR.gray}`,
-  },
-  typeTextSelected: {
-    color: `${COLOR.white}`,
-  },
   Button: {
     backgroundColor: `${COLOR.lightGray}`,
     position: 'absolute',

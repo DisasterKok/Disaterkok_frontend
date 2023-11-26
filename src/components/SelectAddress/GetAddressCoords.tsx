@@ -22,8 +22,8 @@ const getAddressCoords = (address: string): Promise<Coordinates> => {
       .then((data) => {
         if (data.documents.length === 0) reject(new Error('주소를 찾을 수 없습니다.'));
 
-        const latitude = data.documents[0].y;
-        const longitude = data.documents[0].x;
+        const latitude = Number(data.documents[0].y);
+        const longitude = Number(data.documents[0].x);
 
         const coordinates: Coordinates = {
           latitude,
