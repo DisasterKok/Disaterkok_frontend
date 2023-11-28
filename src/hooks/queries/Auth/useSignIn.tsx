@@ -1,19 +1,12 @@
-import { UseMutationOptions, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import userAPI, { loginPayload } from '../../../apis/userAPI';
 
 const useSignIn = () => {
-  const { mutate: signInMutation } = useMutation(
-    (payload: loginPayload) => userAPI.login(payload),
-    {
-      onSuccess: (data) => {
-        console.log(data);
-      },
-      onError: (error) => {
-        console.error(error);
-      },
+  const signInMutation = useMutation({
+    mutationFn: (payload: loginPayload) => {
+      return userAPI.login(payload);
     },
-  );
-
+  });
   return { signInMutation };
 };
 

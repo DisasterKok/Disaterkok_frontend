@@ -4,31 +4,35 @@ import COLOR from '../constants/colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import useInput from '../hooks/useInput';
 import { LoggedOutStackParamList } from '../navigation/types';
+import useSignIn from '../hooks/queries/Auth/useSignIn';
 
 type SignInScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'SignIn'>;
 
 export default function SignIn({ navigation }: SignInScreenProps) {
   const [inputIdFocused, setInputIdFocused] = useState(false);
   const [inputPasswordFocused, setInputPasswordFocused] = useState(false);
-  const [id, onChangeId] = useInput('');
+  const [username, onChangeUsername] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [activeLoginButton, setActiveLoginButton] = useState(false);
 
+  const { signInMutation } = useSignIn();
+
   const checkActiveLoginButton = () => {
-    setActiveLoginButton(!!id && !!password);
+    setActiveLoginButton(!!username && !!password);
   };
 
   const gotoSignUp = () => {
     navigation.navigate('SignUp');
   };
 
-  const submitLoginForm = () => {
-    // signInMutation({ id, password });
+  const submitLoginForm = (e) => {
+    e.preventDefault();
+    signInMutation.mutate({ username, password });
   };
 
   useEffect(() => {
     checkActiveLoginButton();
-  }, [id, password]);
+  }, [username, password]);
 
   return (
     <View style={styles.layout}>
@@ -49,7 +53,7 @@ export default function SignIn({ navigation }: SignInScreenProps) {
             clearButtonMode="always"
             onFocus={() => setInputIdFocused(true)}
             onBlur={() => setInputIdFocused(false)}
-            onChangeText={onChangeId}
+            onChangeText={onChangeUsername}
             autoCapitalize="none"
           />
         </View>
@@ -72,6 +76,7 @@ export default function SignIn({ navigation }: SignInScreenProps) {
           />
         </View>
         <Pressable
+          onPress={submitLoginForm}
           style={
             activeLoginButton
               ? StyleSheet.compose(styles.loginButton, styles.loginButtonActive)

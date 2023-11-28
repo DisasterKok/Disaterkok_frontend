@@ -5,6 +5,7 @@ import useInput from '../hooks/useInput';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import userAPI from '../apis/userAPI';
 import { LoggedOutStackParamList } from '../navigation/types';
+import useSignUp from '../hooks/queries/Auth/useSignUp';
 
 type SetNameScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'SetName'>;
 
@@ -19,6 +20,8 @@ export default function SetName({ route, navigation }: SetNameScreenProps) {
   const [lengthError, setLengthError] = useState(false);
   const [charError, setCharError] = useState(false);
 
+  const { signUpMutation } = useSignUp();
+
   const checkActiveButton = () => {
     setActiveNextButton(!!nickname && !lengthError && !charError);
   };
@@ -32,13 +35,7 @@ export default function SetName({ route, navigation }: SetNameScreenProps) {
   };
 
   const onSubmit = () => {
-    try {
-      // signUpMutation({ username, email, password, nickname });
-      userAPI.register({ username, email, password, nickname });
-      //navigation.navigate('SelectLocation');
-    } catch (error) {
-      console.log(error);
-    }
+    signUpMutation.mutate({ username, email, password, nickname });
     // navigation.navigate('SelectLocation');
   };
 
