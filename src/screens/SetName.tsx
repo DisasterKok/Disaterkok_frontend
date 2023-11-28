@@ -9,8 +9,7 @@ import { LoggedOutStackParamList } from '../navigation/types';
 type SetNameScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'SetName'>;
 
 export default function SetName({ route, navigation }: SetNameScreenProps) {
-  const { id, email, password } = route.params;
-  //console.log('check', id, email, password);
+  const { username, email, password } = route.params;
   const [inputNicknameFocused, setInputNicknameFocused] = useState(false);
 
   const [nickname, onChangeNickname] = useInput('');
@@ -32,16 +31,15 @@ export default function SetName({ route, navigation }: SetNameScreenProps) {
     else setCharError(false);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     try {
-      console.log(id, email, password, nickname);
-      const response = await userAPI.register(id, email, password, nickname);
-      console.log(response);
+      // signUpMutation({ username, email, password, nickname });
+      userAPI.register({ username, email, password, nickname });
       //navigation.navigate('SelectLocation');
     } catch (error) {
       console.log(error);
     }
-    navigation.navigate('SelectLocation');
+    // navigation.navigate('SelectLocation');
   };
 
   useEffect(() => {

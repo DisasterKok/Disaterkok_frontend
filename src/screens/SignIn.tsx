@@ -22,6 +22,10 @@ export default function SignIn({ navigation }: SignInScreenProps) {
     navigation.navigate('SignUp');
   };
 
+  const submitLoginForm = () => {
+    // signInMutation({ id, password });
+  };
+
   useEffect(() => {
     checkActiveLoginButton();
   }, [id, password]);
