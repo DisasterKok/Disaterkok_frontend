@@ -12,4 +12,3 @@ const useSignUp = () => {
 };
 
 export default useSignUp;
-å;

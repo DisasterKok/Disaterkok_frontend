@@ -5,9 +5,9 @@ import { API_URL } from '@env';
 export function createInstance() {
   return axios.create({
     baseURL: `${API_URL}`,
-    // headers: {
-    //   'Content-Type': 'application/json',
-    // },
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
 }
 
