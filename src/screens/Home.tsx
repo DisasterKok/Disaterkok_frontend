@@ -12,7 +12,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AppBar from '../components/Home/AppBar';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import AddressBottomSheet from '../components/common/Modal/BottomSheetModal/AddressSetting/AddressBottomSheet';
-import ClearAsyncStorage from '../hooks/queries/Auth/\bClearAsyncStorage';
 
 export type HomeScreenProps = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
