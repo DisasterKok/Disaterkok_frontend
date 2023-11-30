@@ -7,6 +7,7 @@ const useUser = () => {
     queryKey: ['user'],
     initialData: userAsyncStorage.getUser(),
   });
+  console.log(user);
 
   useEffect(() => {
     if (!user) userAsyncStorage.removeUser();
