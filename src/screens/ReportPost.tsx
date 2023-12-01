@@ -5,12 +5,19 @@ import COLOR from '../constants/colors';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import useInput from '../hooks/useInput';
+import usePostReport from '../hooks/queries/Reports/usePostReport';
 
 export default function ReportPost() {
   const [title, onChangeTitle] = useInput();
   const [content, onChangeContent] = useInput();
 
   const [check, setCheck] = useState(false);
+
+  const { reportMutation } = usePostReport();
+
+  const submitReportForm = () => {
+    reportMutation.mutate({ user: 1, title, content });
+  };
   return (
     <ScrollView style={styles.layout}>
       <View style={styles.titleWrapper}>
@@ -102,7 +109,7 @@ export default function ReportPost() {
             익명으로 올리기
           </Text>
         </Pressable>
-        <Pressable style={styles.submitBtn}>
+        <Pressable onPress={submitReportForm} style={styles.submitBtn}>
           <Text style={styles.submitBtnText}>제보하기</Text>
         </Pressable>
       </View>
