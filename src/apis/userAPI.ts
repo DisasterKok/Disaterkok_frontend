@@ -14,21 +14,13 @@ export interface registerPayload {
 
 const userAPI = {
   login: async (payload: loginPayload) => {
-    try {
-      const response = await instance.post('/users/login/', payload);
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
+    const response = await instance.post('/users/login/', payload);
+    return response.data;
   },
 
   register: async (payload: registerPayload) => {
-    try {
-      const response = await instance.post('/users/register/', payload);
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
+    const response = await instance.post('/users/register/', payload);
+    return response.data;
   },
 };
 
