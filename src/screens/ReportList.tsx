@@ -11,7 +11,7 @@ import { AddressBottomSheet } from '../components/common/Modal/BottomSheetModal'
 import TabBar from '../components/common/TabBar/TabBar';
 import useTabBar from '../hooks/useTabBar';
 import FilterButtons from '../components/ReportList/FilterButtons/FilterButtons';
-import { ARTICLE_LIST } from '../constants/DummyArticle';
+import useReportListQuery from '../hooks/queries/Reports/useReportListQuery';
 
 export default function ReportList() {
   const selectAddressModalRef = useRef<BottomSheetModal>(null);
@@ -22,6 +22,10 @@ export default function ReportList() {
   const [selectedDisaster, setSelectedDisaster] = useState<DisasterType[]>([]);
 
   const { tabList, selectedTab, handleTabPress } = useTabBar({ tabList: ['전국', '우리동네'] });
+
+  const {
+    reportListQuery: { data: reports },
+  } = useReportListQuery();
   return (
     <View style={styles.layout}>
       <ScrollView style={styles.contentLayout}>
@@ -33,7 +37,7 @@ export default function ReportList() {
           setSelectedDisaster={setSelectedDisaster}
         />
 
-        <ReportArticleList reportList={ARTICLE_LIST} />
+        <ReportArticleList reportList={reports} />
 
         {/* 모달 */}
         <AddressBottomSheet bottomSheetModalRef={selectAddressModalRef} isEditable={false} />
