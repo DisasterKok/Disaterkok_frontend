@@ -2,17 +2,14 @@ import React from 'react';
 import { Text, View, Image, StyleSheet, Pressable } from 'react-native';
 import COLOR from '../constants/colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import useAuth from '../states/useAuth';
 import { LoggedOutStackParamList } from '../navigation/types';
 
 type CompleteLoginScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'CompleteLogin'>;
 
 const CompleteLogin = ({ navigation }: CompleteLoginScreenProps) => {
-  const { login } = useAuth();
-
   const handleSubmit = () => {
     // navigation.navigate('Home');
-    login('1234'); //임시로그인
+    // login('1234'); //임시로그인
   };
 
   return (

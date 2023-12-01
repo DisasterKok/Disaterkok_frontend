@@ -3,9 +3,10 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import COLOR from '../../constants/colors';
-import { View, Animated, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Animated, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
 import { HomeStackParamList } from '../../navigation/types';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { useSignOut } from '../../hooks/queries/Auth/useSignOut';
 const FeatherAnimatedIcon = Animated.createAnimatedComponent(FeatherIcon);
 const AntAnimatedIcon = Animated.createAnimatedComponent(AntDesignIcon);
 
@@ -16,6 +17,8 @@ const AppBar = ({
 }) => {
   const navigation: NavigationProp<HomeStackParamList, 'Home'> = useNavigation();
   const [hasNewNoti, setHasNewNoti] = React.useState<boolean>(true);
+
+  const signOut = useSignOut();
 
   const navigateToSetting = () => {
     navigation.navigate('Notification');
@@ -37,6 +40,12 @@ const AppBar = ({
           </View>
         )}
       </View>
+
+      {/* 임시 로그아웃 버튼 */}
+      <Pressable onPress={() => signOut()}>
+        <Text>로그아웃</Text>
+      </Pressable>
+
       <View style={styles.appBarRight}>
         <TouchableOpacity onPress={navigateToSearch}>
           <AntAnimatedIcon name="search1" size={22} color={animatedColor} />

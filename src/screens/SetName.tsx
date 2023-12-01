@@ -5,12 +5,12 @@ import useInput from '../hooks/useInput';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import userAPI from '../apis/userAPI';
 import { LoggedOutStackParamList } from '../navigation/types';
+import useSignUp from '../hooks/queries/Auth/useSignUp';
 
 type SetNameScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'SetName'>;
 
 export default function SetName({ route, navigation }: SetNameScreenProps) {
-  const { id, email, password } = route.params;
-  //console.log('check', id, email, password);
+  const { username, email, password } = route.params;
   const [inputNicknameFocused, setInputNicknameFocused] = useState(false);
 
   const [nickname, onChangeNickname] = useInput('');
@@ -19,6 +19,8 @@ export default function SetName({ route, navigation }: SetNameScreenProps) {
 
   const [lengthError, setLengthError] = useState(false);
   const [charError, setCharError] = useState(false);
+
+  const { signUpMutation } = useSignUp();
 
   const checkActiveButton = () => {
     setActiveNextButton(!!nickname && !lengthError && !charError);
@@ -32,16 +34,9 @@ export default function SetName({ route, navigation }: SetNameScreenProps) {
     else setCharError(false);
   };
 
-  const onSubmit = async () => {
-    try {
-      console.log(id, email, password, nickname);
-      const response = await userAPI.register(id, email, password, nickname);
-      console.log(response);
-      //navigation.navigate('SelectLocation');
-    } catch (error) {
-      console.log(error);
-    }
-    navigation.navigate('SelectLocation');
+  const onSubmit = () => {
+    signUpMutation.mutate({ username, email, password, nickname });
+    // navigation.navigate('SelectLocation');
   };
 
   useEffect(() => {
