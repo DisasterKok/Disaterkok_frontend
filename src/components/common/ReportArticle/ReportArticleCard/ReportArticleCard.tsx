@@ -8,12 +8,12 @@ import { ReportArticleType } from './types';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '../../../../navigation/types';
 import SharedModal from './SharedModal';
+import getElapsedTime from '../../../../utils/getElapsedTime';
 
 export default function ReportArticleCard({
-  id,
-  elapsedTime,
-  viewCount,
-  likeCount,
+  created_at,
+  view,
+  like,
   title,
   tags,
 }: ReportArticleType) {
@@ -35,18 +35,18 @@ export default function ReportArticleCard({
         <View style={styles.topContainer}>
           <View style={styles.topLeftContainer}>
             <View style={styles.topLeftItem}>
-              <Text style={styles.topLeftItemText}>{elapsedTime}초 전</Text>
+              <Text style={styles.topLeftItemText}>{getElapsedTime(created_at)}</Text>
             </View>
             <View style={styles.topLeftItem}>
               <Text style={styles.topLeftItemText}>|</Text>
             </View>
             <View style={styles.topLeftItem}>
               <FoundationIcon name="eye" size={15} color={COLOR.white} />
-              <Text style={styles.topLeftItemText}>{viewCount}</Text>
+              <Text style={styles.topLeftItemText}>{view}</Text>
             </View>
             <View style={styles.topLeftItem}>
               <AntDesignIcon name="like2" size={10} color={COLOR.white} />
-              <Text style={styles.topLeftItemText}>{likeCount}</Text>
+              <Text style={styles.topLeftItemText}>{like}</Text>
             </View>
           </View>
           <EntypoIcon

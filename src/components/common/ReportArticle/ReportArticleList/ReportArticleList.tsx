@@ -10,9 +10,9 @@ export default function ReportArticleList({ reportList }: { reportList: ReportAr
       renderItem={({ item }) => (
         <ReportArticleCard
           id={item.id}
-          elapsedTime={item.elapsedTime}
-          viewCount={item.viewCount}
-          likeCount={item.likeCount}
+          created_at={item.created_at}
+          view={item.view}
+          like={item.like}
           title={item.title}
           tags={item.tags}
         />
