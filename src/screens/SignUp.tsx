@@ -13,7 +13,7 @@ export default function SignUp({ navigation }: SignUpScreenProps) {
   const [inputPasswordFocused, setInputPasswordFocused] = useState(false);
   const [inputPasswordConfirmFocused, setInputPasswordConfirmFocused] = useState(false);
 
-  const [id, onChangeId] = useInput('');
+  const [username, onChangeUsername] = useInput('');
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [passwordConfirm, onChangePasswordConfirm] = useInput('');
@@ -28,13 +28,13 @@ export default function SignUp({ navigation }: SignUpScreenProps) {
   const [checkSubmit, setCheckSubmit] = useState(false);
 
   const checkActiveLoginButton = () => {
-    setActiveSignUpButton(!!id && !!email && !!password && !!passwordConfirm);
+    setActiveSignUpButton(!!username && !!email && !!password && !!passwordConfirm);
   };
 
-  const checkNameValidation = (id: string) => {
+  const checkNameValidation = (username: string) => {
     let isChekced = false;
 
-    if (id.length < 2) setIdError('사용할 수 없는 아이디에요');
+    if (username.length < 2) setIdError('사용할 수 없는 아이디에요');
     else {
       setIdError('');
       isChekced = true;
@@ -68,9 +68,9 @@ export default function SignUp({ navigation }: SignUpScreenProps) {
     return isChecked;
   };
 
-  const checkAllValidation = (id: string, email: string, password: string) => {
+  const checkAllValidation = (username: string, email: string, password: string) => {
     // 유효성 검사 방식 정해지면 추후 수정
-    const checkedName = checkNameValidation(id);
+    const checkedName = checkNameValidation(username);
     const checkedEmail = checkEmailValidation(email);
     const checkedConfirmedPassword = checkConfirmedPasswordValidation(password);
 
@@ -78,14 +78,14 @@ export default function SignUp({ navigation }: SignUpScreenProps) {
   };
 
   const onSubmit = () => {
-    checkAllValidation(id, email, password);
+    checkAllValidation(username, email, password);
     setCheckSubmit(true);
-    navigation.navigate('SetName', { id: id, email: email, password: password });
+    navigation.navigate('SetName', { username: username, email: email, password: password });
   };
 
   useEffect(() => {
     checkActiveLoginButton();
-  }, [id, email, password, passwordConfirm]);
+  }, [username, email, password, passwordConfirm]);
 
   return (
     <View style={styles.layout}>
@@ -105,7 +105,7 @@ export default function SignUp({ navigation }: SignUpScreenProps) {
           clearButtonMode="always"
           onFocus={() => setInputIdFocused(true)}
           onBlur={() => setInputIdFocused(false)}
-          onChangeText={onChangeId}
+          onChangeText={onChangeUsername}
           autoCapitalize="none"
         />
         {idError ? (
