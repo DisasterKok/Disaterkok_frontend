@@ -1,3 +1,4 @@
+import React from 'react';
 import Card from './Card';
 import { Text, StyleSheet } from 'react-native';
 import COLOR from '../../../constants/colors';
