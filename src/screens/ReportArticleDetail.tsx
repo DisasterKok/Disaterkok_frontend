@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native';
-import { ARTICLE } from '../constants/DummyArticle';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -8,12 +7,17 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import COLOR from '../constants/colors';
 import { FlatList } from 'react-native-gesture-handler';
 import SharedModal from '../components/common/ReportArticle/ReportArticleCard/SharedModal';
+import convertDataFormat from '../utils/convertDataFormat';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { HomeStackParamList } from '../navigation/types';
 
-export default function ReportArticleDetail() {
-  //   const { postId, parms } = route.params; // 게시글 ID
-  //   // 추후에 게시글 ID에 기반하여 해당 게시글의 상세 정보를 표시하도록 작업하기
+type ReportArticleDetailScreenProps = NativeStackScreenProps<
+  HomeStackParamList,
+  'ReportArticleDetail'
+>;
 
-  const { id, time, viewCount, likeCount, title, userName, tags, content, isLike } = ARTICLE;
+export default function ReportArticleDetail({ route }: ReportArticleDetailScreenProps) {
+  const { user, created_at, view, like, title, tags, content, isLike } = route.params;
 
   const [isSharedOpen, setIsSharedOpen] = React.useState<boolean>(false);
 
@@ -26,24 +30,24 @@ export default function ReportArticleDetail() {
       <View style={styles.countContainer}>
         <View style={styles.countItem}>
           <FoundationIcon name="eye" size={15} color={COLOR.middleGray} />
-          <Text style={styles.countItemText}>{viewCount}</Text>
+          <Text style={styles.countItemText}>{view}</Text>
         </View>
         <View style={styles.countItem}>
           <AntDesignIcon name="like2" size={10} color={COLOR.middleGray} />
-          <Text style={styles.countItemText}>{likeCount}</Text>
+          <Text style={styles.countItemText}>{like}</Text>
         </View>
       </View>
       <View style={styles.title}>
         <Text style={styles.titleText}>{title}</Text>
       </View>
       <View style={styles.time}>
-        <Text style={styles.timeText}>{time}</Text>
+        <Text style={styles.timeText}>{convertDataFormat(created_at)}</Text>
       </View>
 
       <View style={styles.contentTop}>
         <View style={styles.user}>
           <AntDesignIcon name="user" size={20} color={COLOR.middleGray} />
-          <Text style={styles.userText}>{userName}</Text>
+          <Text style={styles.userText}>{user}</Text>
         </View>
         <View style={styles.solutionGuide}>
           <FeatherIcon name="info" size={10} color={COLOR.blue} />

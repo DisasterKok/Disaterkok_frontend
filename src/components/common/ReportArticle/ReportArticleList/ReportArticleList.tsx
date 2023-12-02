@@ -7,16 +7,7 @@ export default function ReportArticleList({ reportList }: { reportList: ReportAr
   return (
     <FlatList
       data={reportList}
-      renderItem={({ item }) => (
-        <ReportArticleCard
-          id={item.id}
-          created_at={item.created_at}
-          view={item.view}
-          like={item.like}
-          title={item.title}
-          tags={item.tags}
-        />
-      )}
+      renderItem={({ item }) => <ReportArticleCard data={item} />}
       numColumns={1}
       contentContainerStyle={styles.articleList}
       scrollEnabled={false}

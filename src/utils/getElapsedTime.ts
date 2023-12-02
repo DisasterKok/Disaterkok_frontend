@@ -1,5 +1,4 @@
 const getElapsedTime = (datetimeString: string): string => {
-  console.log(datetimeString);
   const datetimeParts = datetimeString.split(' / ');
   const datePart = datetimeParts[0];
   const timePart = datetimeParts[1];
