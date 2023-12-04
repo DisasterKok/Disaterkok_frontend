@@ -4,6 +4,7 @@ export interface reportPostPayload {
   user: number;
   title: string;
   content: string;
+  is_anoymous: boolean;
 }
 
 const reportsAPI = {

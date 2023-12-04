@@ -6,17 +6,20 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import useInput from '../hooks/useInput';
 import usePostReport from '../hooks/queries/Reports/usePostReport';
+import useUser from '../hooks/queries/Auth/useUser';
 
 export default function ReportPost() {
+  const { user } = useUser();
   const [title, onChangeTitle] = useInput();
   const [content, onChangeContent] = useInput();
 
-  const [check, setCheck] = useState(false);
+  const [isAnonymous, setIsAnoymous] = useState(false);
 
   const { reportMutation } = usePostReport();
 
   const submitReportForm = () => {
-    reportMutation.mutate({ user: 1, title, content });
+    reportMutation.mutate({ user: user.username, title, content, is_anoymous: isAnonymous });
+    // navigation.navigate('CompleteReportPost');
   };
   return (
     <ScrollView style={styles.layout}>
@@ -92,8 +95,8 @@ export default function ReportPost() {
       </View>
 
       <View style={styles.submitWrapper}>
-        <Pressable style={styles.anonymousContainer} onPress={() => setCheck(!check)}>
-          {check ? (
+        <Pressable style={styles.anonymousContainer} onPress={() => setIsAnoymous(!isAnonymous)}>
+          {isAnonymous ? (
             <MaterialCommunityIcon name="checkbox-marked" size={16} color={COLOR.blue} />
           ) : (
             <MaterialCommunityIcon name="checkbox-blank-outline" size={16} color={COLOR.gray} />
@@ -101,7 +104,7 @@ export default function ReportPost() {
 
           <Text
             style={
-              check
+              isAnonymous
                 ? StyleSheet.compose(styles.anonymousText, styles.anonymousTextActive)
                 : styles.anonymousText
             }

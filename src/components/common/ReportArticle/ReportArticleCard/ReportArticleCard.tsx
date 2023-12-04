@@ -12,7 +12,7 @@ import getElapsedTime from '../../../../utils/getElapsedTime';
 
 export default function ReportArticleCard({ data }: { data: ReportArticleType }) {
   const navigation: NavigationProp<HomeStackParamList> = useNavigation();
-  const { user, created_at, view, like, title, content, tags } = data;
+  const { created_at, view, like, title, tags, id } = data;
 
   const [isSharedOpen, setIsSharedOpen] = React.useState<boolean>(false);
 
@@ -22,12 +22,7 @@ export default function ReportArticleCard({ data }: { data: ReportArticleType })
 
   const navigateToReportDetail = () => {
     navigation.navigate('ReportArticleDetail', {
-      user,
-      title,
-      content,
-      created_at,
-      view,
-      like,
+      id,
     });
   };
 

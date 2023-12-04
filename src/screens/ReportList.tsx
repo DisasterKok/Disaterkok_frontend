@@ -37,7 +37,7 @@ export default function ReportList() {
           setSelectedDisaster={setSelectedDisaster}
         />
 
-        <ReportArticleList reportList={reports} />
+        <ReportArticleList reportList={reports.results} />
 
         {/* 모달 */}
         <AddressBottomSheet bottomSheetModalRef={selectAddressModalRef} isEditable={false} />

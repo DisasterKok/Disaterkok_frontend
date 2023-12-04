@@ -3,14 +3,6 @@ export type HomeStackParamList = {
   ReportList: undefined;
   ReportArticleDetail: {
     id: number;
-    user: string;
-    title: string;
-    content: string;
-    created_at: string;
-    view: number;
-    like: number;
-    tags: string[];
-    isLike: boolean;
   };
   Notification: undefined;
   Setting: undefined;

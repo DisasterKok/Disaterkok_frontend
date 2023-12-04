@@ -12,7 +12,6 @@ const getCurrentLocation = () => {
         const longitude = position.coords.longitude;
         const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}&input_coord=${input_coord}`;
 
-        //console.log(position);
         fetch(url, {
           method: 'GET',
           headers: {
@@ -23,7 +22,7 @@ const getCurrentLocation = () => {
           .then((response) => response.json())
           .then((data: any) => {
             if (data.documents.length === 0) reject('위치를 얻는 도중 오류가 발생했습니다.');
-            
+
             const address = data.documents[0].address.address_name;
             const roadAddress = data.documents[0].road_address.address_name;
             const zoneCode = data.documents[0].road_address.zone_no;

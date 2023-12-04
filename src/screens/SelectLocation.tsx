@@ -87,7 +87,6 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   // 주소 찾기로 위치 가져오기
   const handleSelect = (data: any) => {
     setIsSearchOpen(false);
-    //console.log(data);
     setAddressData({
       address: data.jibunAddress ? data.jibunAddress : data.autoJibunAddress,
       roadAddress: data.roadAddress ? data.roadAddress : data.autoRoadAddress,
