@@ -10,6 +10,8 @@ interface AddressData {
   address: string;
   roadAddress: string;
   zoneCode: string; // 우편번호
+  xCoordinate: number;
+  yCoordinate: number;
 }
 
 interface AliasData {
@@ -30,7 +32,7 @@ const AliasPostcode = ({
   updateAddress: (data: any) => void;
   goBack: () => void;
 }) => {
-  const { address, roadAddress, zoneCode } = addressData;
+  const { address, roadAddress, zoneCode, xCoordinate, yCoordinate } = addressData;
   const [aliasType, setAliasType] = React.useState<string>(aliasData?.aliasType || '');
   const [name, setName] = useInput(aliasData?.name || '');
   const [isEtc, setIsEtc] = React.useState<boolean>(aliasData?.aliasType == 'etc' || false);
@@ -69,6 +71,8 @@ const AliasPostcode = ({
         address,
         roadAddress,
         zoneCode,
+        xCoordinate,
+        yCoordinate,
       },
       aliasType,
       name,
@@ -235,31 +239,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  typeButton: {
-    width: 76,
-    height: 40,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: `${COLOR.gray}`,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: `${COLOR.white}`,
-    color: `${COLOR.gray}`,
-  },
-  typeButtonSelected: {
-    borderColor: `${COLOR.blue}`,
-    backgroundColor: `${COLOR.blue}`,
-    color: `${COLOR.white}`,
-  },
-  typeText: {
-    fontSize: 14,
-    fontWeight: '400',
-    lineHeight: 22,
-    color: `${COLOR.gray}`,
-  },
-  typeTextSelected: {
-    color: `${COLOR.white}`,
   },
   Button: {
     backgroundColor: `${COLOR.lightGray}`,

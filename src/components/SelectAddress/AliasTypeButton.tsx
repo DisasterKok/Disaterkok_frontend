@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
     color: `${COLOR.gray}`,
   },
   typeButtonSelected: {
-    borderColor: `${COLOR.blue}`,
-    backgroundColor: `${COLOR.blue}`,
+    borderColor: `${COLOR.primary}`,
+    backgroundColor: `${COLOR.primary}`,
     color: `${COLOR.white}`,
   },
   typeText: {
@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
   typeTextSelected: {
     color: `${COLOR.white}`,
   },
-  
 });
 
 export default AliasTypeButton;
