@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   buttonIndicator: {
     width: 65,
     height: 30,
-    backgroundColor: `${COLOR.blue}`,
+    backgroundColor: `${COLOR.primary}`,
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 1,
         shadowRadius: 0,
-        backgroundColor: `${COLOR.blue}`,
+        backgroundColor: `${COLOR.primary}`,
       },
       android: {
         elevation: 2,

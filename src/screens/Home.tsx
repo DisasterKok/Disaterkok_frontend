@@ -29,13 +29,13 @@ export default function Home() {
   // Function to interpolate the background color
   const headerBackgroundColor = scrollY.interpolate({
     inputRange: [0, colorChangeThreshold],
-    outputRange: [`${COLOR.secondary}`, `${COLOR.lightGray}`],
+    outputRange: [`${COLOR.primary}`, `${COLOR.lightGray}`],
     extrapolate: 'clamp',
   });
 
   const headerTextColor = scrollY.interpolate({
     inputRange: [0, colorChangeThreshold],
-    outputRange: [`${COLOR.white}`, `${COLOR.secondary}`],
+    outputRange: [`${COLOR.white}`, `${COLOR.primary}`],
     extrapolate: 'clamp',
   });
 
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     flexDirection: 'column',
-    backgroundColor: `${COLOR.secondary}`,
+    backgroundColor: `${COLOR.primary}`,
     position: 'relative',
   },
   header: {
