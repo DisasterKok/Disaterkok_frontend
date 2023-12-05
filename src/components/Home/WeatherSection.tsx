@@ -96,7 +96,7 @@ const WeatherSection = () => {
     const fcstmonth = (newNow.getMonth() + 1).toString().padStart(2, '0');
     const fcstday = newNow.getDate().toString().padStart(2, '0');
     const fcst_date = `${fcstyear}${fcstmonth}${fcstday}`;
-    let fcst_time = newNow.getHours().toString().padStart(2, '0') + '00';
+    const fcst_time = newNow.getHours().toString().padStart(2, '0') + '00';
 
     return { base_date, base_time, fcst_date, fcst_time };
   };
