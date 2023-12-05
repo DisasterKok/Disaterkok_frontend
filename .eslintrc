@@ -1,37 +1,23 @@
 {
-  "extends": ["airbnb", "plugin:prettier/recommended"],
-  "plugins": ["prettier"],
-  "env": {
-    "browser": true,
-    "jest": true
+  "plugins": ["@typescript-eslint", "prettier"],
+  "extends": [
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "rules": {
+    "@typescript-eslint/no-empty-interface": "off",
+    "no-empty-interface": "off"
   },
-  "ignorePatterns": ["node_modules/"],
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "paths": ["src"]
+  "overrides": [
+    {
+      "files": ["*.js", "*.jsx"],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-empty-interface": "off"
       }
     }
-  },
-  "rules": {
-    "linebreak-style": 0,
-    "import/prefer-default-export": 0,
-    "import/extensions": 0,
-    "no-use-before-define": 0,
-    "import/no-unresolved": 0,
-    "react/react-in-jsx-scope": 0,
-    "import/no-extraneous-dependencies": 0, // 테스트 또는 개발환경을 구성하는 파일에서는 devDependency 사용을 허용
-    "no-shadow": 0,
-    "react/prop-types": 0,
-    "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx"] }],
-    "jsx-a11y/no-noninteractive-element-interactions": 0,
-    "react/function-component-definition": [
-      2,
-      { "namedComponents": ["arrow-function", "function-declaration"] }
-    ],
-    "react/no-unknown-property": ["error", { "ignore": ["css"] }],
-    "react/jsx-props-no-spreading": 0,
-    "no-console": "off",
-    "camelcase": [2, { "properties": "never" }]
-  }
+  ]
 }

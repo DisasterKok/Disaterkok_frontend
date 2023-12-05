@@ -109,7 +109,6 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   // 주소 찾기로 위치 가져오기
   const handleSelect = (data: any) => {
     setIsSearchOpen(false);
-    //console.log(data);
     getAddressCoords(data.jibunAddress ? data.jibunAddress : data.autoJibunAddresss)
       .then((coordinates) => {
         setAddressData({

@@ -8,7 +8,7 @@ const useSignIn = () => {
       return userAPI.login(payload);
     },
     onSuccess: (data) => {
-      queryClient.setQueriesData(['user'], {
+      queryClient.setQueryData(['user'], {
         username: data.user.username,
         accessToken: data.token.access,
       });

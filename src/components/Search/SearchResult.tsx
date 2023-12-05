@@ -5,7 +5,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import ReportListPreview from './ReportListPreview';
 import SolutionListPreview from './SolutionListPreview';
 import ReportArticleList from '../common/ReportArticle/ReportArticleList/ReportArticleList';
-import { ARTICLE_LIST } from '../../constants/DummyArticle';
+import useReportListQuery from '../../hooks/queries/Reports/useReportListQuery';
 
 const SearchResult = ({ searchInput }: { searchInput: string }) => {
   const { tabList, selectedTab, handleTabPress } = useTabBar({
@@ -19,6 +19,10 @@ const SearchResult = ({ searchInput }: { searchInput: string }) => {
   } = useTabBar({
     tabList: ['정확도순', '최신순', '인기순', '가까운순'],
   });
+
+  const {
+    reportListQuery: { data: reports },
+  } = useReportListQuery();
 
   return (
     <View style={styles.layout}>
@@ -50,7 +54,7 @@ const SearchResult = ({ searchInput }: { searchInput: string }) => {
             />
           </>
         )}
-        {selectedTab === '제보' && <ReportArticleList reportList={ARTICLE_LIST} />}
+        {selectedTab === '제보' && <ReportArticleList reportList={reports} />}
         {selectedTab === '솔루션' && <></>}
       </ScrollView>
     </View>

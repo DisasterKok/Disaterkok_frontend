@@ -1,21 +1,34 @@
 import { useQuery } from '@tanstack/react-query';
-import * as userAsyncStorage from './useAsyncStorage';
 import { useEffect } from 'react';
+import useUserAsyncStorage from './useUserAsyncStorage';
 
 const useUser = () => {
-  const { data: user } = useQuery({
+  const { data: user, isLoading } = useQuery({
     queryKey: ['user'],
-    initialData: userAsyncStorage.getUser(),
+    queryFn: () => useUserAsyncStorage.get(),
   });
-  console.log(user);
 
   useEffect(() => {
-    if (!user) userAsyncStorage.removeUser();
-    else userAsyncStorage.saveUser(user);
-  }, [user]);
+    const updateUserAsyncStorage = async () => {
+      try {
+        if (user) {
+          await useUserAsyncStorage.set(user);
+        } else {
+          await useUserAsyncStorage.remove();
+        }
+      } catch (error) {
+        console.error('Error updating user in AsyncStorage:', error);
+      }
+    };
+
+    if (!isLoading) {
+      updateUserAsyncStorage();
+    }
+  }, [user, isLoading]);
 
   return {
     user: user || null,
+    isLoading,
   };
 };
 

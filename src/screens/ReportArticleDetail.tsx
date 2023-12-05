@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native';
-import { ARTICLE } from '../constants/DummyArticle';
+import { View, Text, StyleSheet, ScrollView, Platform, Pressable } from 'react-native';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -8,12 +7,25 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import COLOR from '../constants/colors';
 import { FlatList } from 'react-native-gesture-handler';
 import SharedModal from '../components/common/ReportArticle/ReportArticleCard/SharedModal';
+import convertDataFormat from '../utils/convertDataFormat';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { HomeStackParamList } from '../navigation/types';
+import useReportQuery from '../hooks/queries/Reports/useReportQuery';
+import useReportLike from '../hooks/queries/Reports/useReportLike';
+import useUser from '../hooks/queries/Auth/useUser';
 
-export default function ReportArticleDetail() {
-  //   const { postId, parms } = route.params; // 게시글 ID
-  //   // 추후에 게시글 ID에 기반하여 해당 게시글의 상세 정보를 표시하도록 작업하기
+type ReportArticleDetailScreenProps = NativeStackScreenProps<
+  HomeStackParamList,
+  'ReportArticleDetail'
+>;
 
-  const { id, time, viewCount, likeCount, title, userName, tags, content, isLike } = ARTICLE;
+export default function ReportArticleDetail({ route }: ReportArticleDetailScreenProps) {
+  const { id } = route.params;
+  const { user } = useUser();
+  const {
+    reportQuery: { data: report },
+  } = useReportQuery(id);
+  const { reportLikeMutation } = useReportLike();
 
   const [isSharedOpen, setIsSharedOpen] = React.useState<boolean>(false);
 
@@ -21,82 +33,95 @@ export default function ReportArticleDetail() {
     setIsSharedOpen(!isSharedOpen);
   };
 
+  const handleLikePress = () => {
+    reportLikeMutation.mutate({ id, token: user.accessToken });
+  };
+
   return (
-    <ScrollView style={styles.layout}>
-      <View style={styles.countContainer}>
-        <View style={styles.countItem}>
-          <FoundationIcon name="eye" size={15} color={COLOR.middleGray} />
-          <Text style={styles.countItemText}>{viewCount}</Text>
-        </View>
-        <View style={styles.countItem}>
-          <AntDesignIcon name="like2" size={10} color={COLOR.middleGray} />
-          <Text style={styles.countItemText}>{likeCount}</Text>
-        </View>
-      </View>
-      <View style={styles.title}>
-        <Text style={styles.titleText}>{title}</Text>
-      </View>
-      <View style={styles.time}>
-        <Text style={styles.timeText}>{time}</Text>
-      </View>
-
-      <View style={styles.contentTop}>
-        <View style={styles.user}>
-          <AntDesignIcon name="user" size={20} color={COLOR.middleGray} />
-          <Text style={styles.userText}>{userName}</Text>
-        </View>
-        <View style={styles.solutionGuide}>
-          <FeatherIcon name="info" size={10} color={COLOR.blue} />
-          <Text style={styles.solutionGuideText}>이 재난과 관련된 솔루션이 궁금해요</Text>
-        </View>
-      </View>
-      <View style={styles.imgContainer}>
-        {/* img */}
-        <EntypoIcon
-          name="dots-three-vertical"
-          size={18}
-          color={COLOR.gray}
-          style={styles.shareDotBtn}
-          onPress={handleSharedModal}
-        />
-      </View>
-
-      <FlatList
-        data={tags}
-        renderItem={({ item }) => (
-          <View style={styles.tag}>
-            <Text style={styles.tagText}>{item}</Text>
+    report && (
+      <ScrollView style={styles.layout}>
+        <View style={styles.countContainer}>
+          <View style={styles.countItem}>
+            <FoundationIcon name="eye" size={15} color={COLOR.middleGray} />
+            <Text style={styles.countItemText}>{report.view}</Text>
           </View>
-        )}
-        numColumns={1}
-        horizontal
-        contentContainerStyle={styles.tagContainer}
-      />
+          <View style={styles.countItem}>
+            <AntDesignIcon name="like2" size={10} color={COLOR.middleGray} />
+            <Text style={styles.countItemText}>{report.like}</Text>
+          </View>
+        </View>
+        <View style={styles.title}>
+          <Text style={styles.titleText}>{report.title}</Text>
+        </View>
+        <View style={styles.time}>
+          <Text style={styles.timeText}>{convertDataFormat(report.created_at)}</Text>
+        </View>
 
-      <View style={styles.content}>
-        <Text style={styles.contentText}>{content}</Text>
-      </View>
+        <View style={styles.contentTop}>
+          <View style={styles.user}>
+            <AntDesignIcon name="user" size={20} color={COLOR.middleGray} />
+            <Text style={styles.userText}>{report.is_anonymous ? '익명' : report.user}</Text>
+          </View>
+          <View style={styles.solutionGuide}>
+            <FeatherIcon name="info" size={10} color={COLOR.blue} />
+            <Text style={styles.solutionGuideText}>이 재난과 관련된 솔루션이 궁금해요</Text>
+          </View>
+        </View>
+        <View style={styles.imgContainer}>
+          {/* img */}
+          <EntypoIcon
+            name="dots-three-vertical"
+            size={18}
+            color={COLOR.gray}
+            style={styles.shareDotBtn}
+            onPress={handleSharedModal}
+          />
+        </View>
 
-      <View style={styles.likeWrapper}>
-        <View
-          style={
-            isLike
-              ? StyleSheet.compose(styles.likeContainer, styles.likeContainerActive)
-              : styles.likeContainer
-          }
-        >
-          <AntDesignIcon name="like2" size={20} color={isLike ? COLOR.white : COLOR.blue} />
-          <Text
+        <FlatList
+          data={report.tags}
+          renderItem={({ item }) => (
+            <View style={styles.tag}>
+              <Text style={styles.tagText}>{item}</Text>
+            </View>
+          )}
+          numColumns={1}
+          horizontal
+          contentContainerStyle={styles.tagContainer}
+        />
+
+        <View style={styles.content}>
+          <Text style={styles.contentText}>{report.content}</Text>
+        </View>
+
+        <View style={styles.likeWrapper}>
+          <Pressable
+            onPress={handleLikePress}
             style={
-              isLike ? StyleSheet.compose(styles.likeText, styles.likeTextActive) : styles.likeText
+              report.isLike
+                ? StyleSheet.compose(styles.likeContainer, styles.likeContainerActive)
+                : styles.likeContainer
             }
           >
-            도움이 됐어요
-          </Text>
+            <AntDesignIcon
+              name="like2"
+              size={20}
+              color={report.isLike ? COLOR.white : COLOR.blue}
+            />
+            <Text
+              style={
+                report.isLike
+                  ? StyleSheet.compose(styles.likeText, styles.likeTextActive)
+                  : styles.likeText
+              }
+            >
+              도움이 됐어요
+            </Text>
+          </Pressable>
         </View>
-      </View>
-      <SharedModal isModalOpen={isSharedOpen} handleModal={handleSharedModal} />
-    </ScrollView>
+        <SharedModal isModalOpen={isSharedOpen} handleModal={handleSharedModal} />
+      </ScrollView>
+    )
   );
 }
 

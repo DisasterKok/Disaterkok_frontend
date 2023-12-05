@@ -1,7 +1,12 @@
 export type HomeStackParamList = {
   Home: undefined;
   ReportList: undefined;
-  ReportArticleDetail: undefined;
+  ReportArticleDetail: {
+    id: number;
+  };
+  CompleteReportPost: {
+    id: number;
+  };
   Notification: undefined;
   Setting: undefined;
   Search: undefined;
@@ -12,7 +17,7 @@ export type LoggedOutStackParamList = {
   DisasterNotiSettings: undefined;
   SignIn: undefined;
   SignUp: undefined;
-  SetName: { id: string; email: string; password: string };
+  SetName: { usename: string; email: string; password: string };
   SelectLocation: undefined;
   CompleteLogin: undefined;
 };

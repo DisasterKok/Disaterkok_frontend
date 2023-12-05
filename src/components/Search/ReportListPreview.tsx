@@ -1,11 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, Text, Pressable, FlatList } from 'react-native';
-import { ARTICLE_LIST } from '../../constants/DummyArticle';
-import { ReportArticleType } from '../common/ReportArticle/ReportArticleCard/types';
-import ReportArticleCard from '../common/ReportArticle/ReportArticleCard/ReportArticleCard';
+import { View, StyleSheet, Text, Pressable } from 'react-native';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import COLOR from '../../constants/colors';
 import ReportArticleList from '../common/ReportArticle/ReportArticleList/ReportArticleList';
+import useReportListQuery from '../../hooks/queries/Reports/useReportListQuery';
 
 interface ReportListPreviewProps {
   searchInput: string;
@@ -18,7 +16,9 @@ const ReportListPreview = ({
   selectedFilter,
   handleTabPress,
 }: ReportListPreviewProps) => {
-  const [reports, setReports] = React.useState<ReportArticleType[]>(ARTICLE_LIST);
+  const {
+    reportListQuery: { data: reports },
+  } = useReportListQuery();
 
   // React.useEffect(() => {
   //   const loadReports = async () => {
