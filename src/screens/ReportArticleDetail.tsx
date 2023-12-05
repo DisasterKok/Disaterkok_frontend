@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Platform, Pressable } from 'react-native';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -11,6 +11,8 @@ import convertDataFormat from '../utils/convertDataFormat';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '../navigation/types';
 import useReportQuery from '../hooks/queries/Reports/useReportQuery';
+import useReportLike from '../hooks/queries/Reports/useReportLike';
+import useUser from '../hooks/queries/Auth/useUser';
 
 type ReportArticleDetailScreenProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -19,14 +21,20 @@ type ReportArticleDetailScreenProps = NativeStackScreenProps<
 
 export default function ReportArticleDetail({ route }: ReportArticleDetailScreenProps) {
   const { id } = route.params;
+  const { user } = useUser();
   const {
     reportQuery: { data: report },
   } = useReportQuery(id);
+  const { reportLikeMutation } = useReportLike();
 
   const [isSharedOpen, setIsSharedOpen] = React.useState<boolean>(false);
 
   const handleSharedModal = () => {
     setIsSharedOpen(!isSharedOpen);
+  };
+
+  const handleLikePress = () => {
+    reportLikeMutation.mutate({ id, token: user.accessToken });
   };
 
   return (
@@ -87,7 +95,8 @@ export default function ReportArticleDetail({ route }: ReportArticleDetailScreen
         </View>
 
         <View style={styles.likeWrapper}>
-          <View
+          <Pressable
+            onPress={handleLikePress}
             style={
               report.isLike
                 ? StyleSheet.compose(styles.likeContainer, styles.likeContainerActive)
@@ -108,7 +117,7 @@ export default function ReportArticleDetail({ route }: ReportArticleDetailScreen
             >
               도움이 됐어요
             </Text>
-          </View>
+          </Pressable>
         </View>
         <SharedModal isModalOpen={isSharedOpen} handleModal={handleSharedModal} />
       </ScrollView>

@@ -28,6 +28,11 @@ const reportsAPI = {
     const res = await instance.delete(`/posts/post/${id}/`);
     return res.data;
   },
+  like: async (id: number, token: string) => {
+    const headers = token ? { headers: { Authorization: `Token ${token}` } } : { headers: {} };
+    const res = await instance.post(`/posts/post/${id}/likes/`, headers);
+    return res.data;
+  },
 };
 
 export default reportsAPI;
