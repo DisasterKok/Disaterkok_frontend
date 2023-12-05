@@ -10,8 +10,7 @@ const Stack = createNativeStackNavigator<HomeStackParamList>();
 export default function HomeStack() {
   return (
     <Stack.Navigator>
-      {/* <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} /> */}
-      <Stack.Screen name="Home" component={CompleteReportPost} options={{ headerShown: false }} />
+      <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
 
       <Stack.Screen
         name="ReportList"
