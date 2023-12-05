@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   },
   contentSheet: {
     width: '100%',
-    height: 3000,
+    height: '100%',
     backgroundColor: `${COLOR.lightGray}`,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
