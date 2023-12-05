@@ -19,6 +19,7 @@ import SearchPostcode from '../components/SelectAddress/SearchPostcode';
 import AliasPostcode from '../components/SelectAddress/AliasPostcode';
 import useAddressData from '../hooks/useAddressData';
 import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
+import getAddressCoords from '../components/SelectAddress/GetAddressCoords';
 import Separator from '../components/Separator';
 import { LoggedOutStackParamList } from '../navigation/types';
 
@@ -30,17 +31,21 @@ const AddressDataList = [
       address: '서울특별시 서초구 서초동',
       roadAddress: '서울특별시 서초구 서초대로 396',
       zoneCode: '06626',
+      xCoordinate: 127.024612,
+      yCoordinate: 37.495985,
     },
     aliasType: 'home',
     name: '집',
     default: true,
-    alarm: false,
+    alarm: true,
   },
   {
     addressData: {
       address: '서울특별시 서초구 서초동',
       roadAddress: '서울특별시 서초구 서초대로 396',
       zoneCode: '06626',
+      xCoordinate: 127.024612,
+      yCoordinate: 37.495985,
     },
     aliasType: 'work',
     name: '회사',
@@ -52,11 +57,26 @@ const AddressDataList = [
       address: '서울특별시 서초구 서초동',
       roadAddress: '서울특별시 서초구 서초대로 396',
       zoneCode: '06626',
+      xCoordinate: 127.024612,
+      yCoordinate: 37.495985,
     },
     aliasType: 'etc',
-    name: '칭구칑긔집',
+    name: '본가',
     default: false,
-    alarm: false,
+    alarm: true,
+  },
+  {
+    addressData: {
+      address: '서울특별시 서초구 서초동',
+      roadAddress: '서울특별시 서초구 서초대로 396',
+      zoneCode: '06626',
+      xCoordinate: 127.024612,
+      yCoordinate: 37.495985,
+    },
+    aliasType: 'etc',
+    name: '본가',
+    default: false,
+    alarm: true,
   },
 ];
 
@@ -78,6 +98,8 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
     address: '',
     roadAddress: '',
     zoneCode: '',
+    xCoordinate: -1,
+    yCoordinate: -1,
   });
 
   const openModal = () => {
@@ -87,12 +109,21 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   // 주소 찾기로 위치 가져오기
   const handleSelect = (data: any) => {
     setIsSearchOpen(false);
-    setAddressData({
-      address: data.jibunAddress ? data.jibunAddress : data.autoJibunAddress,
-      roadAddress: data.roadAddress ? data.roadAddress : data.autoRoadAddress,
-      zoneCode: data.zonecode,
-    });
-    setIsSearchAliasOpen(true);
+    getAddressCoords(data.jibunAddress ? data.jibunAddress : data.autoJibunAddresss)
+      .then((coordinates) => {
+        setAddressData({
+          address: data.jibunAddress ? data.jibunAddress : data.autoJibunAddress,
+          roadAddress: data.roadAddress ? data.roadAddress : data.autoRoadAddress,
+          zoneCode: data.zonecode,
+          xCoordinate: coordinates.longitude,
+          yCoordinate: coordinates.latitude,
+        });
+        setIsSearchAliasOpen(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log('위치를 얻는 도중 오류가 발생했습니다.');
+      });
   };
 
   // 현재 위치 가져오기
@@ -103,6 +134,8 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
           address: data.address,
           roadAddress: data.roadAddress,
           zoneCode: data.zoneCode,
+          xCoordinate: data.xCoordinate,
+          yCoordinate: data.yCoordinate,
         });
         setIsCurrentAliasOpen(true);
       })

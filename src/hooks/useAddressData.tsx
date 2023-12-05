@@ -4,6 +4,8 @@ interface AddressData {
   address: string;
   roadAddress: string;
   zoneCode: string;
+  xCoordinate: number;
+  yCoordinate: number;
   // 다른 필요한 속성들도 추가 가능
 }
 

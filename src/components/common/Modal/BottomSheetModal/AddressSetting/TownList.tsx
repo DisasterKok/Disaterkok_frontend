@@ -19,6 +19,7 @@ import AliasPostcode from '../../../../SelectAddress/AliasPostcode';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import AddAddress from './AddAdress';
 import getCurrentLocation from '../../../../SelectAddress/GetCurrentLocation';
+import getAddressCoords from '../../../../SelectAddress/GetAddressCoords';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 const AddressDataList = [
@@ -27,6 +28,8 @@ const AddressDataList = [
       address: '서울특별시 서초구 서초동',
       roadAddress: '서울특별시 서초구 서초대로 396',
       zoneCode: '06626',
+      xCoordinate: 127.024612,
+      yCoordinate: 37.495985,
     },
     aliasType: 'home',
     name: '집',
@@ -38,6 +41,8 @@ const AddressDataList = [
       address: '서울특별시 서초구 서초동',
       roadAddress: '서울특별시 서초구 서초대로 396',
       zoneCode: '06626',
+      xCoordinate: 127.024612,
+      yCoordinate: 37.495985,
     },
     aliasType: 'work',
     name: '회사',
@@ -49,6 +54,8 @@ const AddressDataList = [
       address: '서울특별시 서초구 서초동',
       roadAddress: '서울특별시 서초구 서초대로 396',
       zoneCode: '06626',
+      xCoordinate: 127.024612,
+      yCoordinate: 37.495985,
     },
     aliasType: 'etc',
     name: '본가',
@@ -60,6 +67,8 @@ const AddressDataList = [
       address: '서울특별시 서초구 서초동',
       roadAddress: '서울특별시 서초구 서초대로 396',
       zoneCode: '06626',
+      xCoordinate: 127.024612,
+      yCoordinate: 37.495985,
     },
     aliasType: 'etc',
     name: '본가',
@@ -129,17 +138,29 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
     address: '',
     roadAddress: '',
     zoneCode: '',
+    xCoordinate: -1,
+    yCoordinate: -1,
   });
 
   const handleSelect = (data: any) => {
     closeSlide();
-    setAddressData({
-      address: data.jibunAddress ? data.jibunAddress : data.autoJibunAddress,
-      roadAddress: data.roadAddress ? data.roadAddress : data.autoRoadAddress,
-      zoneCode: data.zonecode,
-    });
-    setIsSlideOpen(true);
-    setSlideNum(2);
+    console.log(data);
+    getAddressCoords(data.jibunAddress ? data.jibunAddress : data.autoJibunAddresss)
+      .then((coordinates) => {
+        setAddressData({
+          address: data.jibunAddress ? data.jibunAddress : data.autoJibunAddress,
+          roadAddress: data.roadAddress ? data.roadAddress : data.autoRoadAddress,
+          zoneCode: data.zonecode,
+          xCoordinate: coordinates.longitude,
+          yCoordinate: coordinates.latitude,
+        });
+        setIsSlideOpen(true);
+        setSlideNum(2);
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log('주소를 얻는 도중 오류가 발생했습니다.');
+      });
   };
 
   const closeSlide = () => {
@@ -171,7 +192,10 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
           address: data.address,
           roadAddress: data.roadAddress,
           zoneCode: data.zoneCode,
+          xCoordinate: data.xCoordinate,
+          yCoordinate: data.yCoordinate,
         });
+        console.log(data);
         setSlideNum(2);
         setIsSlideOpen(true);
       })
@@ -190,6 +214,7 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
       default: !updatedAddressDataList ? true : data.default,
       alarm: false,
     };
+    console.log(newData);
     updatedAddressDataList.push(newData);
     setAddressDataList(updatedAddressDataList);
     resetAddressData();
@@ -533,7 +558,7 @@ const styles = StyleSheet.create({
   completeButton: {
     width: '90%',
     height: 50,
-    backgroundColor: `${COLOR.blue}`,
+    backgroundColor: `${COLOR.primary}`,
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
