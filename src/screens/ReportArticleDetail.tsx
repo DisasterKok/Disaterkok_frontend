@@ -52,7 +52,7 @@ export default function ReportArticleDetail({ route }: ReportArticleDetailScreen
         <View style={styles.contentTop}>
           <View style={styles.user}>
             <AntDesignIcon name="user" size={20} color={COLOR.middleGray} />
-            <Text style={styles.userText}>{report.user}</Text>
+            <Text style={styles.userText}>{report.is_anonymous ? '익명' : report.user}</Text>
           </View>
           <View style={styles.solutionGuide}>
             <FeatherIcon name="info" size={10} color={COLOR.blue} />

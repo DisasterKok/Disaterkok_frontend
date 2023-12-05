@@ -7,6 +7,8 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import useInput from '../hooks/useInput';
 import usePostReport from '../hooks/queries/Reports/usePostReport';
 import useUser from '../hooks/queries/Auth/useUser';
+import { HomeStackParamList } from '../navigation/types';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 export default function ReportPost() {
   const { user } = useUser();
@@ -15,12 +17,22 @@ export default function ReportPost() {
 
   const [isAnonymous, setIsAnoymous] = useState(false);
 
+  const navigation: NavigationProp<HomeStackParamList> = useNavigation();
+
   const { reportMutation } = usePostReport();
 
   const submitReportForm = () => {
-    reportMutation.mutate({ user: user.username, title, content, is_anoymous: isAnonymous });
-    // navigation.navigate('CompleteReportPost');
+    reportMutation.mutate(
+      { user: user.username, title, content, is_anoymous: isAnonymous },
+      {
+        onSuccess: (data) => {
+          console.log('Report mutation successful!', data);
+          navigation.navigate('CompleteReportPost', { id: data.id });
+        },
+      },
+    );
   };
+
   return (
     <ScrollView style={styles.layout}>
       <View style={styles.titleWrapper}>

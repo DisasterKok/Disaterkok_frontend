@@ -4,6 +4,9 @@ export type HomeStackParamList = {
   ReportArticleDetail: {
     id: number;
   };
+  CompleteReportPost: {
+    id: number;
+  };
   Notification: undefined;
   Setting: undefined;
   Search: undefined;
