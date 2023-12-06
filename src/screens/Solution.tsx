@@ -1,9 +1,81 @@
 import React from 'react';
-import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Pressable, ScrollView, FlatList, Image } from 'react-native';
 import COLOR from '../constants/colors';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 
+type DisasterType = {
+  id: number;
+  text: string;
+  imageSource: ReturnType<typeof require>;
+};
+
+const DISASTER: DisasterType[] = [
+  {
+    id: 1,
+    text: '태풍',
+    imageSource: require('../assets/disasterIcons/typhoon/typhoon.png'),
+  },
+
+  {
+    id: 2,
+    text: '전력',
+    imageSource: require('../assets/disasterIcons/electrical/electrical.png'),
+  },
+  {
+    id: 3,
+    text: '지진',
+    imageSource: require('../assets/disasterIcons/earthquake/earthquake.png'),
+  },
+  {
+    id: 4,
+    text: '산사태',
+    imageSource: require('../assets/disasterIcons/landslide/landslide.png'),
+  },
+  {
+    id: 5,
+    text: '홍수',
+    imageSource: require('../assets/disasterIcons/flood/flood.png'),
+  },
+  {
+    id: 6,
+    text: '호우',
+    imageSource: require('../assets/disasterIcons/downpour/downpour.png'),
+  },
+  {
+    id: 7,
+    text: '대기오염',
+    imageSource: require('../assets/disasterIcons/airpollution/airpollution.png'),
+  },
+  {
+    id: 8,
+    text: '감염병',
+    imageSource: require('../assets/disasterIcons/Infectiousdiseases/Infectiousdiseases.png'),
+  },
+  {
+    id: 9,
+    text: '대설',
+    imageSource: require('../assets/disasterIcons/heavysnow/heavysnow.png'),
+  },
+  {
+    id: 10,
+    text: '산불',
+    imageSource: require('../assets/disasterIcons/forestfires/forestfires.png'),
+  },
+  {
+    id: 11,
+    text: '폭염',
+    imageSource: require('../assets/disasterIcons/heatwave/heatwave.png'),
+  },
+];
+
 export default function Solution() {
+  const renderItem = ({ item }: { item: DisasterType }) => (
+    <Pressable style={styles.catecoryCard}>
+      <Image source={item.imageSource} style={{ width: 48, height: 48 }} />
+      <Text style={styles.catecoryText}>{item.text}</Text>
+    </Pressable>
+  );
+
   return (
     <View style={styles.layout}>
       <View style={styles.topContainer}>
@@ -25,26 +97,7 @@ export default function Solution() {
             </Pressable>
           </View>
           <ScrollView horizontal style={styles.catecoryContainer}>
-            <Pressable style={styles.catecoryCard}>
-              <Text>아이콘</Text>
-              <Text style={styles.catecoryText}>지진</Text>
-            </Pressable>
-            <Pressable style={styles.catecoryCard}>
-              <Text>아이콘</Text>
-              <Text style={styles.catecoryText}>지진</Text>
-            </Pressable>
-            <Pressable style={styles.catecoryCard}>
-              <Text>아이콘</Text>
-              <Text style={styles.catecoryText}>지진</Text>
-            </Pressable>
-            <Pressable style={styles.catecoryCard}>
-              <Text>아이콘</Text>
-              <Text style={styles.catecoryText}>지진</Text>
-            </Pressable>
-            <Pressable style={styles.catecoryCard}>
-              <Text>아이콘</Text>
-              <Text style={styles.catecoryText}>지진</Text>
-            </Pressable>
+            <FlatList data={DISASTER} renderItem={renderItem} numColumns={1} horizontal />
           </ScrollView>
         </View>
       </View>
@@ -124,7 +177,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,
-    gap: 20,
+    gap: 10,
   },
   catecoryText: {
     fontSize: 12,
