@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Pressable, ScrollView, FlatList, Image } from 'react-native';
 import COLOR from '../constants/colors';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -69,10 +69,54 @@ const DISASTER: DisasterType[] = [
 ];
 
 export default function Solution() {
-  const renderItem = ({ item }: { item: DisasterType }) => (
-    <Pressable style={styles.catecoryCard}>
-      <Image source={item.imageSource} style={{ width: 48, height: 48 }} />
-      <Text style={styles.catecoryText}>{item.text}</Text>
+  const [selectedCatecory, setSelectedCatecory] = useState('전체');
+  const [selectedDisaster, setSelectedDisaster] = useState('태풍');
+
+  const handleCategoryClick = (categoryName: string) => {
+    setSelectedCatecory(categoryName);
+  };
+
+  const handleDisasterClick = (disasterName: string) => {
+    setSelectedDisaster(disasterName);
+  };
+
+  const renderCatecory = ({ item }: { item: string }) => (
+    <Pressable
+      style={
+        selectedCatecory === item ? StyleSheet.compose(styles.tab, styles.activeTab) : styles.tab
+      }
+      onPress={() => handleCategoryClick(item)}
+    >
+      <Text style={styles.tabText}>{item}</Text>
+    </Pressable>
+  );
+
+  const renderDisasterCard = ({ item }: { item: DisasterType }) => (
+    <Pressable
+      style={
+        selectedDisaster === item.text
+          ? StyleSheet.compose(styles.catecoryCard, styles.activeCatecoryCard)
+          : styles.catecoryCard
+      }
+      onPress={() => handleDisasterClick(item.text)}
+    >
+      <Image
+        source={item.imageSource}
+        style={{
+          width: 48,
+          height: 48,
+          tintColor: selectedDisaster === item.text ? COLOR.white : COLOR.middleGray,
+        }}
+      />
+      <Text
+        style={
+          selectedDisaster === item.text
+            ? StyleSheet.compose(styles.catecoryText, styles.activeCatecoryText)
+            : styles.catecoryText
+        }
+      >
+        {item.text}
+      </Text>
     </Pressable>
   );
 
@@ -85,25 +129,19 @@ export default function Solution() {
         </View>
 
         <View style={styles.selectContainer}>
-          <View style={styles.tabContainer}>
-            <Pressable style={styles.tab}>
-              <Text style={styles.tabText}>전체</Text>
-            </Pressable>
-            <Pressable style={styles.tab}>
-              <Text style={styles.tabText}>최근 발생한</Text>
-            </Pressable>
-            <Pressable style={styles.tab}>
-              <Text style={styles.tabText}>내가 설정한</Text>
-            </Pressable>
-          </View>
-          <ScrollView horizontal style={styles.catecoryContainer}>
-            <FlatList data={DISASTER} renderItem={renderItem} numColumns={1} horizontal />
-          </ScrollView>
+          <FlatList
+            data={['전체', '최근 발생한', '내가 설정한']}
+            renderItem={renderCatecory}
+            numColumns={1}
+            horizontal
+            contentContainerStyle={styles.tabContainer}
+          />
+          <FlatList data={DISASTER} renderItem={renderDisasterCard} numColumns={1} horizontal />
         </View>
       </View>
 
       <View style={styles.bottomContainer}>
-        <Text style={styles.disasterTitle}>지진 발생 시 이렇게 행동하세요!</Text>
+        <Text style={styles.disasterTitle}>{selectedDisaster} 발생 시 이렇게 행동하세요!</Text>
         <View style={styles.swipper}>
           <Text>스와이프 영역</Text>
         </View>
@@ -160,14 +198,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  activeTab: {
+    backgroundColor: `${COLOR.skyBlue}`,
+    borderColor: `${COLOR.skyBlue}`,
+  },
   tabText: {
     fontSize: 12,
     fontWeight: '500',
     color: `${COLOR.white}`,
-  },
-  catecoryContainer: {
-    width: '100%',
-    flexDirection: 'row',
   },
   catecoryCard: {
     width: 85,
@@ -179,10 +217,16 @@ const styles = StyleSheet.create({
     marginRight: 10,
     gap: 10,
   },
+  activeCatecoryCard: {
+    backgroundColor: `${COLOR.skyBlue}`,
+  },
   catecoryText: {
     fontSize: 12,
     fontWeight: '500',
     color: `${COLOR.gray}`,
+  },
+  activeCatecoryText: {
+    color: `${COLOR.white}`,
   },
   bottomContainer: {
     marginTop: 20,
