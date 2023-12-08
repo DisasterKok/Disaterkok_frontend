@@ -25,7 +25,7 @@ export default function SignIn({ navigation }: SignInScreenProps) {
     navigation.navigate('SignUp');
   };
 
-  const submitLoginForm = (e) => {
+  const submitLoginForm = (e: any) => {
     e.preventDefault();
     signInMutation.mutate({ username, password });
   };

@@ -4,14 +4,15 @@ import { Home, ReportArticleDetail, ReportList, Setting, Search } from '../scree
 import { HomeStackParamList } from './types';
 import HeaderLeftGoBack from '../components/common/Header/HeadrLeftGoBack';
 import CompleteReportPost from '../screens/CompleteReportPost';
-
+import useUser from '../hooks/queries/Auth/useUser';
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 export default function HomeStack() {
+  const { user } = useUser();
+
   return (
     <Stack.Navigator>
       <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
-
       <Stack.Screen
         name="ReportList"
         component={ReportList}
@@ -25,7 +26,6 @@ export default function HomeStack() {
         component={ReportArticleDetail}
         options={{ title: '실시간 제보', headerLeft: () => <HeaderLeftGoBack /> }}
       />
-
       <Stack.Screen
         name="CompleteReportPost"
         component={CompleteReportPost}

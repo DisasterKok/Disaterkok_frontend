@@ -4,14 +4,14 @@ import COLOR from '../constants/colors';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { LoggedOutStackParamList } from '../navigation/types';
+import { UserInputStackParamList } from '../navigation/types';
 import {
   SelectNaturalDisasterBottomSheet,
   SelectSocialDisasterBottomSheet,
 } from '../components/DisasterNotiSettings';
 
 type DstrNotiSetScreenProps = NativeStackScreenProps<
-  LoggedOutStackParamList,
+  UserInputStackParamList,
   'DisasterNotiSettings'
 >;
 
@@ -26,9 +26,8 @@ export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenPr
     ref.current?.present();
   }, []);
 
-  const onSubmit = () => {
-    navigation.navigate('CompleteLogin');
-  };
+  // const onSubmit = () => {};
+
   return (
     <View style={styles.layout}>
       <View style={styles.topContainer}>
@@ -105,7 +104,7 @@ export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenPr
               : styles.completeButton
           }
           disabled={!naturalSelectedTags.length && !soicalSelectedTags.length}
-          onPress={() => onSubmit()}
+          // onPress={() => onSubmit()}
         >
           <Text style={styles.completeButtonText}>완료</Text>
         </Pressable>

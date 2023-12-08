@@ -21,9 +21,9 @@ import useAddressData from '../hooks/useAddressData';
 import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
 import getAddressCoords from '../components/SelectAddress/GetAddressCoords';
 import Separator from '../components/Separator';
-import { LoggedOutStackParamList } from '../navigation/types';
+import { UserInputStackParamList } from '../navigation/types';
 
-type SelectLocScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'SelectLocation'>;
+type SelectLocScreenProps = NativeStackScreenProps<UserInputStackParamList, 'SelectLocation'>;
 
 const AddressDataList = [
   {
