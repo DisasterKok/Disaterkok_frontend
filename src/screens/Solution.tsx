@@ -3,40 +3,44 @@ import { StyleSheet, View, Text, Pressable, FlatList, Image, Dimensions } from '
 import COLOR from '../constants/colors';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import SwiperFlatList from 'react-native-swiper-flatlist';
-import Swiper from 'react-native-swiper';
 
-type DisasterType = {
+interface SolutionType {
+  solutionImageSoucre: ReturnType<typeof require>;
+  solutionText: string;
+}
+
+interface DisasterType {
   id: number;
   text: string;
   imageSource: ReturnType<typeof require>;
-  solution: [];
-};
+  solution: SolutionType[];
+}
 
 const DISASTER: DisasterType[] = [
   {
     id: 1,
-    text: '태풍',
-    imageSource: require('../assets/disasterIcons/typhoon/typhoon.png'),
+    text: '지진',
+    imageSource: require('../assets/disasterIcons/earthquake/earthquake.png'),
     solution: [
       {
-        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake.png'),
+        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake_1.png'),
         solutionText: '탁자 안으로 들어가\n다리를 잡고 몸을 보호하세요',
       },
       {
-        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake.png'),
-        solutionText: '탁자 안으로 들어가\n다리를 잡고 몸을 보호하세요',
+        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake_2.png'),
+        solutionText: '가스와 전기를 차단 후\n신속히 밖으로 대피하세요',
       },
       {
-        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake.png'),
-        solutionText: '탁자 안으로 들어가\n다리를 잡고 몸을 보호하세요',
+        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake_3.png'),
+        solutionText: '운동장이나 공원 등\n넓은 곳으로 대피하세요',
       },
       {
-        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake.png'),
-        solutionText: '탁자 안으로 들어가\n다리를 잡고 몸을 보호하세요',
+        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake_4.png'),
+        solutionText: '실내가 넓은 공간에선\n계단이나 기둥 근처로 피하세요',
       },
       {
-        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake.png'),
-        solutionText: '탁자 안으로 들어가\n다리를 잡고 몸을 보호하세요',
+        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake_5.png'),
+        solutionText: '엘레베이터가 아닌\n계단을 이용해 이동하세요',
       },
     ],
   },
@@ -48,8 +52,8 @@ const DISASTER: DisasterType[] = [
   },
   {
     id: 3,
-    text: '지진',
-    imageSource: require('../assets/disasterIcons/earthquake/earthquake.png'),
+    text: '태풍',
+    imageSource: require('../assets/disasterIcons/typhoon/typhoon.png'),
   },
   {
     id: 4,
@@ -174,14 +178,13 @@ export default function Solution() {
         <Text style={styles.disasterTitle}>{selectedDisaster} 발생 시 이렇게 행동하세요!</Text>
         <View style={styles.swipperContainer}>
           <SwiperFlatList
-            // autoplay
-            // autoplayDelay={5}
-            // autoplayLoop
-            index={0}
+            autoplay
+            autoplayDelay={2}
+            autoplayLoop
+            index={2}
             showPagination
             data={selectedDisasterSolutions}
             renderItem={({ item }) => {
-              console.log(item);
               return (
                 <View style={[styles.swipper, { width }]}>
                   <Image
@@ -195,8 +198,9 @@ export default function Solution() {
                 </View>
               );
             }}
-            paginationStyleItem={{ width: 4, height: 4 }}
-            paginationStyleItemInactive={{ backgroundColor: COLOR.darkGray }}
+            paginationStyleItem={{ width: 4, height: 4, marginHorizontal: 2 }}
+            paginationStyleItemInactive={{ backgroundColor: COLOR.lightGray }}
+            paginationStyleItemActive={{ backgroundColor: COLOR.gray }}
           />
         </View>
         <View style={styles.tipsContainer}>
@@ -284,6 +288,7 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     width: '100%',
+    flex: 1,
     marginTop: 20,
     paddingHorizontal: 15,
     gap: 8,
@@ -294,6 +299,7 @@ const styles = StyleSheet.create({
   },
   swipperContainer: {
     width: '100%',
+    flex: 1,
   },
   swipper: {
     height: 230,
@@ -321,48 +327,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     color: `${COLOR.primary}`,
-  },
-
-  //
-  slide: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-  },
-  lastSlide: {
-    justifyContent: 'flex-end',
-  },
-  image: {
-    width: 200,
-    height: 200,
-    resizeMode: 'contain',
-    marginBottom: 30,
-  },
-  title: {
-    alignItems: 'center',
-  },
-  lastTitle: {
-    marginBottom: 110,
-  },
-  titleText: {
-    fontSize: 14,
-    marginBottom: 4,
-  },
-  dot: {
-    backgroundColor: `${COLOR.middleGray}`,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginHorizontal: 4,
-    marginBottom: 100,
-  },
-  activeDot: {
-    backgroundColor: `${COLOR.black}`,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginHorizontal: 4,
-    marginBottom: 100,
   },
 });
