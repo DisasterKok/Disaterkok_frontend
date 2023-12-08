@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Pressable, ScrollView, FlatList, Image } from 'react-native';
+import { StyleSheet, View, Text, Pressable, FlatList, Image, Dimensions } from 'react-native';
 import COLOR from '../constants/colors';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import SwiperFlatList from 'react-native-swiper-flatlist';
+import Swiper from 'react-native-swiper';
 
 type DisasterType = {
   id: number;
   text: string;
   imageSource: ReturnType<typeof require>;
+  solution: [];
 };
 
 const DISASTER: DisasterType[] = [
@@ -14,6 +17,28 @@ const DISASTER: DisasterType[] = [
     id: 1,
     text: '태풍',
     imageSource: require('../assets/disasterIcons/typhoon/typhoon.png'),
+    solution: [
+      {
+        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake.png'),
+        solutionText: '탁자 안으로 들어가\n다리를 잡고 몸을 보호하세요',
+      },
+      {
+        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake.png'),
+        solutionText: '탁자 안으로 들어가\n다리를 잡고 몸을 보호하세요',
+      },
+      {
+        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake.png'),
+        solutionText: '탁자 안으로 들어가\n다리를 잡고 몸을 보호하세요',
+      },
+      {
+        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake.png'),
+        solutionText: '탁자 안으로 들어가\n다리를 잡고 몸을 보호하세요',
+      },
+      {
+        solutionImageSoucre: require('../assets/disasterIcons/earthquake/solution/earthquake.png'),
+        solutionText: '탁자 안으로 들어가\n다리를 잡고 몸을 보호하세요',
+      },
+    ],
   },
 
   {
@@ -71,6 +96,11 @@ const DISASTER: DisasterType[] = [
 export default function Solution() {
   const [selectedCatecory, setSelectedCatecory] = useState('전체');
   const [selectedDisaster, setSelectedDisaster] = useState('태풍');
+
+  const selectedDisasterObject = DISASTER.find((disaster) => disaster.text === selectedDisaster);
+  const selectedDisasterSolutions = selectedDisasterObject?.solution || [];
+
+  const { width } = Dimensions.get('window');
 
   const handleCategoryClick = (categoryName: string) => {
     setSelectedCatecory(categoryName);
@@ -142,8 +172,32 @@ export default function Solution() {
 
       <View style={styles.bottomContainer}>
         <Text style={styles.disasterTitle}>{selectedDisaster} 발생 시 이렇게 행동하세요!</Text>
-        <View style={styles.swipper}>
-          <Text>스와이프 영역</Text>
+        <View style={styles.swipperContainer}>
+          <SwiperFlatList
+            // autoplay
+            // autoplayDelay={5}
+            // autoplayLoop
+            index={0}
+            showPagination
+            data={selectedDisasterSolutions}
+            renderItem={({ item }) => {
+              console.log(item);
+              return (
+                <View style={[styles.swipper, { width }]}>
+                  <Image
+                    source={item.solutionImageSoucre}
+                    style={{
+                      width: 161,
+                      height: 128,
+                    }}
+                  />
+                  <Text style={styles.solutionText}>{item.solutionText}</Text>
+                </View>
+              );
+            }}
+            paginationStyleItem={{ width: 4, height: 4 }}
+            paginationStyleItemInactive={{ backgroundColor: COLOR.darkGray }}
+          />
         </View>
         <View style={styles.tipsContainer}>
           <Text style={styles.tipsText}>이 재난에 대한 상세 행동요령이 궁금해요</Text>
@@ -229,6 +283,7 @@ const styles = StyleSheet.create({
     color: `${COLOR.white}`,
   },
   bottomContainer: {
+    width: '100%',
     marginTop: 20,
     paddingHorizontal: 15,
     gap: 8,
@@ -237,11 +292,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  swipper: {
+  swipperContainer: {
     width: '100%',
+  },
+  swipper: {
     height: 230,
     borderRadius: 10,
     backgroundColor: `${COLOR.white}`,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  solutionText: {
+    fontSize: 14,
+    color: `${COLOR.gray}`,
+    textAlign: 'center',
   },
   tipsContainer: {
     width: '100%',
@@ -257,5 +321,48 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     color: `${COLOR.primary}`,
+  },
+
+  //
+  slide: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+  lastSlide: {
+    justifyContent: 'flex-end',
+  },
+  image: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+    marginBottom: 30,
+  },
+  title: {
+    alignItems: 'center',
+  },
+  lastTitle: {
+    marginBottom: 110,
+  },
+  titleText: {
+    fontSize: 14,
+    marginBottom: 4,
+  },
+  dot: {
+    backgroundColor: `${COLOR.middleGray}`,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
+    marginBottom: 100,
+  },
+  activeDot: {
+    backgroundColor: `${COLOR.black}`,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
+    marginBottom: 100,
   },
 });
