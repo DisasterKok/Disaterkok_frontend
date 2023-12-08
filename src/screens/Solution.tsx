@@ -105,6 +105,7 @@ export default function Solution() {
   const selectedDisasterSolutions = selectedDisasterObject?.solution || [];
 
   const { width } = Dimensions.get('window');
+  const cardWidth = width - 30;
 
   const handleCategoryClick = (categoryName: string) => {
     setSelectedCatecory(categoryName);
@@ -186,7 +187,7 @@ export default function Solution() {
             data={selectedDisasterSolutions}
             renderItem={({ item }) => {
               return (
-                <View style={[styles.swipper, { width }]}>
+                <View style={[styles.swipper, { width: cardWidth }]}>
                   <Image
                     source={item.solutionImageSoucre}
                     style={{
@@ -302,11 +303,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   swipper: {
+    width: '100%',
     height: 230,
     borderRadius: 10,
     backgroundColor: `${COLOR.white}`,
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 30,
   },
   solutionText: {
     fontSize: 14,
