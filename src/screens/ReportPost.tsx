@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput } from 'react-native';
 import { View, Text } from 'react-native';
 import COLOR from '../constants/colors';
@@ -10,6 +10,8 @@ import useUser from '../hooks/queries/Auth/useUser';
 import { HomeStackParamList } from '../navigation/types';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
+import SelectAllDisasterBottomSheet from '../components/DisasterNotiSettings/SelectAllDisaster/SelectAllDisasterBottomSheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 interface LocationInfo {
   region_1depth_name: string;
@@ -27,6 +29,12 @@ export default function ReportPost() {
     region_2depth_name: '',
     region_3depth_name: '',
   });
+
+  const disasterModalRef = useRef<BottomSheetModal>(null);
+  const [disasterType, setDisasterType] = useState<string>('');
+  const handlePresentModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
+    ref.current?.present();
+  }, []);
 
   const [isAnonymous, setIsAnoymous] = useState(false);
 
@@ -131,9 +139,21 @@ export default function ReportPost() {
               </Text>
             </View>
           )}
-          <View style={styles.tagItem}>
-            <Text style={styles.tagItemText}>재난유형</Text>
-          </View>
+          {disasterType === '' ? (
+            <Pressable
+              onPress={() => handlePresentModalPress(disasterModalRef)}
+              style={styles.tagItem}
+            >
+              <Text style={styles.tagItemText}>재난유형</Text>
+            </Pressable>
+          ) : (
+            <Pressable
+              onPress={() => handlePresentModalPress(disasterModalRef)}
+              style={StyleSheet.compose(styles.tagItem, styles.tagItemActive)}
+            >
+              <Text style={styles.tagItemTextActive}>{disasterType}</Text>
+            </Pressable>
+          )}
         </View>
       </View>
 
@@ -175,6 +195,13 @@ export default function ReportPost() {
           <Text style={styles.submitBtnText}>제보하기</Text>
         </Pressable>
       </View>
+
+      {/* 모달 */}
+      <SelectAllDisasterBottomSheet
+        bottomSheetModalRef={disasterModalRef}
+        selectedTag={disasterType}
+        setSelectedTag={setDisasterType}
+      />
     </ScrollView>
   );
 }
