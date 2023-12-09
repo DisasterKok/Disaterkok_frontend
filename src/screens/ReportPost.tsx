@@ -9,17 +9,40 @@ import usePostReport from '../hooks/queries/Reports/usePostReport';
 import useUser from '../hooks/queries/Auth/useUser';
 import { HomeStackParamList } from '../navigation/types';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
+
+interface LocationInfo {
+  region_1depth_name: string;
+  region_2depth_name: string;
+  region_3depth_name: string;
+}
 
 export default function ReportPost() {
   const { user } = useUser();
   const [title, onChangeTitle] = useInput();
   const [content, onChangeContent] = useInput();
 
+  const [location, setLocation] = useState<LocationInfo>({
+    region_1depth_name: '',
+    region_2depth_name: '',
+    region_3depth_name: '',
+  });
+
   const [isAnonymous, setIsAnoymous] = useState(false);
 
   const navigation: NavigationProp<HomeStackParamList> = useNavigation();
 
   const { reportMutation } = usePostReport();
+
+  const getCurrentLocationOnClick = async () => {
+    const locationData = await getCurrentLocation();
+    const locationInfo: LocationInfo = {
+      region_1depth_name: locationData.region_1depth_name,
+      region_2depth_name: locationData.region_2depth_name,
+      region_3depth_name: locationData.region_3depth_name,
+    };
+    setLocation(locationInfo);
+  };
 
   const submitReportForm = () => {
     reportMutation.mutate(
@@ -69,21 +92,45 @@ export default function ReportPost() {
       <View style={styles.tagWrapper}>
         <View style={styles.tagTopContainer}>
           <Text style={styles.titleText}>태그를 입력해주세요</Text>
-          <View style={styles.locationContainer}>
+          <Pressable onPress={getCurrentLocationOnClick} style={styles.locationContainer}>
             <MaterialCommunityIcon name="target" size={10} color={COLOR.blue} />
             <Text style={styles.locationText}>내위치</Text>
-          </View>
+          </Pressable>
         </View>
         <View style={styles.tagContainer}>
-          <View style={styles.tagItem}>
-            <Text style={styles.tagItemText}>시,도</Text>
-          </View>
-          <View style={styles.tagItem}>
-            <Text style={styles.tagItemText}>시,군,구</Text>
-          </View>
-          <View style={styles.tagItem}>
-            <Text style={styles.tagItemText}>동,읍,면</Text>
-          </View>
+          {location.region_1depth_name === '' ? (
+            <View style={styles.tagItem}>
+              <Text style={styles.tagItemText}>시,도</Text>
+            </View>
+          ) : (
+            <View style={StyleSheet.compose(styles.tagItem, styles.tagItemActive)}>
+              <Text style={StyleSheet.compose(styles.tagItemText, styles.tagItemTextActive)}>
+                {location.region_1depth_name}
+              </Text>
+            </View>
+          )}
+          {location.region_2depth_name === '' ? (
+            <View style={styles.tagItem}>
+              <Text style={styles.tagItemText}>시,군,구</Text>
+            </View>
+          ) : (
+            <View style={StyleSheet.compose(styles.tagItem, styles.tagItemActive)}>
+              <Text style={StyleSheet.compose(styles.tagItemText, styles.tagItemTextActive)}>
+                {location.region_2depth_name}
+              </Text>
+            </View>
+          )}
+          {location.region_3depth_name === '' ? (
+            <View style={styles.tagItem}>
+              <Text style={styles.tagItemText}>동,읍,면</Text>
+            </View>
+          ) : (
+            <View style={StyleSheet.compose(styles.tagItem, styles.tagItemActive)}>
+              <Text style={StyleSheet.compose(styles.tagItemText, styles.tagItemTextActive)}>
+                {location.region_3depth_name}
+              </Text>
+            </View>
+          )}
           <View style={styles.tagItem}>
             <Text style={styles.tagItemText}>재난유형</Text>
           </View>
@@ -232,9 +279,15 @@ const styles = StyleSheet.create({
     backgroundColor: `${COLOR.white}`,
     borderRadius: 20,
   },
+  tagItemActive: {
+    backgroundColor: `${COLOR.primary}`,
+  },
   tagItemText: {
     fontSize: 12,
     color: `${COLOR.gray}`,
+  },
+  tagItemTextActive: {
+    color: `${COLOR.white}`,
   },
   contentWrapper: {
     gap: 10,
