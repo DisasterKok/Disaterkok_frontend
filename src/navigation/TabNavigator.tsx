@@ -10,7 +10,11 @@ export default function TabNavigator() {
     <Tab.Navigator>
       <Tab.Screen name="Main" component={Main} options={{ headerShown: false, title: '홈' }} />
       <Tab.Screen name="Report" component={ReportPost} options={{ title: '실시간 제보' }} />
-      <Tab.Screen name="Solution" component={Solution} options={{ title: '솔루션' }} />
+      <Tab.Screen
+        name="Solution"
+        component={Solution}
+        options={{ headerShown: false, title: '솔루션' }}
+      />
     </Tab.Navigator>
   );
 }
