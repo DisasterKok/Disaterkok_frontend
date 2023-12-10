@@ -21,6 +21,7 @@ import SelectAllDisasterBottomSheet from '../components/DisasterNotiSettings/Sel
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 import { launchCamera, CameraOptions, ImagePickerResponse } from 'react-native-image-picker';
+import useUser from '../hooks/queries/Auth/useUser';
 
 interface LocationInfo {
   region_1depth_name: string;
@@ -29,6 +30,7 @@ interface LocationInfo {
 }
 
 export default function ReportPost() {
+  const { user } = useUser();
   const [title, onChangeTitle] = useInput();
   const [content, onChangeContent] = useInput();
 
@@ -50,13 +52,12 @@ export default function ReportPost() {
 
   const navigation: NavigationProp<HomeStackParamList> = useNavigation();
 
-  const { reportMutation } = usePostReport();
+  const { reportMutation } = usePostReport(user.token);
 
   const showCamera = () => {
     //1. launchCamera 하기 위한 옵션 객체
     const options: CameraOptions = {
-      //Property 'mediaType' is missing in type '{}' but required in type 'CameraOptions'
-      mediaType: 'photo', //필수 속성
+      mediaType: 'photo',
       cameraType: 'back',
       saveToPhotos: true,
       quality: 1,
@@ -68,17 +69,38 @@ export default function ReportPost() {
       if (response.didCancel) Alert.alert('촬영취소');
       else if (response.errorMessage) Alert.alert('Error : ' + response.errorMessage);
       else {
-        //이곳에 왔다면 이미지가 잘 촬영된 것
         //촬용된 이미지는 response 객체의 assets 라는 속성으로 전달됨
+        // if (response.assets != null) {
+        //   const uri = response.assets[0].uri;
+        //   const source = { uri: uri };
+
+        //   // 현재 imgList 상태를 가져와서 새로운 이미지를 추가한 후 상태를 업데이트합니다.
+        //   setImgList((prevImgList) => [...prevImgList, source]);
+        // }
         if (response.assets != null) {
           const uri = response.assets[0].uri;
-          const source = { uri: uri };
 
-          // 현재 imgList 상태를 가져와서 새로운 이미지를 추가한 후 상태를 업데이트합니다.
-          setImgList((prevImgList) => [...prevImgList, source]);
+          // FormData 생성
+          const formData = new FormData();
+          formData.append('image', { uri, type: 'image/jpeg', name: 'photo.jpg' });
+
+          try {
+            // 서버로 FormData 전송
+            const response = await axios.post('서버API주소', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                // 추가적인 헤더 (예: Authorization 등)도 필요하다면 여기에 추가
+              },
+            });
+
+            // 서버 응답을 기반으로 상태 업데이트 등 필요한 작업 수행
+            console.log(response.data);
+          } catch (error) {
+            console.error('Error:', error.message);
+          }
         }
       }
-    }); //파라미터로 응답객체 받음
+    });
   };
 
   const getCurrentLocationOnClick = async () => {
@@ -92,38 +114,27 @@ export default function ReportPost() {
   };
 
   const submitReportForm = () => {
-    console.log({
-      title,
-      content,
-      images: imgList,
-      tags: [
-        location.region_1depth_name,
-        location.region_2depth_name,
-        location.region_3depth_name,
-        disasterType,
-      ],
-      is_anoymous: isAnonymous,
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    formData.append('is_anoymous', isAnonymous);
+    // formData.append(
+    //   'tags',
+    //   location.region_1depth_name,
+    //   location.region_2depth_name,
+    //   location.region_3depth_name,
+    //   disasterType,
+    // );
+    imgList.forEach((img) => {
+      return formData.append('image', img);
     });
-    reportMutation.mutate(
-      {
-        title,
-        content,
-        images: imgList,
-        tags: [
-          location.region_1depth_name,
-          location.region_2depth_name,
-          location.region_3depth_name,
-          disasterType,
-        ],
-        is_anoymous: isAnonymous,
+
+    reportMutation.mutate(formData, {
+      onSuccess: (data) => {
+        console.log('Report mutation successful!', data);
+        navigation.navigate('CompleteReportPost', { id: data.id });
       },
-      {
-        onSuccess: (data) => {
-          console.log('Report mutation successful!', data);
-          navigation.navigate('CompleteReportPost', { id: data.id });
-        },
-      },
-    );
+    });
   };
 
   return (
