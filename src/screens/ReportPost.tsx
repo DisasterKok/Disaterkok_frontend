@@ -65,7 +65,7 @@ export default function ReportPost() {
       videoQuality: 'high',
     };
 
-    // 촬영 결과를 받아오는 callback 메소드
+    // 촬영 결과를 받아오는 callback method
     launchCamera(options, (response: ImagePickerResponse) => {
       if (response.didCancel) Alert.alert('촬영취소');
       else if (response.errorMessage) Alert.alert('Error : ' + response.errorMessage);

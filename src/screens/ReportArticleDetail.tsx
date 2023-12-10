@@ -1,5 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Platform, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Platform,
+  Pressable,
+  Image,
+  Dimensions,
+} from 'react-native';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -13,6 +22,7 @@ import { HomeStackParamList } from '../navigation/types';
 import useReportQuery from '../hooks/queries/Reports/useReportQuery';
 import useReportLike from '../hooks/queries/Reports/useReportLike';
 import useUser from '../hooks/queries/Auth/useUser';
+import SwiperFlatList from 'react-native-swiper-flatlist';
 
 type ReportArticleDetailScreenProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -25,8 +35,6 @@ export default function ReportArticleDetail({ route }: ReportArticleDetailScreen
   const {
     reportQuery: { data: report },
   } = useReportQuery(id);
-
-  console.log(report);
 
   const { reportLikeMutation } = useReportLike();
 
@@ -71,11 +79,31 @@ export default function ReportArticleDetail({ route }: ReportArticleDetailScreen
           </View>
         </View>
         <View style={styles.imgContainer}>
-          {/* img */}
+          <SwiperFlatList
+            index={0}
+            showPagination
+            data={report.images}
+            renderItem={({ item }) => {
+              console.log(item);
+              return (
+                <Image
+                  source={{ uri: item.image }}
+                  style={{
+                    width: 346,
+                    height: 346,
+                  }}
+                />
+              );
+            }}
+            paginationStyleItem={{ width: 5, height: 5, marginHorizontal: 2 }}
+            paginationStyleItemInactive={{ backgroundColor: COLOR.lightGray }}
+            paginationStyleItemActive={{ width: 15, backgroundColor: COLOR.black }}
+          />
+
           <EntypoIcon
             name="dots-three-vertical"
             size={18}
-            color={COLOR.gray}
+            color={COLOR.black}
             style={styles.shareDotBtn}
             onPress={handleSharedModal}
           />
@@ -194,7 +222,6 @@ const styles = StyleSheet.create({
     width: 346,
     height: 346,
     borderRadius: 5,
-    backgroundColor: `${COLOR.lightGray}`,
     marginBottom: 10,
   },
   shareDotBtn: {

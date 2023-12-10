@@ -1,5 +1,13 @@
 import React from 'react';
-import { StyleSheet, View, Text, Platform, FlatList, Pressable } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Platform,
+  FlatList,
+  Pressable,
+  ImageBackground,
+} from 'react-native';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
@@ -12,7 +20,7 @@ import getElapsedTime from '../../../../utils/getElapsedTime';
 
 export default function ReportArticleCard({ data }: { data: ReportArticleType }) {
   const navigation: NavigationProp<HomeStackParamList> = useNavigation();
-  const { created_at, view, like, title, tags, id } = data;
+  const { created_at, view, like, title, tags, images, id } = data;
 
   const [isSharedOpen, setIsSharedOpen] = React.useState<boolean>(false);
 
@@ -28,32 +36,64 @@ export default function ReportArticleCard({ data }: { data: ReportArticleType })
 
   return (
     <Pressable style={styles.cardLayout} onPress={navigateToReportDetail}>
-      <View style={styles.img}>
-        <View style={styles.topContainer}>
-          <View style={styles.topLeftContainer}>
-            <View style={styles.topLeftItem}>
-              <Text style={styles.topLeftItemText}>{getElapsedTime(created_at)}</Text>
+      {images.length > 0 ? (
+        <ImageBackground
+          source={{ uri: `http://13.209.220.81:8888${images[0].image}` }}
+          style={styles.img}
+        >
+          <View style={styles.topContainer}>
+            <View style={styles.topLeftContainer}>
+              <View style={styles.topLeftItem}>
+                <Text style={styles.topLeftItemText}>{getElapsedTime(created_at)}</Text>
+              </View>
+              <View style={styles.topLeftItem}>
+                <Text style={styles.topLeftItemText}>|</Text>
+              </View>
+              <View style={styles.topLeftItem}>
+                <FoundationIcon name="eye" size={15} color={COLOR.white} />
+                <Text style={styles.topLeftItemText}>{view}</Text>
+              </View>
+              <View style={styles.topLeftItem}>
+                <AntDesignIcon name="like2" size={10} color={COLOR.white} />
+                <Text style={styles.topLeftItemText}>{like}</Text>
+              </View>
             </View>
-            <View style={styles.topLeftItem}>
-              <Text style={styles.topLeftItemText}>|</Text>
-            </View>
-            <View style={styles.topLeftItem}>
-              <FoundationIcon name="eye" size={15} color={COLOR.white} />
-              <Text style={styles.topLeftItemText}>{view}</Text>
-            </View>
-            <View style={styles.topLeftItem}>
-              <AntDesignIcon name="like2" size={10} color={COLOR.white} />
-              <Text style={styles.topLeftItemText}>{like}</Text>
-            </View>
+            <EntypoIcon
+              name="dots-three-vertical"
+              size={15}
+              color={COLOR.white}
+              onPress={handleSharedModal}
+            />
           </View>
-          <EntypoIcon
-            name="dots-three-vertical"
-            size={15}
-            color={COLOR.white}
-            onPress={handleSharedModal}
-          />
+        </ImageBackground>
+      ) : (
+        <View style={styles.img}>
+          <View style={styles.topContainer}>
+            <View style={styles.topLeftContainer}>
+              <View style={styles.topLeftItem}>
+                <Text style={styles.topLeftItemText}>{getElapsedTime(created_at)}</Text>
+              </View>
+              <View style={styles.topLeftItem}>
+                <Text style={styles.topLeftItemText}>|</Text>
+              </View>
+              <View style={styles.topLeftItem}>
+                <FoundationIcon name="eye" size={15} color={COLOR.white} />
+                <Text style={styles.topLeftItemText}>{view}</Text>
+              </View>
+              <View style={styles.topLeftItem}>
+                <AntDesignIcon name="like2" size={10} color={COLOR.white} />
+                <Text style={styles.topLeftItemText}>{like}</Text>
+              </View>
+            </View>
+            <EntypoIcon
+              name="dots-three-vertical"
+              size={15}
+              color={COLOR.white}
+              onPress={handleSharedModal}
+            />
+          </View>
         </View>
-      </View>
+      )}
       <View style={styles.bottomContainer}>
         <View style={styles.title}>
           <Text style={styles.titleText}>{title}</Text>
