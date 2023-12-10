@@ -1,5 +1,13 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, TextInput } from 'react-native';
+import {
+  Alert,
+  Image,
+  ImageURISource,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+} from 'react-native';
 import { View, Text } from 'react-native';
 import COLOR from '../constants/colors';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,6 +21,8 @@ import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
 import SelectAllDisasterBottomSheet from '../components/DisasterNotiSettings/SelectAllDisaster/SelectAllDisasterBottomSheet';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
+import { launchCamera, CameraOptions, ImagePickerResponse } from 'react-native-image-picker';
+
 interface LocationInfo {
   region_1depth_name: string;
   region_2depth_name: string;
@@ -23,6 +33,8 @@ export default function ReportPost() {
   const { user } = useUser();
   const [title, onChangeTitle] = useInput();
   const [content, onChangeContent] = useInput();
+
+  const [imgList, setImgList] = useState<ImageURISource[]>([]);
 
   const [location, setLocation] = useState<LocationInfo>({
     region_1depth_name: '',
@@ -41,6 +53,35 @@ export default function ReportPost() {
   const navigation: NavigationProp<HomeStackParamList> = useNavigation();
 
   const { reportMutation } = usePostReport();
+
+  const showCamera = () => {
+    //1. launchCamera 하기 위한 옵션 객체
+    const options: CameraOptions = {
+      //Property 'mediaType' is missing in type '{}' but required in type 'CameraOptions'
+      mediaType: 'photo', //필수 속성
+      cameraType: 'back',
+      saveToPhotos: true,
+      quality: 1,
+      videoQuality: 'high',
+    };
+
+    //2. 촬영 결과를 받아오는 callback 메소드 등록
+    launchCamera(options, (response: ImagePickerResponse) => {
+      if (response.didCancel) Alert.alert('촬영취소');
+      else if (response.errorMessage) Alert.alert('Error : ' + response.errorMessage);
+      else {
+        //이곳에 왔다면 이미지가 잘 촬영된 것
+        //촬용된 이미지는 response 객체의 assets 라는 속성으로 전달됨
+        if (response.assets != null) {
+          const uri = response.assets[0].uri;
+          const source = { uri: uri };
+
+          // 현재 imgList 상태를 가져와서 새로운 이미지를 추가한 후 상태를 업데이트합니다.
+          setImgList((prevImgList) => [...prevImgList, source]);
+        }
+      }
+    }); //파라미터로 응답객체 받음
+  };
 
   const getCurrentLocationOnClick = async () => {
     const locationData = await getCurrentLocation();
@@ -84,17 +125,24 @@ export default function ReportPost() {
       <View style={styles.imgWrapper}>
         <Text style={styles.titleText}>사진이나 영상을 올려주세요</Text>
         <Text style={styles.subTitleText}>최대 5개까지 업로드 가능합니다</Text>
-        <View style={styles.imgContainer}>
-          <View style={styles.imgItemFirst}>
-            <AntDesignIcon name="plus" size={30} color={COLOR.blue} />
+        <ScrollView horizontal style={styles.imgContainer}>
+          {imgList.length < 5 && (
+            <Pressable onPress={showCamera} style={styles.imgItemFirst}>
+              <AntDesignIcon name="plus" size={30} color={COLOR.blue} />
+            </Pressable>
+          )}
+          <View style={styles.imgPreviewContainer}>
+            {imgList.map((img, index) => (
+              <Image key={index} source={img} style={styles.imgPreview}></Image>
+            ))}
           </View>
-          <View style={styles.imgItem}>
-            <AntDesignIcon name="plus" size={30} color={COLOR.middleGray} />
-          </View>
-          <View style={styles.imgItem}>
-            <AntDesignIcon name="plus" size={30} color={COLOR.middleGray} />
-          </View>
-        </View>
+
+          {/* {Array.from({ length: Math.max(5 - imgList.length, 0) }).map((_, index) => (
+            <Pressable onPress={showCamera} key={index} style={styles.imgItem}>
+              <AntDesignIcon name="plus" size={30} color={COLOR.middleGray} />
+            </Pressable>
+          ))} */}
+        </ScrollView>
       </View>
 
       <View style={styles.tagWrapper}>
@@ -259,6 +307,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 5,
+  },
+  imgPreviewContainer: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  imgPreview: {
+    width: 100,
+    height: 100,
   },
   imgItem: {
     width: 100,
