@@ -1,9 +1,11 @@
+import { ImageURISource } from 'react-native';
 import { instance } from '../lib/axios';
 
 export interface reportPostPayload {
-  user: number;
   title: string;
   content: string;
+  images: ImageURISource[];
+  tags: string[];
   is_anoymous: boolean;
 }
 

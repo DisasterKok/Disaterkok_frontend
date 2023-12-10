@@ -14,7 +14,6 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import useInput from '../hooks/useInput';
 import usePostReport from '../hooks/queries/Reports/usePostReport';
-import useUser from '../hooks/queries/Auth/useUser';
 import { HomeStackParamList } from '../navigation/types';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
@@ -30,7 +29,6 @@ interface LocationInfo {
 }
 
 export default function ReportPost() {
-  const { user } = useUser();
   const [title, onChangeTitle] = useInput();
   const [content, onChangeContent] = useInput();
 
@@ -41,9 +39,9 @@ export default function ReportPost() {
     region_2depth_name: '',
     region_3depth_name: '',
   });
+  const [disasterType, setDisasterType] = useState<string>('');
 
   const disasterModalRef = useRef<BottomSheetModal>(null);
-  const [disasterType, setDisasterType] = useState<string>('');
   const handlePresentModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
     ref.current?.present();
   }, []);
@@ -94,8 +92,31 @@ export default function ReportPost() {
   };
 
   const submitReportForm = () => {
+    console.log({
+      title,
+      content,
+      images: imgList,
+      tags: [
+        location.region_1depth_name,
+        location.region_2depth_name,
+        location.region_3depth_name,
+        disasterType,
+      ],
+      is_anoymous: isAnonymous,
+    });
     reportMutation.mutate(
-      { user: user.username, title, content, is_anoymous: isAnonymous },
+      {
+        title,
+        content,
+        images: imgList,
+        tags: [
+          location.region_1depth_name,
+          location.region_2depth_name,
+          location.region_3depth_name,
+          disasterType,
+        ],
+        is_anoymous: isAnonymous,
+      },
       {
         onSuccess: (data) => {
           console.log('Report mutation successful!', data);
@@ -239,8 +260,23 @@ export default function ReportPost() {
             익명으로 올리기
           </Text>
         </Pressable>
-        <Pressable onPress={submitReportForm} style={styles.submitBtn}>
-          <Text style={styles.submitBtnText}>제보하기</Text>
+        <Pressable
+          onPress={submitReportForm}
+          style={
+            title === ''
+              ? styles.submitBtn
+              : StyleSheet.compose(styles.submitBtn, styles.submitBtnActive)
+          }
+        >
+          <Text
+            style={
+              title === ''
+                ? styles.submitBtnText
+                : StyleSheet.compose(styles.submitBtnText, styles.submitBtnTextActive)
+            }
+          >
+            제보하기
+          </Text>
         </Pressable>
       </View>
 
@@ -298,7 +334,6 @@ const styles = StyleSheet.create({
   imgContainer: {
     marginTop: 15,
     flexDirection: 'row',
-    gap: 10,
   },
   imgItemFirst: {
     width: 100,
@@ -307,6 +342,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 5,
+    marginRight: 10,
   },
   imgPreviewContainer: {
     flexDirection: 'row',
@@ -423,8 +459,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: `${COLOR.lightGray}`,
   },
+  submitBtnActive: {
+    backgroundColor: `${COLOR.primary}`,
+  },
   submitBtnText: {
     fontSize: 14,
+    color: `${COLOR.white}`,
+  },
+  submitBtnTextActive: {
     color: `${COLOR.white}`,
   },
 });
