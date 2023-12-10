@@ -18,8 +18,10 @@ const reportsAPI = {
     const res = await instance.get(`/posts/post/${id}/`);
     return res.data;
   },
-  post: async (payload: reportPostPayload) => {
-    const res = await instance.post(`/posts/post/`, payload);
+  post: async (payload: reportPostPayload, token: string) => {
+    const res = await instance.post(`/posts/post/`, payload, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return res.data;
   },
   patch: async (id: number, payload: reportPostPayload) => {
