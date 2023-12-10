@@ -10,8 +10,8 @@ const useSignIn = () => {
     onSuccess: (data) => {
       queryClient.setQueryData(['user'], {
         username: data.user.username,
-        accessToken: data.token.access,
-        locData: data.exist,
+        token: data.token.access,
+        locData: Boolean(data.exist),
       });
     },
   });

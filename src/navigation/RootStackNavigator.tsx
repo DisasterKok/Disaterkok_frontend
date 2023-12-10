@@ -9,11 +9,10 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootStackNavigator() {
   const { user } = useUser();
-  const inputExist = user?.locData;
 
   return (
     <>
-      {inputExist ? (
+      {user && user?.locData ? (
         <Stack.Navigator>
           <Stack.Screen
             name="MainTabNavigator"

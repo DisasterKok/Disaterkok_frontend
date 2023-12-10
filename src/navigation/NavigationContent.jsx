@@ -6,7 +6,6 @@ import useUser from '../hooks/queries/Auth/useUser';
 
 const NavigationContent = () => {
   const { user } = useUser();
-  //console.log('user', user);
   return (
     <NavigationContainer>{user ? <RootStackNavigator /> : <LoggedOutStack />}</NavigationContainer>
   );

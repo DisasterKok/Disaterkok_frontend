@@ -10,6 +10,9 @@ import {
   SelectSocialDisasterBottomSheet,
 } from '../components/DisasterNotiSettings';
 
+import { useQueryClient } from '@tanstack/react-query';
+import useUser from '../hooks/queries/Auth/useUser';
+
 type DstrNotiSetScreenProps = NativeStackScreenProps<
   UserInputStackParamList,
   'DisasterNotiSettings'
@@ -26,7 +29,16 @@ export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenPr
     ref.current?.present();
   }, []);
 
-  // const onSubmit = () => {};
+  const queryClient = useQueryClient();
+  const { user } = useUser();
+  const onSubmit = () => {
+    queryClient.setQueryData(['user'], {
+      username: user.username,
+      token: user.token,
+      locData: true,
+    });
+    //navigation.navigate('Home');
+  };
 
   return (
     <View style={styles.layout}>
@@ -104,7 +116,7 @@ export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenPr
               : styles.completeButton
           }
           disabled={!naturalSelectedTags.length && !soicalSelectedTags.length}
-          // onPress={() => onSubmit()}
+          onPress={() => onSubmit()}
         >
           <Text style={styles.completeButtonText}>완료</Text>
         </Pressable>

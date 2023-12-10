@@ -6,7 +6,7 @@ import Separator from '../Separator';
 import useInput from '../../hooks/useInput';
 import AliasTypeButton from './AliasTypeButton';
 
-interface AddressData {
+export interface AddressData {
   address: string;
   roadAddress: string;
   zoneCode: string; // 우편번호

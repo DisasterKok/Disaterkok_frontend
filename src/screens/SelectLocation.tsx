@@ -16,12 +16,19 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 import SearchPostcode from '../components/SelectAddress/SearchPostcode';
-import AliasPostcode from '../components/SelectAddress/AliasPostcode';
+import AliasPostcode, { AddressData } from '../components/SelectAddress/AliasPostcode';
 import useAddressData from '../hooks/useAddressData';
 import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
 import getAddressCoords from '../components/SelectAddress/GetAddressCoords';
 import Separator from '../components/Separator';
 import { UserInputStackParamList } from '../navigation/types';
+
+import useRegionListQuery from '../hooks/queries/Region/useRegionList';
+import useAddRegion from '../hooks/queries/Region/useAddRegion';
+import { UserRegion, UserRegionPayload } from '../apis/userRegionAPI';
+
+import { useSignOut } from '../hooks/queries/Auth/useSignOut';
+import useUser from '../hooks/queries/Auth/useUser';
 
 type SelectLocScreenProps = NativeStackScreenProps<UserInputStackParamList, 'SelectLocation'>;
 
@@ -81,8 +88,18 @@ const AddressDataList = [
 ];
 
 export default function SelectLoc({ navigation }: SelectLocScreenProps) {
-  const [addressDataList, setAddressDataList] = React.useState(AddressDataList);
+  const { user } = useUser();
+  const {
+    regionListQuery: { data: regions },
+  } = useRegionListQuery(user.token);
+  const [addressDataList, setAddressDataList] = React.useState<UserRegion[]>(
+    regions ? regions.results : [],
+  );
 
+  //console.log('listquery', regions);
+  //console.log('datalist: ', addressDataList);
+
+  const { addRegionMutation } = useAddRegion(user.token);
   // 주소 찾기 모달
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   // 주소 찾기로 선택한 주소 별명 설정하기 모달
@@ -108,6 +125,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
 
   // 주소 찾기로 위치 가져오기
   const handleSelect = (data: any) => {
+    //console.log(data);
     setIsSearchOpen(false);
     getAddressCoords(data.jibunAddress ? data.jibunAddress : data.autoJibunAddresss)
       .then((coordinates) => {
@@ -147,19 +165,28 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
 
   // 주소 추기하기
   const handleAddAddress = (data: any) => {
-    const updatedAddressDataList = [...addressDataList];
-    const newData = {
-      addressData: data.addressData,
+    const newData: UserRegionPayload = {
+      address: data.addressData.address,
+      roadAddress: data.addressData.roadAddress,
+      zoneCode: data.addressData.zoneCode,
+      xCoordinate: data.addressData.xCoordinate,
+      yCoordinate: data.addressData.yCoordinate,
       aliasType: data.aliasType,
       name: data.name,
-      default: !updatedAddressDataList ? true : data.default,
-      alarm: false, //default false?
+      default: !addressDataList ? true : data.default,
+      onOff: data.default ? true : false, //default false?
     };
-    updatedAddressDataList.push(newData);
-    setAddressDataList(updatedAddressDataList);
-    resetAddressData();
-    if (isSearchAliasOpen) setIsSearchAliasOpen(false);
-    else if (isCurrentAliasOpen) setIsCurrentAliasOpen(false);
+    console.log(newData);
+    //updatedAddressDataList.push(newData);
+    //setAddressDataList(updatedAddressDataList);
+    addRegionMutation.mutate(newData, {
+      onSuccess: (data: any) => {
+        regions.refetch();
+        resetAddressData();
+        if (isSearchAliasOpen) setIsSearchAliasOpen(false);
+        else if (isCurrentAliasOpen) setIsCurrentAliasOpen(false);
+      },
+    });
   };
 
   const handleUpdateAddress = (data: any) => {
@@ -194,8 +221,10 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   };
 
   useEffect(() => {
-    //console.log(AddressDataList);
-  }, [AddressDataList]);
+    setAddressDataList(regions ? regions.results : []);
+  }, [regions]);
+
+  const signOut = useSignOut();
 
   return (
     <>
@@ -234,7 +263,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
           <ScrollView style={styles.list}>
             <View>
               {addressDataList &&
-                addressDataList.map((data, index) => (
+                addressDataList.map((data, index: number) => (
                   <TouchableOpacity
                     key={index}
                     activeOpacity={0.8}
@@ -250,7 +279,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
                         <View style={styles.roadIcon}>
                           <Text style={styles.roadIconText}>도로명</Text>
                         </View>
-                        <Text style={styles.roadText}>{data.addressData.roadAddress}</Text>
+                        <Text style={styles.roadText}>{data.roadAddress}</Text>
                       </View>
                     </View>
                     <View style={styles.listButton}>
@@ -307,12 +336,18 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
         )}
         {isUpdateAliasOpen && (
           <AliasPostcode
-            addressData={addressDataList[updatingIndex].addressData}
+            addressData={{
+              address: addressDataList[updatingIndex].address,
+              roadAddress: addressDataList[updatingIndex].roadAddress,
+              zoneCode: addressDataList[updatingIndex].zoneCode,
+              xCoordinate: addressDataList[updatingIndex].xCoordinate,
+              yCoordinate: addressDataList[updatingIndex].yCoordinate,
+            }}
             aliasData={{
               aliasType: addressDataList[updatingIndex].aliasType,
               name: addressDataList[updatingIndex].name,
               default: addressDataList[updatingIndex].default,
-              alarm: addressDataList[updatingIndex].alarm,
+              alarm: addressDataList[updatingIndex].onOff,
             }}
             updateAddress={handleUpdateAddress}
             goBack={() => setIsUpdateAliasOpen(false)}
