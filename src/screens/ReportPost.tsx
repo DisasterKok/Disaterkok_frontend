@@ -3,6 +3,7 @@ import {
   Alert,
   Image,
   ImageURISource,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -34,7 +35,8 @@ export default function ReportPost() {
   const [title, onChangeTitle] = useInput();
   const [content, onChangeContent] = useInput();
 
-  const [imgList, setImgList] = useState<ImageURISource[]>([]);
+  const [imgPreviewList, setImgPreviewList] = useState<ImageURISource[]>([]);
+  const [imgAssetList, setImgAssetList] = useState<ImageURISource[]>([]);
 
   const [location, setLocation] = useState<LocationInfo>({
     region_1depth_name: '',
@@ -55,7 +57,6 @@ export default function ReportPost() {
   const { reportMutation } = usePostReport(user.token);
 
   const showCamera = () => {
-    //1. launchCamera 하기 위한 옵션 객체
     const options: CameraOptions = {
       mediaType: 'photo',
       cameraType: 'back',
@@ -64,40 +65,23 @@ export default function ReportPost() {
       videoQuality: 'high',
     };
 
-    //2. 촬영 결과를 받아오는 callback 메소드 등록
+    // 촬영 결과를 받아오는 callback 메소드
     launchCamera(options, (response: ImagePickerResponse) => {
       if (response.didCancel) Alert.alert('촬영취소');
       else if (response.errorMessage) Alert.alert('Error : ' + response.errorMessage);
       else {
-        //촬용된 이미지는 response 객체의 assets 라는 속성으로 전달됨
-        // if (response.assets != null) {
-        //   const uri = response.assets[0].uri;
-        //   const source = { uri: uri };
-
-        //   // 현재 imgList 상태를 가져와서 새로운 이미지를 추가한 후 상태를 업데이트합니다.
-        //   setImgList((prevImgList) => [...prevImgList, source]);
-        // }
         if (response.assets != null) {
           const uri = response.assets[0].uri;
+          const image = {
+            name: response?.assets?.[0]?.fileName,
+            type: response?.assets?.[0]?.type,
+            uri: response?.assets?.[0]?.uri,
+          };
 
-          // FormData 생성
-          const formData = new FormData();
-          formData.append('image', { uri, type: 'image/jpeg', name: 'photo.jpg' });
+          const source = { uri: uri };
 
-          try {
-            // 서버로 FormData 전송
-            const response = await axios.post('서버API주소', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                // 추가적인 헤더 (예: Authorization 등)도 필요하다면 여기에 추가
-              },
-            });
-
-            // 서버 응답을 기반으로 상태 업데이트 등 필요한 작업 수행
-            console.log(response.data);
-          } catch (error) {
-            console.error('Error:', error.message);
-          }
+          setImgPreviewList((prevImgList) => [...prevImgList, source]);
+          setImgAssetList((prevImgList) => [...prevImgList, image]);
         }
       }
     });
@@ -118,21 +102,17 @@ export default function ReportPost() {
     formData.append('title', title);
     formData.append('content', content);
     formData.append('is_anoymous', isAnonymous);
-    // formData.append(
-    //   'tags',
-    //   location.region_1depth_name,
-    //   location.region_2depth_name,
-    //   location.region_3depth_name,
-    //   disasterType,
-    // );
-    imgList.forEach((img) => {
-      return formData.append('image', img);
-    });
+
+    for (let i = 0; i < imgAssetList.length; i++) {
+      formData.append('image', imgAssetList[i]);
+    }
 
     reportMutation.mutate(formData, {
       onSuccess: (data) => {
-        console.log('Report mutation successful!', data);
         navigation.navigate('CompleteReportPost', { id: data.id });
+      },
+      onError: (error) => {
+        console.error(error);
       },
     });
   };
@@ -158,13 +138,13 @@ export default function ReportPost() {
         <Text style={styles.titleText}>사진이나 영상을 올려주세요</Text>
         <Text style={styles.subTitleText}>최대 5개까지 업로드 가능합니다</Text>
         <ScrollView horizontal style={styles.imgContainer}>
-          {imgList.length < 5 && (
+          {imgPreviewList.length < 5 && (
             <Pressable onPress={showCamera} style={styles.imgItemFirst}>
               <AntDesignIcon name="plus" size={30} color={COLOR.blue} />
             </Pressable>
           )}
           <View style={styles.imgPreviewContainer}>
-            {imgList.map((img, index) => (
+            {imgPreviewList.map((img, index) => (
               <Image key={index} source={img} style={styles.imgPreview}></Image>
             ))}
           </View>

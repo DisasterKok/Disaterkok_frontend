@@ -25,6 +25,9 @@ export default function ReportArticleDetail({ route }: ReportArticleDetailScreen
   const {
     reportQuery: { data: report },
   } = useReportQuery(id);
+
+  console.log(report);
+
   const { reportLikeMutation } = useReportLike();
 
   const [isSharedOpen, setIsSharedOpen] = React.useState<boolean>(false);

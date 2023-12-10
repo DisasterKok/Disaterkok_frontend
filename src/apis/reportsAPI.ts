@@ -11,16 +11,18 @@ export interface reportPostPayload {
 
 const reportsAPI = {
   list: async () => {
-    const res = await instance.get(`/posts/post/`);
+    // const res = await instance.get(`/posts/post/`);
+    const res = await instance.get(`/posts/top/`);
+
     return res.data;
   },
   get: async (id: number) => {
     const res = await instance.get(`/posts/post/${id}/`);
     return res.data;
   },
-  post: async (payload: reportPostPayload, token: string) => {
+  post: async (payload, token: string) => {
     const res = await instance.post(`/posts/post/`, payload, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
     });
     return res.data;
   },
