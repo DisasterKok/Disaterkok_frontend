@@ -11,8 +11,7 @@ export interface reportPostPayload {
 
 const reportsAPI = {
   list: async () => {
-    // const res = await instance.get(`/posts/post/`);
-    const res = await instance.get(`/posts/top/`);
+    const res = await instance.get(`/posts/post/`);
 
     return res.data;
   },
