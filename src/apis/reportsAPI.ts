@@ -1,23 +1,28 @@
+import { ImageURISource } from 'react-native';
 import { instance } from '../lib/axios';
 
 export interface reportPostPayload {
-  user: number;
   title: string;
   content: string;
+  images: ImageURISource[];
+  tags: string[];
   is_anoymous: boolean;
 }
 
 const reportsAPI = {
   list: async () => {
     const res = await instance.get(`/posts/post/`);
+
     return res.data;
   },
   get: async (id: number) => {
     const res = await instance.get(`/posts/post/${id}/`);
     return res.data;
   },
-  post: async (payload: reportPostPayload) => {
-    const res = await instance.post(`/posts/post/`, payload);
+  post: async (payload, token: string) => {
+    const res = await instance.post(`/posts/post/`, payload, {
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
+    });
     return res.data;
   },
   patch: async (id: number, payload: reportPostPayload) => {

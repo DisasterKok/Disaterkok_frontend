@@ -52,7 +52,6 @@ const WeatherSection = () => {
   const handleCurrentLocation = async () => {
     try {
       const locationData = await getCurrentLocation();
-      console.log(locationData);
       const infoResult: LocationInfo = {
         addressName: locationData.regionName,
         latitude: locationData.xCoordinate,
