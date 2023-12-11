@@ -23,72 +23,19 @@ import getAddressCoords from '../components/SelectAddress/GetAddressCoords';
 import Separator from '../components/Separator';
 import { UserInputStackParamList } from '../navigation/types';
 
-import useRegionListQuery from '../hooks/queries/Region/useRegionList';
-import useAddRegion from '../hooks/queries/Region/useAddRegion';
-import { UserRegion, UserRegionPayload, AddressData, AliasPayload } from '../apis/userRegionAPI';
+import { UserRegion, UserRegionPayload } from '../apis/userRegionAPI';
+
+import {
+  useRegionListQuery,
+  useAddRegion,
+  useUpdateAlias,
+  useSetDefault,
+} from '../hooks/queries/Region';
 
 import useUser from '../hooks/queries/Auth/useUser';
-import useUpdateAlias from '../hooks/queries/Region/useUpdateAlias';
-import useSetDefault from '../hooks/queries/Region/useSetDefault';
-
 import { useSignOut } from '../hooks/queries/Auth/useSignOut';
 
 type SelectLocScreenProps = NativeStackScreenProps<UserInputStackParamList, 'SelectLocation'>;
-
-// const AddressDataList = [
-//   {
-//     addressData: {
-//       address: '서울특별시 서초구 서초동',
-//       roadAddress: '서울특별시 서초구 서초대로 396',
-//       zoneCode: '06626',
-//       xCoordinate: 127.024612,
-//       yCoordinate: 37.495985,
-//     },
-//     aliasType: 'home',
-//     name: '집',
-//     default: true,
-//     alarm: true,
-//   },
-//   {
-//     addressData: {
-//       address: '서울특별시 서초구 서초동',
-//       roadAddress: '서울특별시 서초구 서초대로 396',
-//       zoneCode: '06626',
-//       xCoordinate: 127.024612,
-//       yCoordinate: 37.495985,
-//     },
-//     aliasType: 'work',
-//     name: '회사',
-//     default: false,
-//     alarm: false,
-//   },
-//   {
-//     addressData: {
-//       address: '서울특별시 서초구 서초동',
-//       roadAddress: '서울특별시 서초구 서초대로 396',
-//       zoneCode: '06626',
-//       xCoordinate: 127.024612,
-//       yCoordinate: 37.495985,
-//     },
-//     aliasType: 'etc',
-//     name: '본가',
-//     default: false,
-//     alarm: true,
-//   },
-//   {
-//     addressData: {
-//       address: '서울특별시 서초구 서초동',
-//       roadAddress: '서울특별시 서초구 서초대로 396',
-//       zoneCode: '06626',
-//       xCoordinate: 127.024612,
-//       yCoordinate: 37.495985,
-//     },
-//     aliasType: 'etc',
-//     name: '본가',
-//     default: false,
-//     alarm: true,
-//   },
-// ];
 
 export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   const { user } = useUser();
@@ -98,9 +45,6 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   const [addressDataList, setAddressDataList] = React.useState<UserRegion[]>(
     regions ? regions.results : [],
   );
-
-  //console.log('listquery', regions);
-  //console.log('datalist: ', addressDataList);
 
   // 주소 찾기 모달
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
@@ -113,8 +57,8 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   const [updatingIndex, setUpdatingIndex] = React.useState<number>(0);
 
   const { addRegionMutation } = useAddRegion(user.token);
-  const { updateAliasMutation } = useUpdateAlias(updatingIndex, user.token);
-  const { setDefaultMutation } = useSetDefault(updatingIndex, user.token);
+  const { updateAliasMutation } = useUpdateAlias(user.token);
+  const { setDefaultMutation } = useSetDefault(user.token);
 
   // 주소 찾기로 선택한 주소
   const { data, setAddressData, resetAddressData } = useAddressData({
@@ -131,7 +75,6 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
 
   // 주소 찾기로 위치 가져오기
   const handleSelect = (data: any) => {
-    //console.log(data);
     setIsSearchOpen(false);
     getAddressCoords(data.jibunAddress ? data.jibunAddress : data.autoJibunAddresss)
       .then((coordinates) => {
@@ -171,9 +114,6 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
 
   // 주소 추기하기
   const handleAddAddress = (newData: UserRegionPayload) => {
-    //console.log(newData);
-    //updatedAddressDataList.push(newData);
-    //setAddressDataList(updatedAddressDataList);
     addRegionMutation.mutate(newData, {
       onSuccess: (data: any) => {
         resetAddressData();
@@ -185,11 +125,9 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
 
   //주소 별명 수정
   const handleUpdateAddress = (updatedData: UserRegionPayload) => {
-    // const updatedAddressDataList = [...addressDataList];
-    // updatedAddressDataList[updatingIndex] = data;
-    // setAddressDataList(updatedAddressDataList);
+    const payload = { aliasType: updatedData.aliasType, name: updatedData.name };
     updateAliasMutation.mutate(
-      { aliasType: updatedData.aliasType, name: updatedData.name },
+      { id: updatingIndex, payload: payload },
       {
         onSuccess: (data: any) => {
           if (isUpdateAliasOpen) setIsUpdateAliasOpen(false);
@@ -200,18 +138,8 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
 
   // 기본 주소로 설정하기
   const handleToggleDefault = async (id: number) => {
-    // if (addressDataList[index].default) return;
-    // const updatedAddressDataList = [...addressDataList];
-    // updatedAddressDataList[index].default = !updatedAddressDataList[index].default;
-    // for (let i = 0; i < updatedAddressDataList.length; i++) {
-    //   if (i !== index) {
-    //     updatedAddressDataList[i].default = false;
-    //   }
-    // }
-    // setAddressDataList(updatedAddressDataList);
-    setUpdatingIndex(id);
     try {
-      await setDefaultMutation.mutateAsync();
+      await setDefaultMutation.mutateAsync(id);
     } catch (error) {
       console.log(error);
     }
@@ -223,7 +151,6 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   };
 
   const handleSubmit = () => {
-    //console.log(addressDataList);
     navigation.navigate('DisasterNotiSettings');
   };
 

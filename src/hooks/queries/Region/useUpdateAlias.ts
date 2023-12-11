@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import UserRegionAPI from '../../../apis/userRegionAPI';
+import UserRegionAPI, { AliasPayload } from '../../../apis/userRegionAPI';
 
-const useUpdateAlias = (id: number, token: string) => {
+const useUpdateAlias = (token: string) => {
   const queryClient = useQueryClient();
   const updateAliasMutation = useMutation({
-    mutationFn: (payload: { aliasType: 'home' | 'school' | 'work' | 'etc'; name: string }) => {
+    mutationFn: ({ id, payload }: { id: number; payload: AliasPayload }) => {
       return UserRegionAPI.updateAlias(id, payload, token);
     },
     onSuccess: (data) => {

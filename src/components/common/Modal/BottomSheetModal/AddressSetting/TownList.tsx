@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
-  Modal,
   Pressable,
 } from 'react-native';
 import COLOR from '../../../../../constants/colors';
@@ -23,69 +22,16 @@ import getAddressCoords from '../../../../SelectAddress/GetAddressCoords';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 import { UserRegion, UserRegionPayload } from '../../../../../apis/userRegionAPI';
-import useRegionListQuery from '../../../../../hooks/queries/Region/useRegionList';
-import useAddRegion from '../../../../../hooks/queries/Region/useAddRegion';
-import useUpdateAlias from '../../../../../hooks/queries/Region/useUpdateAlias';
-import useSetDefault from '../../../../../hooks/queries/Region/useSetDefault';
-import useDeleteRegion from '../../../../../hooks/queries/Region/useDeleteRegion';
-import useSetOnoff from '../../../../../hooks/queries/Region/useSetOnoff';
+import {
+  useRegionListQuery,
+  useAddRegion,
+  useUpdateAlias,
+  useSetDefault,
+  useDeleteRegion,
+  useSetOnoff,
+} from '../../../../../hooks/queries/Region';
 
 import useUser from '../../../../../hooks/queries/Auth/useUser';
-
-// const AddressDataList = [
-//   {
-//     addressData: {
-//       address: '서울특별시 서초구 서초동',
-//       roadAddress: '서울특별시 서초구 서초대로 396',
-//       zoneCode: '06626',
-//       xCoordinate: 127.024612,
-//       yCoordinate: 37.495985,
-//     },
-//     aliasType: 'home',
-//     name: '집',
-//     default: true,
-//     alarm: true,
-//   },
-//   {
-//     addressData: {
-//       address: '서울특별시 서초구 서초동',
-//       roadAddress: '서울특별시 서초구 서초대로 396',
-//       zoneCode: '06626',
-//       xCoordinate: 127.024612,
-//       yCoordinate: 37.495985,
-//     },
-//     aliasType: 'work',
-//     name: '회사',
-//     default: false,
-//     alarm: false,
-//   },
-//   {
-//     addressData: {
-//       address: '서울특별시 서초구 서초동',
-//       roadAddress: '서울특별시 서초구 서초대로 396',
-//       zoneCode: '06626',
-//       xCoordinate: 127.024612,
-//       yCoordinate: 37.495985,
-//     },
-//     aliasType: 'etc',
-//     name: '본가',
-//     default: false,
-//     alarm: true,
-//   },
-//   {
-//     addressData: {
-//       address: '서울특별시 서초구 서초동',
-//       roadAddress: '서울특별시 서초구 서초대로 396',
-//       zoneCode: '06626',
-//       xCoordinate: 127.024612,
-//       yCoordinate: 37.495985,
-//     },
-//     aliasType: 'etc',
-//     name: '본가',
-//     default: false,
-//     alarm: true,
-//   },
-// ];
 
 interface TownListBottomSheetProps {
   height: number;
@@ -95,84 +41,26 @@ interface TownListBottomSheetProps {
 
 const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomSheetProps) => {
   const { user } = useUser();
+  const [isEditMode, setIsEditMode] = React.useState<boolean>(false);
+  const [updatingIndex, setUpdatingIndex] = React.useState<number>(0);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState<boolean>(false);
+
   const {
     regionListQuery: { data: regions },
   } = useRegionListQuery(user.token);
   const [addressDataList, setAddressDataList] = React.useState<UserRegion[]>(
     regions ? regions.results : [],
   );
-  const [isEditMode, setIsEditMode] = React.useState<boolean>(false);
-  const [updatingIndex, setUpdatingIndex] = React.useState<number>(0);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState<boolean>(false);
-
   const { addRegionMutation } = useAddRegion(user.token);
-  const { updateAliasMutation } = useUpdateAlias(updatingIndex, user.token);
-  const { setDefaultMutation } = useSetDefault(updatingIndex, user.token);
-  const { deleteRegionMutation } = useDeleteRegion(updatingIndex, user.token);
-  const { setOnoffMutation } = useSetOnoff(updatingIndex, user.token);
+  const { updateAliasMutation } = useUpdateAlias(user.token);
+  const { setDefaultMutation } = useSetDefault(user.token);
+  const { deleteRegionMutation } = useDeleteRegion(user.token);
+  const { setOnoffMutation } = useSetOnoff(user.token);
 
   const viewHeight = Dimensions.get('window').height * height - 30;
 
   const handleEditTown = () => {
     setIsEditMode(!isEditMode);
-  };
-
-  //주소 삭제하기
-  const confirmDeleteTown = async (confirm: boolean) => {
-    if (confirm) {
-      // const updatedAddressDataList = [...addressDataList];
-      // const isDefault = updatedAddressDataList[updatingIndex].default;
-      // updatedAddressDataList.splice(updatingIndex, 1);
-      // if (isDefault) {
-      //   updatedAddressDataList[0].default = true;
-      // }
-      // setAddressDataList(updatedAddressDataList);
-      try {
-        await deleteRegionMutation.mutateAsync();
-        regions.re;
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    setIsDeleteModalOpen(false);
-  };
-
-  const handleDeleteTown = (id: number) => {
-    setUpdatingIndex(id);
-    setIsDeleteModalOpen(true);
-  };
-
-  // 기본 주소로 설정하기
-  const handleToggleDefault = async (id: number) => {
-    // if (addressDataList[index].default) return;
-    // const updatedAddressDataList = [...addressDataList];
-
-    // updatedAddressDataList[index].default = !updatedAddressDataList[index].default;
-    // for (let i = 0; i < updatedAddressDataList.length; i++) {
-    //   if (i !== index) {
-    //     updatedAddressDataList[i].default = false;
-    //   }
-    // }
-    // setAddressDataList(updatedAddressDataList);
-    setUpdatingIndex(id);
-    try {
-      await setDefaultMutation.mutateAsync();
-      regions.refetch();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // 알림 설정
-  const handleCheckAlarm = async (id: number) => {
-    // const updatedAddressDataList = [...addressDataList];
-    // updatedAddressDataList[index].onOff = !updatedAddressDataList[index].onOff;
-    // setAddressDataList(updatedAddressDataList);
-    try {
-      await setOnoffMutation.mutateAsync();
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const [isSlideOpen, setIsSlideOpen] = React.useState<boolean>(false);
@@ -250,10 +138,6 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
 
   // 주소 추가하기
   const handleAddAddress = (newData: UserRegionPayload) => {
-    //const updatedAddressDataList = [...addressDataList];
-    // console.log(newData);
-    // updatedAddressDataList.push(newData);
-    // setAddressDataList(updatedAddressDataList);
     addRegionMutation.mutate(newData, {
       onSuccess: (data: any) => {
         resetAddressData();
@@ -264,17 +148,51 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
 
   // 주소 별명 수정
   const handleUpdateAddress = (updatedData: UserRegionPayload) => {
-    // const updatedAddressDataList = [...addressDataList];
-    // updatedAddressDataList[updatingIndex] = data;
-    // setAddressDataList(updatedAddressDataList);
+    const payload = { aliasType: updatedData.aliasType, name: updatedData.name };
     updateAliasMutation.mutate(
-      { aliasType: updatedData.aliasType, name: updatedData.name },
+      { id: updatingIndex, payload: payload },
       {
         onSuccess: (data: any) => {
           closeSlide();
         },
       },
     );
+  };
+
+  //주소 삭제하기
+  const confirmDeleteTown = async (confirm: boolean) => {
+    if (confirm) {
+      try {
+        await deleteRegionMutation.mutateAsync(updatingIndex);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleDeleteTown = (id: number) => {
+    setUpdatingIndex(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  // 기본 주소로 설정하기
+  const handleToggleDefault = async (id: number) => {
+    try {
+      await setDefaultMutation.mutateAsync(id);
+      regions.refetch();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 알림 설정
+  const handleCheckAlarm = async (id: number) => {
+    try {
+      await setOnoffMutation.mutateAsync(id);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleCloseModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {

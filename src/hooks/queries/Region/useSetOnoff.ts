@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import UserRegionAPI from '../../../apis/userRegionAPI';
 
-const useSetOnoff = (id: number, token: string) => {
+const useSetOnoff = (token: string) => {
   const queryClient = useQueryClient();
   const setOnoffMutation = useMutation({
-    mutationFn: () => {
+    mutationFn: (id: number) => {
       return UserRegionAPI.setOnOff(id, token);
     },
     onSuccess: (data) => {
