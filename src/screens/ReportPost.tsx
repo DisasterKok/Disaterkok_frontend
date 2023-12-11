@@ -1,36 +1,120 @@
-import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, TextInput } from 'react-native';
+import React, { useCallback, useRef, useState } from 'react';
+import {
+  Alert,
+  Image,
+  ImageURISource,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+} from 'react-native';
 import { View, Text } from 'react-native';
 import COLOR from '../constants/colors';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import useInput from '../hooks/useInput';
 import usePostReport from '../hooks/queries/Reports/usePostReport';
-import useUser from '../hooks/queries/Auth/useUser';
 import { HomeStackParamList } from '../navigation/types';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
+import SelectAllDisasterBottomSheet from '../components/DisasterNotiSettings/SelectAllDisaster/SelectAllDisasterBottomSheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+
+import { launchCamera, CameraOptions, ImagePickerResponse } from 'react-native-image-picker';
+import useUser from '../hooks/queries/Auth/useUser';
+
+interface LocationInfo {
+  region_1depth_name: string;
+  region_2depth_name: string;
+  region_3depth_name: string;
+}
 
 export default function ReportPost() {
   const { user } = useUser();
   const [title, onChangeTitle] = useInput();
   const [content, onChangeContent] = useInput();
 
+  const [imgPreviewList, setImgPreviewList] = useState<ImageURISource[]>([]);
+  const [imgAssetList, setImgAssetList] = useState<ImageURISource[]>([]);
+
+  const [location, setLocation] = useState<LocationInfo>({
+    region_1depth_name: '',
+    region_2depth_name: '',
+    region_3depth_name: '',
+  });
+  const [disasterType, setDisasterType] = useState<string>('');
+
+  const disasterModalRef = useRef<BottomSheetModal>(null);
+  const handlePresentModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
+    ref.current?.present();
+  }, []);
+
   const [isAnonymous, setIsAnoymous] = useState(false);
 
   const navigation: NavigationProp<HomeStackParamList> = useNavigation();
 
-  const { reportMutation } = usePostReport();
+  const { reportMutation } = usePostReport(user.token);
+
+  const showCamera = () => {
+    const options: CameraOptions = {
+      mediaType: 'photo',
+      cameraType: 'back',
+      saveToPhotos: true,
+      quality: 1,
+      videoQuality: 'high',
+    };
+
+    // 촬영 결과를 받아오는 callback method
+    launchCamera(options, (response: ImagePickerResponse) => {
+      if (response.didCancel) Alert.alert('촬영취소');
+      else if (response.errorMessage) Alert.alert('Error : ' + response.errorMessage);
+      else {
+        if (response.assets != null) {
+          const uri = response.assets[0].uri;
+          const image = {
+            name: response?.assets?.[0]?.fileName,
+            type: response?.assets?.[0]?.type,
+            uri: response?.assets?.[0]?.uri,
+          };
+
+          const source = { uri: uri };
+
+          setImgPreviewList((prevImgList) => [...prevImgList, source]);
+          setImgAssetList((prevImgList) => [...prevImgList, image]);
+        }
+      }
+    });
+  };
+
+  const getCurrentLocationOnClick = async () => {
+    const locationData = await getCurrentLocation();
+    const locationInfo: LocationInfo = {
+      region_1depth_name: locationData.region_1depth_name,
+      region_2depth_name: locationData.region_2depth_name,
+      region_3depth_name: locationData.region_3depth_name,
+    };
+    setLocation(locationInfo);
+  };
 
   const submitReportForm = () => {
-    reportMutation.mutate(
-      { user: user.username, title, content, is_anoymous: isAnonymous },
-      {
-        onSuccess: (data) => {
-          console.log('Report mutation successful!', data);
-          navigation.navigate('CompleteReportPost', { id: data.id });
-        },
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    formData.append('is_anoymous', isAnonymous);
+
+    for (let i = 0; i < imgAssetList.length; i++) {
+      formData.append('image', imgAssetList[i]);
+    }
+
+    reportMutation.mutate(formData, {
+      onSuccess: (data) => {
+        navigation.navigate('CompleteReportPost', { id: data.id });
       },
-    );
+      onError: (error) => {
+        console.error(error);
+      },
+    });
   };
 
   return (
@@ -53,40 +137,83 @@ export default function ReportPost() {
       <View style={styles.imgWrapper}>
         <Text style={styles.titleText}>사진이나 영상을 올려주세요</Text>
         <Text style={styles.subTitleText}>최대 5개까지 업로드 가능합니다</Text>
-        <View style={styles.imgContainer}>
-          <View style={styles.imgItemFirst}>
-            <AntDesignIcon name="plus" size={30} color={COLOR.blue} />
+        <ScrollView horizontal style={styles.imgContainer}>
+          {imgPreviewList.length < 5 && (
+            <Pressable onPress={showCamera} style={styles.imgItemFirst}>
+              <AntDesignIcon name="plus" size={30} color={COLOR.blue} />
+            </Pressable>
+          )}
+          <View style={styles.imgPreviewContainer}>
+            {imgPreviewList.map((img, index) => (
+              <Image key={index} source={img} style={styles.imgPreview}></Image>
+            ))}
           </View>
-          <View style={styles.imgItem}>
-            <AntDesignIcon name="plus" size={30} color={COLOR.middleGray} />
-          </View>
-          <View style={styles.imgItem}>
-            <AntDesignIcon name="plus" size={30} color={COLOR.middleGray} />
-          </View>
-        </View>
+
+          {/* {Array.from({ length: Math.max(5 - imgList.length, 0) }).map((_, index) => (
+            <Pressable onPress={showCamera} key={index} style={styles.imgItem}>
+              <AntDesignIcon name="plus" size={30} color={COLOR.middleGray} />
+            </Pressable>
+          ))} */}
+        </ScrollView>
       </View>
 
       <View style={styles.tagWrapper}>
         <View style={styles.tagTopContainer}>
           <Text style={styles.titleText}>태그를 입력해주세요</Text>
-          <View style={styles.locationContainer}>
+          <Pressable onPress={getCurrentLocationOnClick} style={styles.locationContainer}>
             <MaterialCommunityIcon name="target" size={10} color={COLOR.blue} />
             <Text style={styles.locationText}>내위치</Text>
-          </View>
+          </Pressable>
         </View>
         <View style={styles.tagContainer}>
-          <View style={styles.tagItem}>
-            <Text style={styles.tagItemText}>시,도</Text>
-          </View>
-          <View style={styles.tagItem}>
-            <Text style={styles.tagItemText}>시,군,구</Text>
-          </View>
-          <View style={styles.tagItem}>
-            <Text style={styles.tagItemText}>동,읍,면</Text>
-          </View>
-          <View style={styles.tagItem}>
-            <Text style={styles.tagItemText}>재난유형</Text>
-          </View>
+          {location.region_1depth_name === '' ? (
+            <View style={styles.tagItem}>
+              <Text style={styles.tagItemText}>시,도</Text>
+            </View>
+          ) : (
+            <View style={StyleSheet.compose(styles.tagItem, styles.tagItemActive)}>
+              <Text style={StyleSheet.compose(styles.tagItemText, styles.tagItemTextActive)}>
+                {location.region_1depth_name}
+              </Text>
+            </View>
+          )}
+          {location.region_2depth_name === '' ? (
+            <View style={styles.tagItem}>
+              <Text style={styles.tagItemText}>시,군,구</Text>
+            </View>
+          ) : (
+            <View style={StyleSheet.compose(styles.tagItem, styles.tagItemActive)}>
+              <Text style={StyleSheet.compose(styles.tagItemText, styles.tagItemTextActive)}>
+                {location.region_2depth_name}
+              </Text>
+            </View>
+          )}
+          {location.region_3depth_name === '' ? (
+            <View style={styles.tagItem}>
+              <Text style={styles.tagItemText}>동,읍,면</Text>
+            </View>
+          ) : (
+            <View style={StyleSheet.compose(styles.tagItem, styles.tagItemActive)}>
+              <Text style={StyleSheet.compose(styles.tagItemText, styles.tagItemTextActive)}>
+                {location.region_3depth_name}
+              </Text>
+            </View>
+          )}
+          {disasterType === '' ? (
+            <Pressable
+              onPress={() => handlePresentModalPress(disasterModalRef)}
+              style={styles.tagItem}
+            >
+              <Text style={styles.tagItemText}>재난유형</Text>
+            </Pressable>
+          ) : (
+            <Pressable
+              onPress={() => handlePresentModalPress(disasterModalRef)}
+              style={StyleSheet.compose(styles.tagItem, styles.tagItemActive)}
+            >
+              <Text style={styles.tagItemTextActive}>{disasterType}</Text>
+            </Pressable>
+          )}
         </View>
       </View>
 
@@ -124,10 +251,32 @@ export default function ReportPost() {
             익명으로 올리기
           </Text>
         </Pressable>
-        <Pressable onPress={submitReportForm} style={styles.submitBtn}>
-          <Text style={styles.submitBtnText}>제보하기</Text>
+        <Pressable
+          onPress={submitReportForm}
+          style={
+            title === ''
+              ? styles.submitBtn
+              : StyleSheet.compose(styles.submitBtn, styles.submitBtnActive)
+          }
+        >
+          <Text
+            style={
+              title === ''
+                ? styles.submitBtnText
+                : StyleSheet.compose(styles.submitBtnText, styles.submitBtnTextActive)
+            }
+          >
+            제보하기
+          </Text>
         </Pressable>
       </View>
+
+      {/* 모달 */}
+      <SelectAllDisasterBottomSheet
+        bottomSheetModalRef={disasterModalRef}
+        selectedTag={disasterType}
+        setSelectedTag={setDisasterType}
+      />
     </ScrollView>
   );
 }
@@ -176,7 +325,6 @@ const styles = StyleSheet.create({
   imgContainer: {
     marginTop: 15,
     flexDirection: 'row',
-    gap: 10,
   },
   imgItemFirst: {
     width: 100,
@@ -185,6 +333,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 5,
+    marginRight: 10,
+  },
+  imgPreviewContainer: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  imgPreview: {
+    width: 100,
+    height: 100,
   },
   imgItem: {
     width: 100,
@@ -232,9 +389,15 @@ const styles = StyleSheet.create({
     backgroundColor: `${COLOR.white}`,
     borderRadius: 20,
   },
+  tagItemActive: {
+    backgroundColor: `${COLOR.primary}`,
+  },
   tagItemText: {
     fontSize: 12,
     color: `${COLOR.gray}`,
+  },
+  tagItemTextActive: {
+    color: `${COLOR.white}`,
   },
   contentWrapper: {
     gap: 10,
@@ -287,8 +450,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: `${COLOR.lightGray}`,
   },
+  submitBtnActive: {
+    backgroundColor: `${COLOR.primary}`,
+  },
   submitBtnText: {
     fontSize: 14,
+    color: `${COLOR.white}`,
+  },
+  submitBtnTextActive: {
     color: `${COLOR.white}`,
   },
 });

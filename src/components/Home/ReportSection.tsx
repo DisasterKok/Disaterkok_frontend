@@ -25,6 +25,7 @@ export default function ReportSection() {
         <Text style={styles.subTitle}>시민들의 실시간 제보를 통해 재난을 확인해요</Text>
       </View>
       {reports && <ReportArticleList reportList={reports.results} />}
+
       <Pressable style={styles.moreView} onPress={navigateToReportList}>
         <Text style={styles.moreViewText}>더보기</Text>
         <AntIcon name="right" size={12} color={COLOR.gray} />

@@ -8,6 +8,9 @@ export interface LocationData {
   zoneCode: string;
   xCoordinate: number;
   yCoordinate: number;
+  region_1depth_name: string;
+  region_2depth_name: string;
+  region_3depth_name: string;
 }
 
 const getCurrentLocation = (): Promise<LocationData> => {
@@ -47,6 +50,9 @@ const getCurrentLocation = (): Promise<LocationData> => {
               zoneCode,
               xCoordinate: latitude,
               yCoordinate: longitude,
+              region_1depth_name: data.documents[0].address.region_1depth_name,
+              region_2depth_name: data.documents[0].address.region_2depth_name,
+              region_3depth_name: data.documents[0].address.region_3depth_name,
             };
 
             resolve(locationData);
