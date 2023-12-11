@@ -4,7 +4,6 @@ import Swiper from 'react-native-swiper';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import COLOR from '../constants/colors';
 import { LoggedOutStackParamList } from '../navigation/types';
-import { useSignOut } from '../hooks/queries/Auth/useSignOut';
 
 type OnboardingScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'Onboarding'>;
 
@@ -12,8 +11,6 @@ export const Onboarding = ({ navigation }: OnboardingScreenProps) => {
   const gotoSignIn = () => {
     navigation.navigate('SignIn');
   };
-
-  const signOut = useSignOut();
 
   return (
     <Swiper
@@ -46,9 +43,6 @@ export const Onboarding = ({ navigation }: OnboardingScreenProps) => {
         </View>
         <Pressable style={styles.loginButton} onPress={gotoSignIn}>
           <Text style={styles.loginButtonText}>로그인하기</Text>
-        </Pressable>
-        <Pressable onPress={() => signOut()}>
-          <Text>로그아웃</Text>
         </Pressable>
       </View>
     </Swiper>

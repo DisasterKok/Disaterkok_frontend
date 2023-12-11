@@ -5,21 +5,7 @@ import COLOR from '../../constants/colors';
 import Separator from '../Separator';
 import useInput from '../../hooks/useInput';
 import AliasTypeButton from './AliasTypeButton';
-
-export interface AddressData {
-  address: string;
-  roadAddress: string;
-  zoneCode: string; // 우편번호
-  xCoordinate: number;
-  yCoordinate: number;
-}
-
-interface AliasData {
-  aliasType: string;
-  name: string;
-  default: boolean;
-  alarm: boolean;
-}
+import { UserRegionPayload, AddressData, AliasData } from '../../apis/userRegionAPI';
 
 const AliasPostcode = ({
   addressData,
@@ -33,13 +19,15 @@ const AliasPostcode = ({
   goBack: () => void;
 }) => {
   const { address, roadAddress, zoneCode, xCoordinate, yCoordinate } = addressData;
-  const [aliasType, setAliasType] = React.useState<string>(aliasData?.aliasType || '');
+  const [aliasType, setAliasType] = React.useState<'home' | 'work' | 'school' | 'etc'>(
+    aliasData?.aliasType || 'home',
+  );
   const [name, setName] = useInput(aliasData?.name || '');
   const [isEtc, setIsEtc] = React.useState<boolean>(aliasData?.aliasType == 'etc' || false);
 
   const [inputNameFocused, setInputNameFocused] = React.useState(false);
 
-  const onChangeAliasType = (text: string) => {
+  const onChangeAliasType = (text: 'home' | 'work' | 'school' | 'etc') => {
     setAliasType(text);
     if (text === 'home') {
       setAliasType('home');
@@ -66,18 +54,16 @@ const AliasPostcode = ({
   };
 
   const handleUpdateAddress = () => {
-    const newAliasData = {
-      addressData: {
-        address,
-        roadAddress,
-        zoneCode,
-        xCoordinate,
-        yCoordinate,
-      },
+    const newAliasData: UserRegionPayload = {
+      address,
+      roadAddress,
+      zoneCode,
+      xCoordinate,
+      yCoordinate,
       aliasType,
       name,
       default: aliasData?.default || false,
-      alarm: aliasData?.alarm || false,
+      onOff: aliasData?.onOff || false,
     };
     updateAddress(newAliasData);
   };

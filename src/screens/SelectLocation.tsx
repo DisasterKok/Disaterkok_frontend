@@ -16,7 +16,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 import SearchPostcode from '../components/SelectAddress/SearchPostcode';
-import AliasPostcode, { AddressData } from '../components/SelectAddress/AliasPostcode';
+import AliasPostcode from '../components/SelectAddress/AliasPostcode';
 import useAddressData from '../hooks/useAddressData';
 import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
 import getAddressCoords from '../components/SelectAddress/GetAddressCoords';
@@ -25,67 +25,70 @@ import { UserInputStackParamList } from '../navigation/types';
 
 import useRegionListQuery from '../hooks/queries/Region/useRegionList';
 import useAddRegion from '../hooks/queries/Region/useAddRegion';
-import { UserRegion, UserRegionPayload } from '../apis/userRegionAPI';
+import { UserRegion, UserRegionPayload, AddressData, AliasPayload } from '../apis/userRegionAPI';
+
+import useUser from '../hooks/queries/Auth/useUser';
+import useUpdateAlias from '../hooks/queries/Region/useUpdateAlias';
+import useSetDefault from '../hooks/queries/Region/useSetDefault';
 
 import { useSignOut } from '../hooks/queries/Auth/useSignOut';
-import useUser from '../hooks/queries/Auth/useUser';
 
 type SelectLocScreenProps = NativeStackScreenProps<UserInputStackParamList, 'SelectLocation'>;
 
-const AddressDataList = [
-  {
-    addressData: {
-      address: '서울특별시 서초구 서초동',
-      roadAddress: '서울특별시 서초구 서초대로 396',
-      zoneCode: '06626',
-      xCoordinate: 127.024612,
-      yCoordinate: 37.495985,
-    },
-    aliasType: 'home',
-    name: '집',
-    default: true,
-    alarm: true,
-  },
-  {
-    addressData: {
-      address: '서울특별시 서초구 서초동',
-      roadAddress: '서울특별시 서초구 서초대로 396',
-      zoneCode: '06626',
-      xCoordinate: 127.024612,
-      yCoordinate: 37.495985,
-    },
-    aliasType: 'work',
-    name: '회사',
-    default: false,
-    alarm: false,
-  },
-  {
-    addressData: {
-      address: '서울특별시 서초구 서초동',
-      roadAddress: '서울특별시 서초구 서초대로 396',
-      zoneCode: '06626',
-      xCoordinate: 127.024612,
-      yCoordinate: 37.495985,
-    },
-    aliasType: 'etc',
-    name: '본가',
-    default: false,
-    alarm: true,
-  },
-  {
-    addressData: {
-      address: '서울특별시 서초구 서초동',
-      roadAddress: '서울특별시 서초구 서초대로 396',
-      zoneCode: '06626',
-      xCoordinate: 127.024612,
-      yCoordinate: 37.495985,
-    },
-    aliasType: 'etc',
-    name: '본가',
-    default: false,
-    alarm: true,
-  },
-];
+// const AddressDataList = [
+//   {
+//     addressData: {
+//       address: '서울특별시 서초구 서초동',
+//       roadAddress: '서울특별시 서초구 서초대로 396',
+//       zoneCode: '06626',
+//       xCoordinate: 127.024612,
+//       yCoordinate: 37.495985,
+//     },
+//     aliasType: 'home',
+//     name: '집',
+//     default: true,
+//     alarm: true,
+//   },
+//   {
+//     addressData: {
+//       address: '서울특별시 서초구 서초동',
+//       roadAddress: '서울특별시 서초구 서초대로 396',
+//       zoneCode: '06626',
+//       xCoordinate: 127.024612,
+//       yCoordinate: 37.495985,
+//     },
+//     aliasType: 'work',
+//     name: '회사',
+//     default: false,
+//     alarm: false,
+//   },
+//   {
+//     addressData: {
+//       address: '서울특별시 서초구 서초동',
+//       roadAddress: '서울특별시 서초구 서초대로 396',
+//       zoneCode: '06626',
+//       xCoordinate: 127.024612,
+//       yCoordinate: 37.495985,
+//     },
+//     aliasType: 'etc',
+//     name: '본가',
+//     default: false,
+//     alarm: true,
+//   },
+//   {
+//     addressData: {
+//       address: '서울특별시 서초구 서초동',
+//       roadAddress: '서울특별시 서초구 서초대로 396',
+//       zoneCode: '06626',
+//       xCoordinate: 127.024612,
+//       yCoordinate: 37.495985,
+//     },
+//     aliasType: 'etc',
+//     name: '본가',
+//     default: false,
+//     alarm: true,
+//   },
+// ];
 
 export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   const { user } = useUser();
@@ -99,7 +102,6 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   //console.log('listquery', regions);
   //console.log('datalist: ', addressDataList);
 
-  const { addRegionMutation } = useAddRegion(user.token);
   // 주소 찾기 모달
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   // 주소 찾기로 선택한 주소 별명 설정하기 모달
@@ -109,6 +111,10 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   // 별명 수정하기 모달
   const [isUpdateAliasOpen, setIsUpdateAliasOpen] = React.useState(false);
   const [updatingIndex, setUpdatingIndex] = React.useState<number>(0);
+
+  const { addRegionMutation } = useAddRegion(user.token);
+  const { updateAliasMutation } = useUpdateAlias(updatingIndex, user.token);
+  const { setDefaultMutation } = useSetDefault(updatingIndex, user.token);
 
   // 주소 찾기로 선택한 주소
   const { data, setAddressData, resetAddressData } = useAddressData({
@@ -164,24 +170,12 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   };
 
   // 주소 추기하기
-  const handleAddAddress = (data: any) => {
-    const newData: UserRegionPayload = {
-      address: data.addressData.address,
-      roadAddress: data.addressData.roadAddress,
-      zoneCode: data.addressData.zoneCode,
-      xCoordinate: data.addressData.xCoordinate,
-      yCoordinate: data.addressData.yCoordinate,
-      aliasType: data.aliasType,
-      name: data.name,
-      default: !addressDataList ? true : data.default,
-      onOff: data.default ? true : false, //default false?
-    };
-    console.log(newData);
+  const handleAddAddress = (newData: UserRegionPayload) => {
+    //console.log(newData);
     //updatedAddressDataList.push(newData);
     //setAddressDataList(updatedAddressDataList);
     addRegionMutation.mutate(newData, {
       onSuccess: (data: any) => {
-        regions.refetch();
         resetAddressData();
         if (isSearchAliasOpen) setIsSearchAliasOpen(false);
         else if (isCurrentAliasOpen) setIsCurrentAliasOpen(false);
@@ -189,25 +183,38 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
     });
   };
 
-  const handleUpdateAddress = (data: any) => {
-    const updatedAddressDataList = [...addressDataList];
-    updatedAddressDataList[updatingIndex] = data;
-    setAddressDataList(updatedAddressDataList);
-    setIsUpdateAliasOpen(false);
+  //주소 별명 수정
+  const handleUpdateAddress = (updatedData: UserRegionPayload) => {
+    // const updatedAddressDataList = [...addressDataList];
+    // updatedAddressDataList[updatingIndex] = data;
+    // setAddressDataList(updatedAddressDataList);
+    updateAliasMutation.mutate(
+      { aliasType: updatedData.aliasType, name: updatedData.name },
+      {
+        onSuccess: (data: any) => {
+          if (isUpdateAliasOpen) setIsUpdateAliasOpen(false);
+        },
+      },
+    );
   };
 
   // 기본 주소로 설정하기
-  const handleToggleDefault = (index: number) => {
-    if (addressDataList[index].default) return;
-    const updatedAddressDataList = [...addressDataList];
-
-    updatedAddressDataList[index].default = !updatedAddressDataList[index].default;
-    for (let i = 0; i < updatedAddressDataList.length; i++) {
-      if (i !== index) {
-        updatedAddressDataList[i].default = false;
-      }
+  const handleToggleDefault = async (id: number) => {
+    // if (addressDataList[index].default) return;
+    // const updatedAddressDataList = [...addressDataList];
+    // updatedAddressDataList[index].default = !updatedAddressDataList[index].default;
+    // for (let i = 0; i < updatedAddressDataList.length; i++) {
+    //   if (i !== index) {
+    //     updatedAddressDataList[i].default = false;
+    //   }
+    // }
+    // setAddressDataList(updatedAddressDataList);
+    setUpdatingIndex(id);
+    try {
+      await setDefaultMutation.mutateAsync();
+    } catch (error) {
+      console.log(error);
     }
-    setAddressDataList(updatedAddressDataList);
   };
 
   const backToSearch = () => {
@@ -256,6 +263,9 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
                 style={styles.currentButtonIcon}
               />
             </TouchableOpacity>
+            <Pressable onPress={() => signOut()}>
+              <Text>로그아웃</Text>
+            </Pressable>
           </View>
         </View>
         <Separator />
@@ -263,13 +273,13 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
           <ScrollView style={styles.list}>
             <View>
               {addressDataList &&
-                addressDataList.map((data, index: number) => (
+                addressDataList.map((data) => (
                   <TouchableOpacity
-                    key={index}
+                    key={data.id}
                     activeOpacity={0.8}
                     style={styles.listItemContainer}
                     onPress={() => {
-                      setUpdatingIndex(index);
+                      setUpdatingIndex(data.id);
                       setIsUpdateAliasOpen(true);
                     }}
                   >
@@ -283,7 +293,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
                       </View>
                     </View>
                     <View style={styles.listButton}>
-                      <Pressable onPress={() => handleToggleDefault(index)}>
+                      <Pressable onPress={() => handleToggleDefault(data.id)}>
                         <FeatherIcon
                           name="check-circle"
                           size={24}
@@ -347,7 +357,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
               aliasType: addressDataList[updatingIndex].aliasType,
               name: addressDataList[updatingIndex].name,
               default: addressDataList[updatingIndex].default,
-              alarm: addressDataList[updatingIndex].onOff,
+              onOff: addressDataList[updatingIndex].onOff,
             }}
             updateAddress={handleUpdateAddress}
             goBack={() => setIsUpdateAliasOpen(false)}

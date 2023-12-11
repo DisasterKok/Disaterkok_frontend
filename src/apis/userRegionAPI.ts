@@ -25,6 +25,26 @@ export interface UserRegionPayload {
   onOff: boolean;
 }
 
+export interface AddressData {
+  address: string;
+  roadAddress: string;
+  zoneCode: string; // 우편번호
+  xCoordinate: number;
+  yCoordinate: number;
+}
+
+export interface AliasData {
+  aliasType: 'home' | 'school' | 'work' | 'etc';
+  name: string;
+  default: boolean;
+  onOff: boolean;
+}
+
+export interface AliasPayload {
+  aliasType: 'home' | 'school' | 'work' | 'etc';
+  name: string;
+}
+
 const UserRegionAPI = {
   getList: async (token: string) => {
     const response = await instance.get(`/regions/`, {
@@ -44,12 +64,8 @@ const UserRegionAPI = {
     });
     return response.data;
   },
-  editAlias: async (
-    id: number,
-    payload: { aliasType: 'home' | 'school' | 'work' | 'etc'; name: string },
-    token: string,
-  ) => {
-    const response = await instance.patch(`/regions/${id}`, payload, {
+  updateAlias: async (id: number, payload: AliasPayload, token: string) => {
+    const response = await instance.put(`/regions/${id}`, payload, {
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     });
     return response.data;
