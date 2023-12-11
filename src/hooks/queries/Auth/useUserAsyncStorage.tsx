@@ -7,7 +7,7 @@ const useUserAsyncStorage = {
   async get() {
     try {
       const user = await AsyncStorage.getItem(USER_LOCAL_STORAGE_KEY);
-      return user ? JSON.parse(user) : null;
+      return user ? JSON.parse(user) : undefined;
     } catch (error) {
       console.error('Error retrieving user:', error);
       return null;

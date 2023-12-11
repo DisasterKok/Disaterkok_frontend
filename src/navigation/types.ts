@@ -12,13 +12,16 @@ export type HomeStackParamList = {
   Search: undefined;
 };
 
+export type UserInputStackParamList = {
+  SelectLocation: undefined;
+  DisasterNotiSettings: undefined;
+};
+
 export type LoggedOutStackParamList = {
   Onboarding: undefined;
-  DisasterNotiSettings: undefined;
   SignIn: undefined;
   SignUp: undefined;
   SetName: { usename: string; email: string; password: string };
-  SelectLocation: undefined;
   CompleteLogin: undefined;
 };
 

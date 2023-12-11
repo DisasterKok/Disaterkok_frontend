@@ -4,14 +4,17 @@ import COLOR from '../constants/colors';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { LoggedOutStackParamList } from '../navigation/types';
+import { UserInputStackParamList } from '../navigation/types';
 import {
   SelectNaturalDisasterBottomSheet,
   SelectSocialDisasterBottomSheet,
 } from '../components/DisasterNotiSettings';
 
+import { useQueryClient } from '@tanstack/react-query';
+import useUser from '../hooks/queries/Auth/useUser';
+
 type DstrNotiSetScreenProps = NativeStackScreenProps<
-  LoggedOutStackParamList,
+  UserInputStackParamList,
   'DisasterNotiSettings'
 >;
 
@@ -26,9 +29,17 @@ export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenPr
     ref.current?.present();
   }, []);
 
+  const queryClient = useQueryClient();
+  const { user } = useUser();
   const onSubmit = () => {
-    navigation.navigate('CompleteLogin');
+    queryClient.setQueryData(['user'], {
+      username: user.username,
+      token: user.token,
+      locData: true,
+    });
+    //navigation.navigate('Home');
   };
+
   return (
     <View style={styles.layout}>
       <View style={styles.topContainer}>

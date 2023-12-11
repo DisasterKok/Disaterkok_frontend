@@ -21,67 +21,30 @@ import useAddressData from '../hooks/useAddressData';
 import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
 import getAddressCoords from '../components/SelectAddress/GetAddressCoords';
 import Separator from '../components/Separator';
-import { LoggedOutStackParamList } from '../navigation/types';
+import { UserInputStackParamList } from '../navigation/types';
 
-type SelectLocScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'SelectLocation'>;
+import { UserRegion, UserRegionPayload } from '../apis/userRegionAPI';
 
-const AddressDataList = [
-  {
-    addressData: {
-      address: '서울특별시 서초구 서초동',
-      roadAddress: '서울특별시 서초구 서초대로 396',
-      zoneCode: '06626',
-      xCoordinate: 127.024612,
-      yCoordinate: 37.495985,
-    },
-    aliasType: 'home',
-    name: '집',
-    default: true,
-    alarm: true,
-  },
-  {
-    addressData: {
-      address: '서울특별시 서초구 서초동',
-      roadAddress: '서울특별시 서초구 서초대로 396',
-      zoneCode: '06626',
-      xCoordinate: 127.024612,
-      yCoordinate: 37.495985,
-    },
-    aliasType: 'work',
-    name: '회사',
-    default: false,
-    alarm: false,
-  },
-  {
-    addressData: {
-      address: '서울특별시 서초구 서초동',
-      roadAddress: '서울특별시 서초구 서초대로 396',
-      zoneCode: '06626',
-      xCoordinate: 127.024612,
-      yCoordinate: 37.495985,
-    },
-    aliasType: 'etc',
-    name: '본가',
-    default: false,
-    alarm: true,
-  },
-  {
-    addressData: {
-      address: '서울특별시 서초구 서초동',
-      roadAddress: '서울특별시 서초구 서초대로 396',
-      zoneCode: '06626',
-      xCoordinate: 127.024612,
-      yCoordinate: 37.495985,
-    },
-    aliasType: 'etc',
-    name: '본가',
-    default: false,
-    alarm: true,
-  },
-];
+import {
+  useRegionListQuery,
+  useAddRegion,
+  useUpdateAlias,
+  useSetDefault,
+} from '../hooks/queries/Region';
+
+import useUser from '../hooks/queries/Auth/useUser';
+import { useSignOut } from '../hooks/queries/Auth/useSignOut';
+
+type SelectLocScreenProps = NativeStackScreenProps<UserInputStackParamList, 'SelectLocation'>;
 
 export default function SelectLoc({ navigation }: SelectLocScreenProps) {
-  const [addressDataList, setAddressDataList] = React.useState(AddressDataList);
+  const { user } = useUser();
+  const {
+    regionListQuery: { data: regions },
+  } = useRegionListQuery(user.token);
+  const [addressDataList, setAddressDataList] = React.useState<UserRegion[]>(
+    regions ? regions.results : [],
+  );
 
   // 주소 찾기 모달
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
@@ -92,6 +55,10 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   // 별명 수정하기 모달
   const [isUpdateAliasOpen, setIsUpdateAliasOpen] = React.useState(false);
   const [updatingIndex, setUpdatingIndex] = React.useState<number>(0);
+
+  const { addRegionMutation } = useAddRegion(user.token);
+  const { updateAliasMutation } = useUpdateAlias(user.token);
+  const { setDefaultMutation } = useSetDefault(user.token);
 
   // 주소 찾기로 선택한 주소
   const { data, setAddressData, resetAddressData } = useAddressData({
@@ -146,41 +113,36 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   };
 
   // 주소 추기하기
-  const handleAddAddress = (data: any) => {
-    const updatedAddressDataList = [...addressDataList];
-    const newData = {
-      addressData: data.addressData,
-      aliasType: data.aliasType,
-      name: data.name,
-      default: !updatedAddressDataList ? true : data.default,
-      alarm: false, //default false?
-    };
-    updatedAddressDataList.push(newData);
-    setAddressDataList(updatedAddressDataList);
-    resetAddressData();
-    if (isSearchAliasOpen) setIsSearchAliasOpen(false);
-    else if (isCurrentAliasOpen) setIsCurrentAliasOpen(false);
+  const handleAddAddress = (newData: UserRegionPayload) => {
+    addRegionMutation.mutate(newData, {
+      onSuccess: (data: any) => {
+        resetAddressData();
+        if (isSearchAliasOpen) setIsSearchAliasOpen(false);
+        else if (isCurrentAliasOpen) setIsCurrentAliasOpen(false);
+      },
+    });
   };
 
-  const handleUpdateAddress = (data: any) => {
-    const updatedAddressDataList = [...addressDataList];
-    updatedAddressDataList[updatingIndex] = data;
-    setAddressDataList(updatedAddressDataList);
-    setIsUpdateAliasOpen(false);
+  //주소 별명 수정
+  const handleUpdateAddress = (updatedData: UserRegionPayload) => {
+    const payload = { aliasType: updatedData.aliasType, name: updatedData.name };
+    updateAliasMutation.mutate(
+      { id: updatingIndex, payload: payload },
+      {
+        onSuccess: (data: any) => {
+          if (isUpdateAliasOpen) setIsUpdateAliasOpen(false);
+        },
+      },
+    );
   };
 
   // 기본 주소로 설정하기
-  const handleToggleDefault = (index: number) => {
-    if (addressDataList[index].default) return;
-    const updatedAddressDataList = [...addressDataList];
-
-    updatedAddressDataList[index].default = !updatedAddressDataList[index].default;
-    for (let i = 0; i < updatedAddressDataList.length; i++) {
-      if (i !== index) {
-        updatedAddressDataList[i].default = false;
-      }
+  const handleToggleDefault = async (id: number) => {
+    try {
+      await setDefaultMutation.mutateAsync(id);
+    } catch (error) {
+      console.log(error);
     }
-    setAddressDataList(updatedAddressDataList);
   };
 
   const backToSearch = () => {
@@ -189,13 +151,14 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   };
 
   const handleSubmit = () => {
-    //console.log(addressDataList);
     navigation.navigate('DisasterNotiSettings');
   };
 
   useEffect(() => {
-    //console.log(AddressDataList);
-  }, [AddressDataList]);
+    setAddressDataList(regions ? regions.results : []);
+  }, [regions]);
+
+  const signOut = useSignOut();
 
   return (
     <>
@@ -227,6 +190,9 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
                 style={styles.currentButtonIcon}
               />
             </TouchableOpacity>
+            <Pressable onPress={() => signOut()}>
+              <Text>로그아웃</Text>
+            </Pressable>
           </View>
         </View>
         <Separator />
@@ -234,13 +200,13 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
           <ScrollView style={styles.list}>
             <View>
               {addressDataList &&
-                addressDataList.map((data, index) => (
+                addressDataList.map((data) => (
                   <TouchableOpacity
-                    key={index}
+                    key={data.id}
                     activeOpacity={0.8}
                     style={styles.listItemContainer}
                     onPress={() => {
-                      setUpdatingIndex(index);
+                      setUpdatingIndex(data.id);
                       setIsUpdateAliasOpen(true);
                     }}
                   >
@@ -250,11 +216,11 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
                         <View style={styles.roadIcon}>
                           <Text style={styles.roadIconText}>도로명</Text>
                         </View>
-                        <Text style={styles.roadText}>{data.addressData.roadAddress}</Text>
+                        <Text style={styles.roadText}>{data.roadAddress}</Text>
                       </View>
                     </View>
                     <View style={styles.listButton}>
-                      <Pressable onPress={() => handleToggleDefault(index)}>
+                      <Pressable onPress={() => handleToggleDefault(data.id)}>
                         <FeatherIcon
                           name="check-circle"
                           size={24}
@@ -307,12 +273,18 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
         )}
         {isUpdateAliasOpen && (
           <AliasPostcode
-            addressData={addressDataList[updatingIndex].addressData}
+            addressData={{
+              address: addressDataList[updatingIndex].address,
+              roadAddress: addressDataList[updatingIndex].roadAddress,
+              zoneCode: addressDataList[updatingIndex].zoneCode,
+              xCoordinate: addressDataList[updatingIndex].xCoordinate,
+              yCoordinate: addressDataList[updatingIndex].yCoordinate,
+            }}
             aliasData={{
               aliasType: addressDataList[updatingIndex].aliasType,
               name: addressDataList[updatingIndex].name,
               default: addressDataList[updatingIndex].default,
-              alarm: addressDataList[updatingIndex].alarm,
+              onOff: addressDataList[updatingIndex].onOff,
             }}
             updateAddress={handleUpdateAddress}
             goBack={() => setIsUpdateAliasOpen(false)}

@@ -3,7 +3,7 @@ import { WEATHER_API_KEY } from '@env';
 import { TMData } from './getTMCoords';
 
 const getDustStation = async ({ tmX, tmY }: TMData) => {
-  console.log(WEATHER_API_KEY);
+  //console.log(WEATHER_API_KEY);
   try {
     const response = await axios.get(
       `http://apis.data.go.kr/B552584/MsrstnInfoInqireSvc/getNearbyMsrstnList`,

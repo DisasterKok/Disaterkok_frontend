@@ -10,6 +10,9 @@ import { useSignOut } from '../../hooks/queries/Auth/useSignOut';
 const FeatherAnimatedIcon = Animated.createAnimatedComponent(FeatherIcon);
 const AntAnimatedIcon = Animated.createAnimatedComponent(AntDesignIcon);
 
+import { useQueryClient } from '@tanstack/react-query';
+import useUser from '../../hooks/queries/Auth/useUser';
+
 const AppBar = ({
   animatedColor,
 }: {
@@ -18,14 +21,25 @@ const AppBar = ({
   const navigation: NavigationProp<HomeStackParamList, 'Home'> = useNavigation();
   const [hasNewNoti, setHasNewNoti] = React.useState<boolean>(true);
 
-  const signOut = useSignOut();
-
   const navigateToSetting = () => {
     navigation.navigate('Notification');
   };
 
   const navigateToSearch = () => {
     navigation.navigate('Search');
+  };
+
+  // 임시
+  const signOut = useSignOut();
+  const queryClient = useQueryClient();
+  const { user } = useUser();
+  const resetData = () => {
+    queryClient.setQueryData(['user'], {
+      username: user.username,
+      token: user.token,
+      locData: false,
+    });
+    //navigation.navigate('Home');
   };
 
   return (
@@ -45,6 +59,9 @@ const AppBar = ({
       <Pressable onPress={() => signOut()}>
         <Text>로그아웃</Text>
       </Pressable>
+      {/* <Pressable onPress={() => resetData()}>
+        <Text>region 초기화</Text>
+      </Pressable> */}
 
       <View style={styles.appBarRight}>
         <TouchableOpacity onPress={navigateToSearch}>

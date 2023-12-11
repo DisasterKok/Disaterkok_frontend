@@ -1,4 +1,5 @@
 export interface User {
   username: string;
-  accessToken: string;
+  token: string;
+  locData: boolean;
 }

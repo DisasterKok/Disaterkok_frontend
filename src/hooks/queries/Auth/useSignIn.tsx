@@ -12,6 +12,8 @@ const useSignIn = () => {
       queryClient.setQueryData(['user'], {
         username: data.user.username,
         token: data.token.access,
+        locData: true,
+        //locData: Boolean(data.exist),
       });
     },
   });

@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
-  Modal,
   Pressable,
 } from 'react-native';
 import COLOR from '../../../../../constants/colors';
@@ -22,60 +21,17 @@ import getCurrentLocation from '../../../../SelectAddress/GetCurrentLocation';
 import getAddressCoords from '../../../../SelectAddress/GetAddressCoords';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
-const AddressDataList = [
-  {
-    addressData: {
-      address: '서울특별시 서초구 서초동',
-      roadAddress: '서울특별시 서초구 서초대로 396',
-      zoneCode: '06626',
-      xCoordinate: 127.024612,
-      yCoordinate: 37.495985,
-    },
-    aliasType: 'home',
-    name: '집',
-    default: true,
-    alarm: true,
-  },
-  {
-    addressData: {
-      address: '서울특별시 서초구 서초동',
-      roadAddress: '서울특별시 서초구 서초대로 396',
-      zoneCode: '06626',
-      xCoordinate: 127.024612,
-      yCoordinate: 37.495985,
-    },
-    aliasType: 'work',
-    name: '회사',
-    default: false,
-    alarm: false,
-  },
-  {
-    addressData: {
-      address: '서울특별시 서초구 서초동',
-      roadAddress: '서울특별시 서초구 서초대로 396',
-      zoneCode: '06626',
-      xCoordinate: 127.024612,
-      yCoordinate: 37.495985,
-    },
-    aliasType: 'etc',
-    name: '본가',
-    default: false,
-    alarm: true,
-  },
-  {
-    addressData: {
-      address: '서울특별시 서초구 서초동',
-      roadAddress: '서울특별시 서초구 서초대로 396',
-      zoneCode: '06626',
-      xCoordinate: 127.024612,
-      yCoordinate: 37.495985,
-    },
-    aliasType: 'etc',
-    name: '본가',
-    default: false,
-    alarm: true,
-  },
-];
+import { UserRegion, UserRegionPayload } from '../../../../../apis/userRegionAPI';
+import {
+  useRegionListQuery,
+  useAddRegion,
+  useUpdateAlias,
+  useSetDefault,
+  useDeleteRegion,
+  useSetOnoff,
+} from '../../../../../hooks/queries/Region';
+
+import useUser from '../../../../../hooks/queries/Auth/useUser';
 
 interface TownListBottomSheetProps {
   height: number;
@@ -84,52 +40,27 @@ interface TownListBottomSheetProps {
 }
 
 const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomSheetProps) => {
-  const [addressDataList, setAddressDataList] = React.useState(AddressDataList);
+  const { user } = useUser();
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false);
   const [updatingIndex, setUpdatingIndex] = React.useState<number>(0);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState<boolean>(false);
+
+  const {
+    regionListQuery: { data: regions },
+  } = useRegionListQuery(user.token);
+  const [addressDataList, setAddressDataList] = React.useState<UserRegion[]>(
+    regions ? regions.results : [],
+  );
+  const { addRegionMutation } = useAddRegion(user.token);
+  const { updateAliasMutation } = useUpdateAlias(user.token);
+  const { setDefaultMutation } = useSetDefault(user.token);
+  const { deleteRegionMutation } = useDeleteRegion(user.token);
+  const { setOnoffMutation } = useSetOnoff(user.token);
 
   const viewHeight = Dimensions.get('window').height * height - 30;
 
   const handleEditTown = () => {
     setIsEditMode(!isEditMode);
-  };
-
-  const confirmDeleteTown = (confirm: boolean) => {
-    if (confirm) {
-      const updatedAddressDataList = [...addressDataList];
-      const isDefault = updatedAddressDataList[updatingIndex].default;
-      updatedAddressDataList.splice(updatingIndex, 1);
-      if (isDefault) {
-        updatedAddressDataList[0].default = true;
-      }
-      setAddressDataList(updatedAddressDataList);
-    }
-    setIsDeleteModalOpen(false);
-  };
-
-  const handleDeleteTown = (index: number) => {
-    setUpdatingIndex(index);
-    setIsDeleteModalOpen(true);
-  };
-
-  const handleToggleDefault = (index: number) => {
-    if (addressDataList[index].default) return;
-    const updatedAddressDataList = [...addressDataList];
-
-    updatedAddressDataList[index].default = !updatedAddressDataList[index].default;
-    for (let i = 0; i < updatedAddressDataList.length; i++) {
-      if (i !== index) {
-        updatedAddressDataList[i].default = false;
-      }
-    }
-    setAddressDataList(updatedAddressDataList);
-  };
-
-  const handleCheckAlarm = (index: number) => {
-    const updatedAddressDataList = [...addressDataList];
-    updatedAddressDataList[index].alarm = !updatedAddressDataList[index].alarm;
-    setAddressDataList(updatedAddressDataList);
   };
 
   const [isSlideOpen, setIsSlideOpen] = React.useState<boolean>(false);
@@ -144,8 +75,8 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
 
   const handleSelect = (data: any) => {
     closeSlide();
-    console.log(data);
-    getAddressCoords(data.jibunAddress ? data.jibunAddress : data.autoJibunAddresss)
+
+    getAddressCoords(data.jibunAddress ? data.jibunAddress : data.autoJibunAddress)
       .then((coordinates) => {
         setAddressData({
           address: data.jibunAddress ? data.jibunAddress : data.autoJibunAddress,
@@ -205,32 +136,72 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
       });
   };
 
-  const handleAddAddress = (data: any) => {
-    const updatedAddressDataList = [...addressDataList];
-    const newData = {
-      addressData: data.addressData,
-      aliasType: data.aliasType,
-      name: data.name,
-      default: !updatedAddressDataList ? true : data.default,
-      alarm: false,
-    };
-    console.log(newData);
-    updatedAddressDataList.push(newData);
-    setAddressDataList(updatedAddressDataList);
-    resetAddressData();
-    closeSlide();
+  // 주소 추가하기
+  const handleAddAddress = (newData: UserRegionPayload) => {
+    addRegionMutation.mutate(newData, {
+      onSuccess: (data: any) => {
+        resetAddressData();
+        closeSlide();
+      },
+    });
   };
 
-  const handleUpdateAddress = (data: any) => {
-    const updatedAddressDataList = [...addressDataList];
-    updatedAddressDataList[updatingIndex] = data;
-    setAddressDataList(updatedAddressDataList);
-    closeSlide();
+  // 주소 별명 수정
+  const handleUpdateAddress = (updatedData: UserRegionPayload) => {
+    const payload = { aliasType: updatedData.aliasType, name: updatedData.name };
+    updateAliasMutation.mutate(
+      { id: updatingIndex, payload: payload },
+      {
+        onSuccess: (data: any) => {
+          closeSlide();
+        },
+      },
+    );
+  };
+
+  //주소 삭제하기
+  const confirmDeleteTown = async (confirm: boolean) => {
+    if (confirm) {
+      try {
+        await deleteRegionMutation.mutateAsync(updatingIndex);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleDeleteTown = (id: number) => {
+    setUpdatingIndex(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  // 기본 주소로 설정하기
+  const handleToggleDefault = async (id: number) => {
+    try {
+      await setDefaultMutation.mutateAsync(id);
+      regions.refetch();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 알림 설정
+  const handleCheckAlarm = async (id: number) => {
+    try {
+      await setOnoffMutation.mutateAsync(id);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleCloseModalPress = useCallback((ref: React.RefObject<BottomSheetModal>) => {
     ref.current?.close();
   }, []);
+
+  useEffect(() => {
+    setAddressDataList(regions ? regions.results : []);
+  }, [regions]);
 
   return (
     <View style={[styles.container, { height: viewHeight }]}>
@@ -251,28 +222,28 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
       <ScrollView style={isEditable ? styles.list : StyleSheet.compose(styles.list, styles.listMb)}>
         <View>
           {addressDataList &&
-            addressDataList.map((data, index) => (
-              <View key={index} style={styles.listItemContainer}>
+            addressDataList.map((data: UserRegion) => (
+              <View key={data.id} style={styles.listItemContainer}>
                 <View style={styles.listItem}>
                   <Text style={styles.listName}>{data.name}</Text>
                   <View style={styles.roadBox}>
                     <View style={styles.roadIcon}>
                       <Text style={styles.roadIconText}>도로명</Text>
                     </View>
-                    <Text style={styles.roadText}>{data.addressData.roadAddress}</Text>
+                    <Text style={styles.roadText}>{data.roadAddress}</Text>
                   </View>
                 </View>
                 <View style={[styles.listButton, { gap: isEditMode ? 5 : 10 }]}>
                   {isEditMode ? (
                     <>
                       <TouchableOpacity
-                        onPress={() => toggleEditAlias(index)}
+                        onPress={() => toggleEditAlias(data.id)}
                         style={styles.editDeleteButton}
                       >
                         <Text style={styles.editDeleteText}>수정</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        onPress={() => handleDeleteTown(index)}
+                        onPress={() => handleDeleteTown(data.id)}
                         style={styles.editDeleteButton}
                       >
                         <Text style={styles.editDeleteText}>삭제</Text>
@@ -284,7 +255,7 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
                     </>
                   ) : (
                     <>
-                      <TouchableOpacity onPress={() => handleToggleDefault(index)}>
+                      <TouchableOpacity onPress={() => handleToggleDefault(data.id)}>
                         <FeatherIcon
                           name="check-circle"
                           size={24}
@@ -296,7 +267,7 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
                       </TouchableOpacity>
                       {isEditable && (
                         <TouchableOpacity
-                          onPress={() => handleCheckAlarm(index)}
+                          onPress={() => handleCheckAlarm(data.id)}
                           style={{
                             position: 'relative',
                             width: 24,
@@ -312,7 +283,7 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
                               position: 'absolute',
                               display: 'flex',
                               borderWidth: 2,
-                              borderColor: data.alarm ? `${COLOR.primary}` : `${COLOR.lightGray}`,
+                              borderColor: data.onOff ? `${COLOR.primary}` : `${COLOR.lightGray}`,
                               borderRadius: 12,
                             }}
                           />
@@ -321,7 +292,7 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
                             size={16}
                             style={[
                               styles.itemButtonUnchecked,
-                              data.alarm && styles.itemButtonChecked,
+                              data.onOff && styles.itemButtonChecked,
                               { position: 'absolute', top: 4, left: 4 },
                             ]}
                           />
@@ -371,12 +342,18 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
             )}
             {slideNum === 3 && (
               <AliasPostcode
-                addressData={addressDataList[updatingIndex].addressData}
+                addressData={{
+                  address: addressDataList[updatingIndex].address,
+                  roadAddress: addressDataList[updatingIndex].roadAddress,
+                  zoneCode: addressDataList[updatingIndex].zoneCode,
+                  xCoordinate: addressDataList[updatingIndex].xCoordinate,
+                  yCoordinate: addressDataList[updatingIndex].yCoordinate,
+                }}
                 aliasData={{
                   aliasType: addressDataList[updatingIndex].aliasType,
                   name: addressDataList[updatingIndex].name,
                   default: addressDataList[updatingIndex].default,
-                  alarm: addressDataList[updatingIndex].alarm,
+                  onOff: addressDataList[updatingIndex].onOff,
                 }}
                 updateAddress={handleUpdateAddress}
                 goBack={closeSlide}
