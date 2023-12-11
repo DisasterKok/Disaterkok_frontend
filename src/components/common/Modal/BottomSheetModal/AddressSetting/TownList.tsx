@@ -28,6 +28,7 @@ import useAddRegion from '../../../../../hooks/queries/Region/useAddRegion';
 import useUpdateAlias from '../../../../../hooks/queries/Region/useUpdateAlias';
 import useSetDefault from '../../../../../hooks/queries/Region/useSetDefault';
 import useDeleteRegion from '../../../../../hooks/queries/Region/useDeleteRegion';
+import useSetOnoff from '../../../../../hooks/queries/Region/useSetOnoff';
 
 import useUser from '../../../../../hooks/queries/Auth/useUser';
 
@@ -108,6 +109,7 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
   const { updateAliasMutation } = useUpdateAlias(updatingIndex, user.token);
   const { setDefaultMutation } = useSetDefault(updatingIndex, user.token);
   const { deleteRegionMutation } = useDeleteRegion(updatingIndex, user.token);
+  const { setOnoffMutation } = useSetOnoff(updatingIndex, user.token);
 
   const viewHeight = Dimensions.get('window').height * height - 30;
 
@@ -135,8 +137,8 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
     setIsDeleteModalOpen(false);
   };
 
-  const handleDeleteTown = (index: number) => {
-    setUpdatingIndex(index);
+  const handleDeleteTown = (id: number) => {
+    setUpdatingIndex(id);
     setIsDeleteModalOpen(true);
   };
 
@@ -161,10 +163,16 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
     }
   };
 
-  const handleCheckAlarm = (index: number) => {
-    const updatedAddressDataList = [...addressDataList];
-    updatedAddressDataList[index].onOff = !updatedAddressDataList[index].onOff;
-    setAddressDataList(updatedAddressDataList);
+  // 알림 설정
+  const handleCheckAlarm = async (id: number) => {
+    // const updatedAddressDataList = [...addressDataList];
+    // updatedAddressDataList[index].onOff = !updatedAddressDataList[index].onOff;
+    // setAddressDataList(updatedAddressDataList);
+    try {
+      await setOnoffMutation.mutateAsync();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const [isSlideOpen, setIsSlideOpen] = React.useState<boolean>(false);
@@ -243,15 +251,15 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
   // 주소 추가하기
   const handleAddAddress = (newData: UserRegionPayload) => {
     //const updatedAddressDataList = [...addressDataList];
+    // console.log(newData);
+    // updatedAddressDataList.push(newData);
+    // setAddressDataList(updatedAddressDataList);
     addRegionMutation.mutate(newData, {
       onSuccess: (data: any) => {
         resetAddressData();
         closeSlide();
       },
     });
-    // console.log(newData);
-    // updatedAddressDataList.push(newData);
-    // setAddressDataList(updatedAddressDataList);
   };
 
   // 주소 별명 수정
