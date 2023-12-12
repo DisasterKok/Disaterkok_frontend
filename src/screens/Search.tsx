@@ -8,20 +8,25 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '../navigation/types';
 import KeywordList from '../components/Search/KeywordsList';
 import SearchResult from '../components/Search/SearchResult';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-const Search = () => {
+type SearchScreenProps = NativeStackScreenProps<HomeStackParamList, 'Search'>;
+
+const Search = ({ route, navigation }: SearchScreenProps) => {
+  const { keywordInput } = route.params || {};
   const insets = useSafeAreaInsets();
   const [searchHistory, setSearchHistory] = React.useState<string[]>([]);
-  const [searchInput, setSearchInput] = React.useState<string>('');
+  const [searchInput, setSearchInput] = React.useState<string>(keywordInput ? keywordInput : '');
   const [isSearched, setIsSearched] = React.useState<boolean>(false);
   const [searchKeyword, setSearchKeyword] = React.useState<string>('');
 
-  const navigation = useNavigation() as NavigationProp<HomeStackParamList, 'ReportList'>;
-
   React.useEffect(() => {
+    if (keywordInput) {
+      handleKeywordSearch(keywordInput);
+    }
     loadSearchHistory();
-    console.log('searchHistory:', searchHistory);
-  }, []);
+    //console.log('searchHistory:', searchHistory);
+  }, [keywordInput]);
 
   const onSearching = () => {
     if (isSearched) {

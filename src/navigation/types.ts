@@ -9,7 +9,11 @@ export type HomeStackParamList = {
   };
   Notification: undefined;
   Setting: undefined;
-  Search: undefined;
+  Search:
+    | undefined
+    | {
+        keywordInput?: string;
+      };
 };
 
 export type UserInputStackParamList = {

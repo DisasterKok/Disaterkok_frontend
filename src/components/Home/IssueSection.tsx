@@ -1,7 +1,9 @@
 import React from 'react';
 import { LinearGradient } from 'react-native-linear-gradient';
-import { View, Text, StyleSheet, Platform, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Platform, ScrollView, TouchableOpacity } from 'react-native';
 import COLOR from '../../constants/colors';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { HomeStackParamList } from '../../navigation/types';
 
 const CommonIssue = {
   location: '대구',
@@ -9,10 +11,16 @@ const CommonIssue = {
 };
 
 const LocalKeyword = {
-  keyword: ['키워드', '키워드', '키워드', '키워드', '키워드'],
+  keyword: ['#지진', '#폭설', '#한파', '#교통사고', '#산불'],
 };
 
 const IssueSection = ({ isLocalSelected }: { isLocalSelected: boolean }) => {
+  const navigation: NavigationProp<HomeStackParamList> = useNavigation();
+
+  const handleKeywordSearch = (keyword: string) => {
+    navigation.navigate('Search', { keywordInput: keyword });
+  };
+
   return (
     <View style={styles.sectionCard}>
       {isLocalSelected ? (
@@ -23,7 +31,11 @@ const IssueSection = ({ isLocalSelected }: { isLocalSelected: boolean }) => {
           </Text>
           <ScrollView horizontal style={styles.keywordContainer}>
             {LocalKeyword.keyword.map((keyword, index) => (
-              <View key={index} style={styles.keywordBoxContainer}>
+              <TouchableOpacity
+                key={index}
+                style={styles.keywordBoxContainer}
+                onPress={() => handleKeywordSearch(keyword)}
+              >
                 <LinearGradient
                   colors={[
                     '#FFF',
@@ -36,7 +48,7 @@ const IssueSection = ({ isLocalSelected }: { isLocalSelected: boolean }) => {
                 >
                   <Text style={styles.keywordText}>{keyword}</Text>
                 </LinearGradient>
-              </View>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
