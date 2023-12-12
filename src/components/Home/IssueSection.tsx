@@ -72,9 +72,9 @@ const IssueSection = ({ isLocalSelected }: { isLocalSelected: boolean }) => {
               </View>
               <Text style={styles.issueText}>{CommonIssue.location} </Text>
               {CommonIssue.issue.map((issue, index) => (
-                <Text key={index} style={styles.issueText}>
-                  #{issue}{' '}
-                </Text>
+                <TouchableOpacity key={index} onPress={() => handleKeywordSearch(issue)}>
+                  <Text style={styles.issueText}>#{issue} </Text>
+                </TouchableOpacity>
               ))}
             </LinearGradient>
           </View>
