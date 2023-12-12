@@ -12,7 +12,7 @@ export default function RootStackNavigator() {
 
   return (
     <>
-      {user && user?.locData ? (
+      {user?.locData ? (
         <Stack.Navigator>
           <Stack.Screen
             name="MainTabNavigator"

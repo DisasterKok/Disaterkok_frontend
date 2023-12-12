@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Platform,
-  Pressable,
-  Image,
-  Dimensions,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Platform, Pressable, Image } from 'react-native';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -35,6 +26,7 @@ export default function ReportArticleDetail({ route }: ReportArticleDetailScreen
   const {
     reportQuery: { data: report },
   } = useReportQuery(id);
+  console.log(report);
 
   const { reportLikeMutation } = useReportLike();
 
