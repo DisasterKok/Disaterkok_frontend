@@ -22,21 +22,21 @@ export const Onboarding = ({ navigation }: OnboardingScreenProps) => {
       prevButton={<Text style={styles.buttonText}>‹</Text>}
     >
       <View style={styles.slide}>
-        <Image source={require('../assets/images/onboardingtmpBox.png')} style={styles.image} />
+        <Image source={require('../assets/onboarding/onboarding_1.png')} style={styles.image} />
         <View style={styles.title}>
           <Text style={styles.titleText}>내가 원하는 지역을 설정하고,</Text>
           <Text style={styles.titleText}>실시간 제보를 통해 재난 상황을 확인해요</Text>
         </View>
       </View>
       <View style={styles.slide}>
-        <Image source={require('../assets/images/onboardingtmpBox.png')} style={styles.image} />
+        <Image source={require('../assets/onboarding/onboarding_2.png')} style={styles.image} />
         <View style={styles.title}>
           <Text style={styles.titleText}>개별 재난 알림 설정을 통해</Text>
           <Text style={styles.titleText}>나에게 필요한 알림을 받을 수 있어요</Text>
         </View>
       </View>
       <View style={StyleSheet.compose(styles.slide, styles.lastSlide)}>
-        <Image source={require('../assets/images/onboardingtmpBox.png')} style={styles.image} />
+        <Image source={require('../assets/onboarding/onboarding_3.png')} style={styles.image} />
         <View style={StyleSheet.compose(styles.title, styles.lastTitle)}>
           <Text style={styles.titleText}>생성한 재난 상황을 실시간으로,</Text>
           <Text style={styles.titleText}>재난콕과 안전한 하루를 시작해볼까요?</Text>
