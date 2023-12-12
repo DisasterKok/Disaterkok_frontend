@@ -98,7 +98,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   layout: {
     width: '100%',
-    height: '100%',
+    height: '115%',
     flexDirection: 'column',
     backgroundColor: `${COLOR.primary}`,
     position: 'relative',
@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingLeft: 22,
     paddingRight: 22,
+    paddingBottom: 120,
     ...Platform.select({
       ios: {
         shadowColor: '#000',

@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 3,
-    marginTop: 50,
+    marginTop: 30,
   },
   moreViewText: {
     fontSize: 12,

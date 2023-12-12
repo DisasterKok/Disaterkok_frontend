@@ -118,7 +118,7 @@ export default function ReportArticleCard({ data }: { data: ReportArticleType })
 const styles = StyleSheet.create({
   cardLayout: {
     width: '100%',
-    height: 280,
+    height: 300,
     backgroundColor: `${COLOR.white}`,
     ...Platform.select({
       ios: {
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   img: {
     position: 'relative',
     width: '100%',
-    height: 200,
+    height: 220,
     backgroundColor: `${COLOR.middleGray}`,
     borderTopLeftRadius: 5,
     borderTopEndRadius: 5,
