@@ -34,7 +34,8 @@ export default function SetName({ route, navigation }: SetNameScreenProps) {
     else setCharError(false);
   };
 
-  const onSubmit = () => {
+  const onSubmit = (e: any) => {
+    e.preventDefault();
     signUpMutation.mutate({ username, email, password, nickname });
     // navigation.navigate('SelectLocation');
   };
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   Button: {
-    backgroundColor: `${COLOR.middleGray}`,
+    backgroundColor: `${COLOR.deactivated}`,
     position: 'absolute',
     bottom: 15,
     width: 346,
