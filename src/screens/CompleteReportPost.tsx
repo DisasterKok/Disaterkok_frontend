@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import COLOR from '../constants/colors';
 import { HomeStackParamList } from '../navigation/types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -30,9 +30,10 @@ export default function CompleteReportPost({ route }: ReportArticleDetailScreenP
 
   return (
     <View style={styles.layout}>
-      <View style={styles.illustratorWrapper}>
-        <Text>일러스트</Text>
-      </View>
+      <Image
+        source={require('../assets/onboarding/onboarding_3.png')}
+        style={styles.illustratorWrapper}
+      />
 
       <View style={styles.completeWrapper}>
         <Text style={styles.completeText}>업로드가 완료되었습니다</Text>
@@ -61,7 +62,6 @@ const styles = StyleSheet.create({
   illustratorWrapper: {
     width: 150,
     height: 150,
-    backgroundColor: `${COLOR.gray}`,
   },
   completeWrapper: {
     gap: 5,

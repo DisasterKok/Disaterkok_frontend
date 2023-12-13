@@ -17,7 +17,7 @@ const CompleteLogin = ({ navigation }: CompleteLoginScreenProps) => {
       <Text style={styles.text}>
         필요한 설정이 모두 완료되었어요{'\n'}재난콕과 함께 안전한 하루를 시작해볼까요?
       </Text>
-      <Image source={require('../assets/images/onboardingtmpBox.png')} style={styles.image} />
+      <Image source={require('../assets/onboarding/onboarding_3.png')} style={styles.image} />
       <Pressable style={styles.Button} onPress={handleSubmit}>
         <Text style={styles.ButtonText}>재난콕 시작하기</Text>
       </Pressable>

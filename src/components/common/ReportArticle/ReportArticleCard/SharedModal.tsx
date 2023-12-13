@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Text, View, Pressable, StyleSheet } from 'react-native';
+import { Modal, Text, View, Pressable, StyleSheet, Image } from 'react-native';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import COLOR from '../../../../constants/colors';
 import ClipBoard from '../../ClipBoard/ClipBoard';
@@ -28,19 +28,31 @@ const SharedModal = ({ isModalOpen, handleModal }: SharedModalProps) => {
             </View>
             <View style={styles.platformList}>
               <View style={styles.platformContainer}>
-                <View style={styles.platformIcom} />
+                <Image
+                  source={require('../../../../assets/social/kakao.png')}
+                  style={styles.platformIcom}
+                />
                 <Text style={styles.platformText}>카카오톡</Text>
               </View>
               <View style={styles.platformContainer}>
-                <View style={styles.platformIcom} />
+                <Image
+                  source={require('../../../../assets/social/twitter.png')}
+                  style={styles.platformIcom}
+                />
                 <Text style={styles.platformText}>트위터</Text>
               </View>
               <View style={styles.platformContainer}>
-                <View style={styles.platformIcom} />
+                <Image
+                  source={require('../../../../assets/social/instagram.png')}
+                  style={styles.platformIcom}
+                />
                 <Text style={styles.platformText}>인스타그램</Text>
               </View>
               <View style={styles.platformContainer}>
-                <View style={styles.platformIcom} />
+                <Image
+                  source={require('../../../../assets/social/facebook.png')}
+                  style={styles.platformIcom}
+                />
                 <Text style={styles.platformText}>페이스북</Text>
               </View>
             </View>

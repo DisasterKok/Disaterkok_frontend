@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Platform,
-  Pressable,
-  Image,
-  Dimensions,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Platform, Pressable, Image } from 'react-native';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -35,6 +26,7 @@ export default function ReportArticleDetail({ route }: ReportArticleDetailScreen
   const {
     reportQuery: { data: report },
   } = useReportQuery(id);
+  console.log(report);
 
   const { reportLikeMutation } = useReportLike();
 
@@ -79,26 +71,32 @@ export default function ReportArticleDetail({ route }: ReportArticleDetailScreen
           </View>
         </View>
         <View style={styles.imgContainer}>
-          <SwiperFlatList
-            index={0}
-            showPagination
-            data={report.images}
-            renderItem={({ item }) => {
-              console.log(item);
-              return (
-                <Image
-                  source={{ uri: item.image }}
-                  style={{
-                    width: 346,
-                    height: 346,
-                  }}
-                />
-              );
-            }}
-            paginationStyleItem={{ width: 5, height: 5, marginHorizontal: 2 }}
-            paginationStyleItemInactive={{ backgroundColor: COLOR.lightGray }}
-            paginationStyleItemActive={{ width: 15, backgroundColor: COLOR.black }}
-          />
+          {report.images.length !== 0 ? (
+            <SwiperFlatList
+              index={0}
+              showPagination
+              data={report.images}
+              renderItem={({ item }) => {
+                console.log(item);
+                return (
+                  <Image
+                    source={{ uri: item.image }}
+                    style={{
+                      width: 346,
+                      height: 346,
+                    }}
+                  />
+                );
+              }}
+              paginationStyleItem={{ width: 5, height: 5, marginHorizontal: 2 }}
+              paginationStyleItemInactive={{ backgroundColor: COLOR.lightGray }}
+              paginationStyleItemActive={{ width: 15, backgroundColor: COLOR.black }}
+            />
+          ) : (
+            <View style={styles.emptyImgContainer}>
+              <Text style={styles.emptyImgText}>No Images</Text>
+            </View>
+          )}
 
           <EntypoIcon
             name="dots-three-vertical"
@@ -223,6 +221,20 @@ const styles = StyleSheet.create({
     height: 346,
     borderRadius: 5,
     marginBottom: 10,
+  },
+  emptyImgContainer: {
+    position: 'relative',
+    width: 346,
+    height: 346,
+    borderRadius: 5,
+    marginBottom: 10,
+    backgroundColor: `${COLOR.lightGray}`,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyImgText: {
+    fontSize: 20,
+    fontWeight: '600',
   },
   shareDotBtn: {
     position: 'absolute',

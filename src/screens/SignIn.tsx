@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import COLOR from '../constants/colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import useInput from '../hooks/useInput';
@@ -101,9 +101,13 @@ export default function SignIn({ navigation }: SignInScreenProps) {
       <View style={styles.easyLoginContainer}>
         <Text style={styles.easyLoginText}>간편 로그인</Text>
         <View style={styles.easyLoginButtonTap}>
+          <Image source={require('../assets/social/kakao.png')} style={styles.easyLoginButton} />
+          <Image source={require('../assets/social/naver.png')} style={styles.easyLoginButton} />
+          <Image source={require('../assets/social/google.png')} style={styles.easyLoginButton} />
+
+          {/* <View style={styles.easyLoginButton}></View>
           <View style={styles.easyLoginButton}></View>
-          <View style={styles.easyLoginButton}></View>
-          <View style={styles.easyLoginButton}></View>
+          <View style={styles.easyLoginButton}></View> */}
         </View>
       </View>
     </View>
@@ -147,7 +151,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   loginButton: {
-    backgroundColor: `${COLOR.middleGray}`,
+    backgroundColor: `${COLOR.deactivated}`,
     width: 346,
     height: 48,
     borderRadius: 5,

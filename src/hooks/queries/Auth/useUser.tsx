@@ -6,6 +6,8 @@ const useUser = () => {
   const { data: user, isLoading } = useQuery({
     queryKey: ['user'],
     queryFn: () => useUserAsyncStorage.get(),
+    staleTime: 300000,
+    gcTime: 0,
   });
 
   useEffect(() => {
@@ -28,7 +30,6 @@ const useUser = () => {
 
   return {
     user: user || null,
-    isLoading,
   };
 };
 
