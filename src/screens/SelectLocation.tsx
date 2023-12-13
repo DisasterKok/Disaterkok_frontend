@@ -127,7 +127,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   const handleUpdateAddress = (updatedData: UserRegionPayload) => {
     const payload = { aliasType: updatedData.aliasType, name: updatedData.name };
     updateAliasMutation.mutate(
-      { id: updatingIndex, payload: payload },
+      { id: addressDataList[updatingIndex].id, payload: payload },
       {
         onSuccess: (data: any) => {
           if (isUpdateAliasOpen) setIsUpdateAliasOpen(false);
