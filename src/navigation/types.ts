@@ -19,6 +19,11 @@ export type HomeStackParamList = {
 export type UserInputStackParamList = {
   SelectLocation: undefined;
   DisasterNotiSettings: undefined;
+  CompleteRegionSetting: {
+    username: string;
+    token: string;
+    locData: boolean;
+  };
 };
 
 export type LoggedOutStackParamList = {
@@ -26,7 +31,6 @@ export type LoggedOutStackParamList = {
   SignIn: undefined;
   SignUp: undefined;
   SetName: { usename: string; email: string; password: string };
-  CompleteLogin: undefined;
 };
 
 export type RootStackParamList = {

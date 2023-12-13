@@ -37,7 +37,7 @@ export default function SetName({ route, navigation }: SetNameScreenProps) {
   const onSubmit = (e: any) => {
     e.preventDefault();
     signUpMutation.mutate({ username, email, password, nickname });
-    // navigation.navigate('SelectLocation');
+    navigation.navigate('SignIn');
   };
 
   useEffect(() => {

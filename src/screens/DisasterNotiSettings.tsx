@@ -10,7 +10,6 @@ import {
   SelectSocialDisasterBottomSheet,
 } from '../components/DisasterNotiSettings';
 
-import { useQueryClient } from '@tanstack/react-query';
 import useUser from '../hooks/queries/Auth/useUser';
 
 type DstrNotiSetScreenProps = NativeStackScreenProps<
@@ -29,23 +28,17 @@ export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenPr
     ref.current?.present();
   }, []);
 
-  const queryClient = useQueryClient();
   const { user } = useUser();
-
-  const resetUserData = () => {
-    queryClient.setQueryData(['user'], null);
-  };
 
   const onSubmit = () => {
     const username = user.username;
     const token = user.token;
-    resetUserData();
-    queryClient.setQueryData(['user'], {
+
+    navigation.navigate('CompleteRegionSetting', {
       username: username,
       token: token,
       locData: true,
     });
-    //navigation.navigate('Home');
   };
 
   return (
@@ -114,9 +107,9 @@ export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenPr
         </View>
       </View>
       <View style={styles.bottomContainer}>
-        <View style={styles.skip}>
+        <Pressable onPress={onSubmit} style={styles.skip}>
           <Text style={styles.skipText}>건너뛰기 {'>'}</Text>
-        </View>
+        </Pressable>
         <Pressable
           style={
             naturalSelectedTags.length || soicalSelectedTags.length

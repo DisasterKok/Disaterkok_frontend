@@ -8,11 +8,11 @@ const useSignIn = () => {
       return userAPI.login(payload);
     },
     onSuccess: (data) => {
+      // 추후에 user / locData 캐싱 키 분리 및 api 연결 후 기능 연결
       queryClient.setQueryData(['user'], {
         username: data.user.username,
         token: data.token.access,
-        locData: true,
-        // locData: Boolean(data.exist),
+        locData: Boolean(data.exist),
       });
     },
   });
