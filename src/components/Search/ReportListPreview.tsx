@@ -4,34 +4,21 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import COLOR from '../../constants/colors';
 import ReportArticleList from '../common/ReportArticle/ReportArticleList/ReportArticleList';
 import useReportListQuery from '../../hooks/queries/Reports/useReportListQuery';
+import { ReportArticleType } from '../common/ReportArticle/ReportArticleCard/types';
 
 interface ReportListPreviewProps {
   searchInput: string;
   selectedFilter: string;
   handleTabPress: (tabName: string) => void;
+  reportList: ReportArticleType[];
 }
 
 const ReportListPreview = ({
   searchInput,
   selectedFilter,
   handleTabPress,
+  reportList,
 }: ReportListPreviewProps) => {
-  const {
-    reportListQuery: { data: reports },
-  } = useReportListQuery();
-
-  // React.useEffect(() => {
-  //   const loadReports = async () => {
-  //     try {
-  //       const response = await axios.get<Report[]>(`/reports?search=${searchInput}?filter=${selectedFilter}`);
-  //       setReports(response.data);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   loadReports();
-  // }, [searchInput, filter]);
-
   return (
     <View style={styles.container}>
       <View style={styles.tabNameContainer}>
@@ -41,7 +28,7 @@ const ReportListPreview = ({
           <IonIcon name="chevron-forward" size={12} color={`${COLOR.gray}`} />
         </Pressable>
       </View>
-      <ReportArticleList reportList={reports} />
+      <ReportArticleList reportList={reportList} />
     </View>
   );
 };

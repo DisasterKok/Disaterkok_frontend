@@ -99,9 +99,14 @@ export default function ReportPost() {
 
   const submitReportForm = () => {
     const formData = new FormData();
+
     formData.append('title', title);
     formData.append('content', content);
-    formData.append('is_anoymous', isAnonymous);
+    formData.append('is_anonymous', isAnonymous);
+    formData.append('tags', location.region_1depth_name);
+    formData.append('tags', location.region_2depth_name);
+    formData.append('tags', location.region_3depth_name);
+    formData.append('tags', disasterType);
 
     for (let i = 0; i < imgAssetList.length; i++) {
       formData.append('image', imgAssetList[i]);

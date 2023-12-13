@@ -5,7 +5,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import ReportListPreview from './ReportListPreview';
 import SolutionListPreview from './SolutionListPreview';
 import ReportArticleList from '../common/ReportArticle/ReportArticleList/ReportArticleList';
-import useReportListQuery from '../../hooks/queries/Reports/useReportListQuery';
+import useReportSearchQuery from '../../hooks/queries/Reports/useReporSearchQuery';
 
 const SearchResult = ({ searchInput }: { searchInput: string }) => {
   const { tabList, selectedTab, handleTabPress } = useTabBar({
@@ -22,7 +22,7 @@ const SearchResult = ({ searchInput }: { searchInput: string }) => {
 
   const {
     reportListQuery: { data: reports },
-  } = useReportListQuery();
+  } = useReportSearchQuery(searchInput);
 
   return (
     <View style={styles.layout}>
@@ -42,11 +42,14 @@ const SearchResult = ({ searchInput }: { searchInput: string }) => {
       <ScrollView style={{ marginBottom: 130 }}>
         {selectedTab === '전체' && (
           <>
-            <ReportListPreview
-              searchInput={searchInput}
-              selectedFilter={selectedFilter}
-              handleTabPress={handleTabPress}
-            />
+            {reports && (
+              <ReportListPreview
+                searchInput={searchInput}
+                selectedFilter={selectedFilter}
+                handleTabPress={handleTabPress}
+                reportList={reports.results}
+              />
+            )}
             <SolutionListPreview
               searchInput={searchInput}
               selectedFilter={selectedFilter}
@@ -54,7 +57,7 @@ const SearchResult = ({ searchInput }: { searchInput: string }) => {
             />
           </>
         )}
-        {selectedTab === '제보' && <ReportArticleList reportList={reports} />}
+        {selectedTab === '제보' && <ReportArticleList reportList={reports.results} />}
         {selectedTab === '솔루션' && <></>}
       </ScrollView>
     </View>

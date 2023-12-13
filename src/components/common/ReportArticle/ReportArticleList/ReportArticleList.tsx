@@ -17,6 +17,6 @@ export default function ReportArticleList({ reportList }: { reportList: ReportAr
 
 const styles = StyleSheet.create({
   articleList: {
-    gap: 10,
+    gap: 25,
   },
 });

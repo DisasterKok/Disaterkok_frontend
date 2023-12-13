@@ -440,9 +440,10 @@ const styles = StyleSheet.create({
     backgroundColor: `${COLOR.whiteBackground}`,
   },
   topContainer: {
+    flex: 0.55,
     backgroundColor: `${COLOR.primary}`,
     borderBottomLeftRadius: 20,
-    paddingTop: 40,
+    paddingTop: 70,
     paddingBottom: 20,
     paddingHorizontal: 15,
     gap: 30,
@@ -520,16 +521,16 @@ const styles = StyleSheet.create({
   },
   swipperContainer: {
     width: '100%',
-    flex: 1,
   },
   swipper: {
     width: '100%',
-    height: 230,
+    height: 270,
     borderRadius: 10,
     backgroundColor: `${COLOR.white}`,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 30,
+    gap: 20,
   },
   solutionText: {
     fontSize: 14,

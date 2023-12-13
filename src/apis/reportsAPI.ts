@@ -12,7 +12,11 @@ export interface reportPostPayload {
 const reportsAPI = {
   list: async () => {
     const res = await instance.get(`/posts/post/`);
-
+    return res.data;
+  },
+  search: async (search: string) => {
+    console.log(search);
+    const res = await instance.get(`/posts/post/`, { params: { search } });
     return res.data;
   },
   get: async (id: number) => {

@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Solution, Main, ReportPost } from '../screens';
 import { RootTabParamList } from './types';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import COLOR from '../constants/colors';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -12,7 +12,7 @@ export default function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarStyle: { height: 65, paddingVertical: 10, paddingHorizontal: 15 },
+        tabBarStyle: { height: 90, paddingVertical: 10, paddingHorizontal: 15 },
         tabBarActiveTintColor: COLOR.black,
         tabBarInactiveTintColor: COLOR.gray,
       }}
