@@ -9,7 +9,7 @@ export { default as Solution } from './Solution';
 export { default as SelectLocation } from './SelectLocation';
 export { default as SetName } from './SetName';
 export { default as DisasterNotiSettings } from './DisasterNotiSettings';
-export { default as CompleteLogin } from './CompleteLogin';
+export { default as CompleteRegionSetting } from './CompleteRegionSetting';
 export { default as Main } from './Main';
 export { default as Setting } from './Setting';
 export { default as Search } from './Search';

@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
-import { SignIn, SignUp, SetName, CompleteLogin, Onboarding } from '../screens';
+import { SignIn, SignUp, SetName, Onboarding } from '../screens';
 import { LoggedOutStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<LoggedOutStackParamList>();
@@ -10,7 +10,6 @@ export default function LoggedOutStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />
-      {/* 테스트 위해 임시로 설정한거 */}
       <Stack.Screen
         name="SignIn"
         component={SignIn}
@@ -18,11 +17,6 @@ export default function LoggedOutStack() {
       />
       <Stack.Screen name="SignUp" component={SignUp} options={{ title: '회원가입' }} />
       <Stack.Screen name="SetName" component={SetName} options={{ title: '닉네임 설정' }} />
-      <Stack.Screen
-        name="CompleteLogin"
-        component={CompleteLogin}
-        options={{ headerShown: false, title: '회원가입 완료' }}
-      />
     </Stack.Navigator>
   );
 }

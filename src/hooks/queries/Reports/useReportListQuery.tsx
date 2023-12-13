@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import reportsAPI from '../../../apis/reportsAPI';
 
-const useReportListQuery = () => {
+const useReportListQuery = (token: string) => {
   const reportListQuery = useQuery({
     queryKey: ['Reports'],
     queryFn: () => {
-      return reportsAPI.list();
+      return reportsAPI.list(token);
     },
   });
 

@@ -6,13 +6,15 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '../../navigation/types';
 import useReportListQuery from '../../hooks/queries/Reports/useReportListQuery';
+import useUser from '../../hooks/queries/Auth/useUser';
 
 export default function ReportSection() {
   const navigation: NavigationProp<HomeStackParamList, 'ReportList'> = useNavigation();
+  const { user } = useUser();
 
   const {
     reportListQuery: { data: reports },
-  } = useReportListQuery();
+  } = useReportListQuery(user.token);
 
   const navigateToReportList = () => {
     navigation.navigate('ReportList');

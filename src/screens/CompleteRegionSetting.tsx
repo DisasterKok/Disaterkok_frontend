@@ -2,14 +2,30 @@ import React from 'react';
 import { Text, View, Image, StyleSheet, Pressable } from 'react-native';
 import COLOR from '../constants/colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { LoggedOutStackParamList } from '../navigation/types';
+import { UserInputStackParamList } from '../navigation/types';
+import { useQueryClient } from '@tanstack/react-query';
 
-type CompleteLoginScreenProps = NativeStackScreenProps<LoggedOutStackParamList, 'CompleteLogin'>;
+type CompleteRegionScreenProps = NativeStackScreenProps<
+  UserInputStackParamList,
+  'CompleteRegionSetting'
+>;
 
-const CompleteLogin = ({ navigation }: CompleteLoginScreenProps) => {
+const CompleteRegionSetting = ({ route }: CompleteRegionScreenProps) => {
+  const { username, token, locData } = route.params;
+  console.log(username, token, locData);
+  const queryClient = useQueryClient();
+
+  const resetUserData = () => {
+    queryClient.setQueryData(['user'], null);
+  };
+
   const handleSubmit = () => {
-    // navigation.navigate('Home');
-    // login('1234'); //임시로그인
+    // resetUserData();
+    queryClient.setQueryData(['user'], {
+      username: username,
+      token: token,
+      locData: locData,
+    });
   };
 
   return (
@@ -25,25 +41,21 @@ const CompleteLogin = ({ navigation }: CompleteLoginScreenProps) => {
   );
 };
 
-export default CompleteLogin;
+export default CompleteRegionSetting;
 
 const styles = StyleSheet.create({
   layout: {
     width: '100%',
     height: '100%',
-    display: 'flex',
-    padding: 22,
-    flexDirection: 'column',
+    paddingVertical: 70,
+    paddingTop: 100,
     backgroundColor: `${COLOR.whiteBackground}`,
     alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
+    justifyContent: 'space-between',
   },
   text: {
-    position: 'absolute',
     fontSize: 18,
     fontWeight: '400',
-    top: 65,
   },
   image: {
     width: 200,
@@ -53,8 +65,6 @@ const styles = StyleSheet.create({
   },
   Button: {
     backgroundColor: `${COLOR.primary}`,
-    position: 'absolute',
-    bottom: 15,
     width: 346,
     height: 48,
     borderRadius: 5,

@@ -190,9 +190,6 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
                 style={styles.currentButtonIcon}
               />
             </TouchableOpacity>
-            <Pressable onPress={signOut}>
-              <Text>로그아웃</Text>
-            </Pressable>
           </View>
         </View>
         <Separator />

@@ -10,8 +10,10 @@ export interface reportPostPayload {
 }
 
 const reportsAPI = {
-  list: async () => {
-    const res = await instance.get(`/posts/post/`);
+  list: async (token: string) => {
+    const res = await instance.get(`/posts/post/`, {
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
+    });
     return res.data;
   },
   search: async (search: string) => {
