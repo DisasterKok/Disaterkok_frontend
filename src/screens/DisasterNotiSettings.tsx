@@ -31,10 +31,18 @@ export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenPr
 
   const queryClient = useQueryClient();
   const { user } = useUser();
+
+  const resetUserData = () => {
+    queryClient.setQueryData(['user'], null);
+  };
+
   const onSubmit = () => {
+    const username = user.username;
+    const token = user.token;
+    resetUserData();
     queryClient.setQueryData(['user'], {
-      username: user.username,
-      token: user.token,
+      username: username,
+      token: token,
       locData: true,
     });
     //navigation.navigate('Home');
@@ -142,6 +150,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 70,
     justifyContent: 'space-between',
+    backgroundColor: `${COLOR.whiteBackground}`,
   },
   topContainer: {},
   titleContainer: { gap: 7, marginBottom: 30, paddingLeft: 30 },
@@ -196,8 +205,8 @@ const styles = StyleSheet.create({
   },
   completeButton: {
     width: '90%',
-    height: 50,
-    backgroundColor: `${COLOR.middleGray}`,
+    height: 48,
+    backgroundColor: `${COLOR.lightGray}`,
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
