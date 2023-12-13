@@ -59,31 +59,31 @@ const UserRegionAPI = {
     return response.data;
   },
   getRegionAlias: async (id: number, token: string) => {
-    const response = await instance.get(`/regions/${id}`, {
+    const response = await instance.get(`/regions/${id}/`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   },
   updateAlias: async (id: number, payload: AliasPayload, token: string) => {
-    const response = await instance.put(`/regions/${id}`, payload, {
+    const response = await instance.put(`/regions/${id}/`, payload, {
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     });
     return response.data;
   },
   deleteRegion: async (id: number, token: string) => {
-    const response = await instance.delete(`/regions/${id}`, {
+    const response = await instance.delete(`/regions/${id}/`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   },
   setDefaultRegion: async (id: number, token: string) => {
-    const response = await instance.post(`/regions/${id}/default`, {
+    const response = await instance.post(`/regions/${id}/default/`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   },
   setOnOff: async (id: number, token: string) => {
-    const response = await instance.patch(`/regions/${id}/onoff`, {
+    const response = await instance.post(`/regions/${id}/onoff/`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;

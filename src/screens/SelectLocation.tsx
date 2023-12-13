@@ -190,7 +190,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
                 style={styles.currentButtonIcon}
               />
             </TouchableOpacity>
-            <Pressable onPress={() => signOut()}>
+            <Pressable onPress={signOut}>
               <Text>로그아웃</Text>
             </Pressable>
           </View>
@@ -200,13 +200,13 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
           <ScrollView style={styles.list}>
             <View>
               {addressDataList &&
-                addressDataList.map((data) => (
+                addressDataList.map((data, index) => (
                   <TouchableOpacity
                     key={data.id}
                     activeOpacity={0.8}
                     style={styles.listItemContainer}
                     onPress={() => {
-                      setUpdatingIndex(data.id);
+                      setUpdatingIndex(index);
                       setIsUpdateAliasOpen(true);
                     }}
                   >
@@ -238,7 +238,7 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
         </SafeAreaView>
         <Pressable
           style={
-            !!addressDataList
+            addressDataList.length > 0
               ? StyleSheet.compose(styles.Button, styles.ButtonActive)
               : styles.Button
           }
@@ -299,7 +299,7 @@ export const styles = StyleSheet.create({
   layout: {
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: `${COLOR.white}`,
+    backgroundColor: `${COLOR.whiteBackground}`,
     height: '100%',
     position: 'relative',
     alignItems: 'center',
@@ -307,7 +307,7 @@ export const styles = StyleSheet.create({
   searchBox: {
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: 'white',
+    backgroundColor: `${COLOR.whiteBackground}`,
     paddingRight: 20,
     paddingLeft: 20,
   },
@@ -357,7 +357,7 @@ export const styles = StyleSheet.create({
     marginRight: 5,
   },
   list: {
-    backgroundColor: `${COLOR.white}`,
+    backgroundColor: `${COLOR.whiteBackground}`,
     paddingLeft: 22,
     paddingRight: 22,
     width: '100%',
@@ -426,7 +426,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   Button: {
-    backgroundColor: `${COLOR.middleGray}`,
+    backgroundColor: `${COLOR.lightGray}`,
     position: 'absolute',
     bottom: 15,
     width: 346,

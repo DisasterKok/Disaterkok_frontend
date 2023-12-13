@@ -150,7 +150,7 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
   const handleUpdateAddress = (updatedData: UserRegionPayload) => {
     const payload = { aliasType: updatedData.aliasType, name: updatedData.name };
     updateAliasMutation.mutate(
-      { id: updatingIndex, payload: payload },
+      { id: addressDataList[updatingIndex].id, payload: payload },
       {
         onSuccess: (data: any) => {
           closeSlide();
@@ -222,7 +222,7 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
       <ScrollView style={isEditable ? styles.list : StyleSheet.compose(styles.list, styles.listMb)}>
         <View>
           {addressDataList &&
-            addressDataList.map((data: UserRegion) => (
+            addressDataList.map((data: UserRegion, index: number) => (
               <View key={data.id} style={styles.listItemContainer}>
                 <View style={styles.listItem}>
                   <Text style={styles.listName}>{data.name}</Text>
@@ -237,7 +237,7 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
                   {isEditMode ? (
                     <>
                       <TouchableOpacity
-                        onPress={() => toggleEditAlias(data.id)}
+                        onPress={() => toggleEditAlias(index)}
                         style={styles.editDeleteButton}
                       >
                         <Text style={styles.editDeleteText}>수정</Text>
