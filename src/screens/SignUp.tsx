@@ -69,7 +69,6 @@ export default function SignUp({ navigation }: SignUpScreenProps) {
   };
 
   const checkAllValidation = (username: string, email: string, password: string) => {
-    // 유효성 검사 방식 정해지면 추후 수정
     const checkedName = checkNameValidation(username);
     const checkedEmail = checkEmailValidation(email);
     const checkedConfirmedPassword = checkConfirmedPasswordValidation(password);

@@ -25,7 +25,7 @@ export default function ReportArticleDetail({ route }: ReportArticleDetailScreen
   const { user } = useUser();
   const {
     reportQuery: { data: report },
-  } = useReportQuery(id);
+  } = useReportQuery(id, user.token);
   console.log(report);
 
   const { reportLikeMutation } = useReportLike();

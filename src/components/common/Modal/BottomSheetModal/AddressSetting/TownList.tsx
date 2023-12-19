@@ -126,12 +126,10 @@ const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomShe
           xCoordinate: data.xCoordinate,
           yCoordinate: data.yCoordinate,
         });
-        console.log(data);
         setSlideNum(2);
         setIsSlideOpen(true);
       })
       .catch((error) => {
-        // console.log(error);
         console.log('위치를 얻는 도중 오류가 발생했습니다.');
       });
   };

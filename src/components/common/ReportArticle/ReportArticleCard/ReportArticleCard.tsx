@@ -37,10 +37,7 @@ export default function ReportArticleCard({ data }: { data: ReportArticleType })
   return (
     <Pressable style={styles.cardLayout} onPress={navigateToReportDetail}>
       {images.length > 0 ? (
-        <ImageBackground
-          source={{ uri: `http://13.209.220.81:8888${images[0].image}` }}
-          style={styles.img}
-        >
+        <ImageBackground source={{ uri: `${images[0].image}` }} style={styles.img}>
           <View style={styles.topContainer}>
             <View style={styles.topLeftContainer}>
               <View style={styles.topLeftItem}>

@@ -174,7 +174,7 @@ const WeatherSection = () => {
         });
         console.log('dust', dustInfo, 'uv', uvInfo);
       } catch (error) {
-        console.error('Error fetching dust, uv data:', error);
+        console.log('Error fetching dust, uv data:', error);
       }
     };
     fetchWeatherData();

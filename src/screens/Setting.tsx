@@ -53,7 +53,7 @@ export default function Setting() {
       <View style={styles.notiLayout}>
         <View style={styles.notiWrapper}>
           <View style={styles.notiWrapperTop}>
-            <Text style={styles.notiWDate}>2023-09-27</Text>
+            <Text style={styles.notiWDate}>2023-12-13</Text>
             <Text style={styles.allRead}>다 읽음</Text>
           </View>
           <View style={styles.notiContainer}>
@@ -65,7 +65,11 @@ export default function Setting() {
               <Text style={styles.notiTime}>오전 09:30</Text>
             </View>
             <View style={styles.notiContent}>
-              <Text style={styles.notiContentText}>재난내용에 대한 것 재난 내용에 대한 것</Text>
+              <Text style={styles.notiContentText}>
+                현재 성북구 지역에서는 강한 폭풍우로 인해 피해가 발생하고 있습니다. 모든 주민은
+                안전한 장소로 이동하시고, 긴급 대피소를 이용해 주세요. 자세한 안내는 지역 방송 및
+                관할 당국의 지시를 따라 주시기 바랍니다.
+              </Text>
               <FaIcon
                 name="angle-down"
                 size={20}
@@ -80,10 +84,12 @@ export default function Setting() {
                 <View style={styles.hometownNotiCircle} />
                 <Text style={styles.notiCatecoryText}>우리동네 재난 알림</Text>
               </View>
-              <Text style={styles.notiTime}>오전 09:30</Text>
+              <Text style={styles.notiTime}>오후 15:31</Text>
             </View>
             <View style={styles.notiContent}>
-              <Text style={styles.notiContentText}>재난내용에 대한 것 재난 내용에 대한 것</Text>
+              <Text style={styles.notiContentText}>
+                현재 지하철 파업으로 인해 4호선이 지연되고 있습니다.
+              </Text>
               <FaIcon
                 name="angle-down"
                 size={20}
@@ -98,10 +104,13 @@ export default function Setting() {
                 <View style={styles.nationwideNotiCircle} />
                 <Text style={styles.notiCatecoryText}>전국 재난 알림</Text>
               </View>
-              <Text style={styles.notiTime}>오전 09:30</Text>
+              <Text style={styles.notiTime}>오후 20:15</Text>
             </View>
             <View style={styles.notiContent}>
-              <Text style={styles.notiContentText}>재난내용에 대한 것 재난 내용에 대한 것</Text>
+              <Text style={styles.notiContentText}>
+                전주 지역에서 현재 지진이 발생하였습니다. 안전한 곳으로 빠르게 대피하시고, 가스 및
+                전기 차단, 낙하물 주의 등 안전 조치를 취해주세요. 긴급 대피소로 대피해주세요
+              </Text>
               <FaIcon
                 name="angle-down"
                 size={20}
@@ -114,7 +123,7 @@ export default function Setting() {
 
         <View style={styles.notiWrapper}>
           <View style={styles.notiWrapperTop}>
-            <Text style={styles.notiWDate}>2023-09-27</Text>
+            <Text style={styles.notiWDate}>2023-12-12</Text>
             <Text style={styles.allRead}>다 읽음</Text>
           </View>
           <View style={styles.notiContainer}>
@@ -126,7 +135,11 @@ export default function Setting() {
               <Text style={styles.notiTime}>오전 09:30</Text>
             </View>
             <View style={styles.notiContent}>
-              <Text style={styles.notiContentText}>재난내용에 대한 것 재난 내용에 대한 것</Text>
+              <Text style={styles.notiContentText}>
+                현재 중구 지역에서는 강한 폭풍우로 인해 피해가 발생하고 있습니다. 모든 주민은 안전한
+                장소로 이동하시고, 긴급 대피소를 이용해 주세요. 자세한 안내는 지역 방송 및 관할
+                당국의 지시를 따라 주시기 바랍니다.
+              </Text>
               <FaIcon
                 name="angle-down"
                 size={20}
