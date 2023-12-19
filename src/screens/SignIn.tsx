@@ -36,9 +36,8 @@ export default function SignIn({ navigation }: SignInScreenProps) {
 
   return (
     <View style={styles.layout}>
-      <View style={styles.logo}>
-        <Text>로고</Text>
-      </View>
+      <Image source={require('../assets/logo/logo.png')} style={styles.logo} />
+
       <View style={styles.signForm}>
         <View style={styles.inputWrapper}>
           <Text style={styles.label}>아이디</Text>
@@ -120,12 +119,8 @@ const styles = StyleSheet.create({
     paddingTop: 100,
   },
   logo: {
-    width: 75,
-    height: 75,
-    backgroundColor: `${COLOR.middleGray}`,
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: 120,
+    height: 70,
   },
   signForm: {
     width: '100%',
