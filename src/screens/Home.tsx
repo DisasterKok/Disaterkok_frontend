@@ -29,7 +29,7 @@ export default function Home() {
   // Function to interpolate the background color
   const headerBackgroundColor = scrollY.interpolate({
     inputRange: [0, colorChangeThreshold],
-    outputRange: [`${COLOR.primary}`, `${COLOR.lightGray}`],
+    outputRange: [`${COLOR.primary}`, `${COLOR.white}`],
     extrapolate: 'clamp',
   });
 
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   contentSheet: {
     width: '100%',
     height: '100%',
-    backgroundColor: `${COLOR.lightGray}`,
+    backgroundColor: `${COLOR.white}`,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 20,
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 10,
-        backgroundColor: `${COLOR.lightGray}`,
+        backgroundColor: `${COLOR.white}`,
       },
       android: {
         elevation: 2,
