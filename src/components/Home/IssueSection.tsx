@@ -33,21 +33,10 @@ const IssueSection = ({ isLocalSelected }: { isLocalSelected: boolean }) => {
             {LocalKeyword.keyword.map((keyword, index) => (
               <TouchableOpacity
                 key={index}
-                style={styles.keywordBoxContainer}
+                style={styles.keywordBox}
                 onPress={() => handleKeywordSearch(keyword)}
               >
-                <LinearGradient
-                  colors={[
-                    '#FFF',
-                    '#FFF',
-                    'rgba(252, 252, 252, 0.80)',
-                    'rgba(247, 247, 247, 0.50)',
-                    'rgba(245, 245, 245, 0.80)',
-                  ]}
-                  style={styles.keywordBox}
-                >
-                  <Text style={styles.keywordText}>{keyword}</Text>
-                </LinearGradient>
+                <Text style={styles.keywordText}>{keyword}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -57,26 +46,15 @@ const IssueSection = ({ isLocalSelected }: { isLocalSelected: boolean }) => {
           <Text style={styles.title}>실슈체크</Text>
           <Text style={styles.content}>현재 실시간 이슈, 어떤 실슈가 있는지 확인해요</Text>
           <View style={styles.issueContainer}>
-            <LinearGradient
-              colors={[
-                '#FFF',
-                '#FFF',
-                'rgba(252, 252, 252, 0.80)',
-                'rgba(247, 247, 247, 0.50)',
-                'rgba(245, 245, 245, 0.80)',
-              ]}
-              style={styles.issueBox}
-            >
-              <View style={{ transform: [{ scaleX: -1 }], marginRight: 10 }}>
-                <Text style={{ fontSize: 10 }}>📢</Text>
-              </View>
-              <Text style={styles.issueText}>{CommonIssue.location} </Text>
-              {CommonIssue.issue.map((issue, index) => (
-                <TouchableOpacity key={index} onPress={() => handleKeywordSearch(issue)}>
-                  <Text style={styles.issueText}>#{issue} </Text>
-                </TouchableOpacity>
-              ))}
-            </LinearGradient>
+            <View style={{ transform: [{ scaleX: -1 }], marginRight: 10 }}>
+              <Text style={{ fontSize: 10 }}>📢</Text>
+            </View>
+            <Text style={styles.issueText}>{CommonIssue.location} </Text>
+            {CommonIssue.issue.map((issue, index) => (
+              <TouchableOpacity key={index} onPress={() => handleKeywordSearch(issue)}>
+                <Text style={styles.issueText}>#{issue} </Text>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
       )}
@@ -88,13 +66,15 @@ export default IssueSection;
 
 const styles = StyleSheet.create({
   sectionCard: {
+    position: 'relative',
     display: 'flex',
-    padding: 15,
-    justifyContent: 'center',
+    paddingVertical: 17,
+    paddingHorizontal: 15,
     width: '100%',
-    height: 120,
-    backgroundColor: `${COLOR.white}`,
+    height: 110,
+    backgroundColor: `${COLOR.grayBackground}`,
     borderRadius: 20,
+    alignItems: 'stretch',
     ...Platform.select({
       ios: {
         shadowColor: 'rgba(0, 0, 0, 0.05)',
@@ -124,74 +104,40 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   issueContainer: {
+    position: 'absolute',
+    top: 48,
     width: '100%',
     height: 30,
     backgroundColor: `${COLOR.white}`,
     borderRadius: 50,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'rgba(0, 0, 0, 0.05)',
-        shadowOffset: {
-          width: 1,
-          height: 2,
-        },
-        shadowOpacity: 1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-    marginTop: 5,
-  },
-  issueBox: {
-    width: '100%',
-    height: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    borderRadius: 50,
   },
   issueText: {
-    color: `${COLOR.primary}`,
+    color: `${COLOR.alert}`,
     fontSize: 12,
     fontWeight: '600',
     lineHeight: 22,
   },
   keywordContainer: {
+    position: 'absolute',
+    top: 48,
     width: '100%',
     flexDirection: 'row',
     height: 30,
   },
-  keywordBoxContainer: {
+  keywordBox: {
     height: 25,
     borderRadius: 50,
     marginRight: 10,
     backgroundColor: `${COLOR.white}`,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'rgba(0, 0, 0, 0.05)',
-        shadowOffset: {
-          width: 1,
-          height: 2,
-        },
-        shadowOpacity: 1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  keywordBox: {
-    height: '100%',
-    marginTop: 5,
-    backgroundColor: `${COLOR.white}`,
-    borderRadius: 50,
     paddingHorizontal: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   keywordText: {
-    color: `${COLOR.primary}`,
+    color: `${COLOR.alert}`,
     fontSize: 10,
     fontWeight: '600',
     lineHeight: 22,
