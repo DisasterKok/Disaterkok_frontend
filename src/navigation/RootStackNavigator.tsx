@@ -8,11 +8,11 @@ import useUser from '../hooks/queries/Auth/useUser';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootStackNavigator() {
-  const { user } = useUser();
+  const { userData } = useUser();
 
   return (
     <>
-      {user?.locData ? (
+      {userData?.locData ? (
         <Stack.Navigator>
           <Stack.Screen
             name="MainTabNavigator"

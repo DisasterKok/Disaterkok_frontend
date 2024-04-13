@@ -20,6 +20,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import getCurrentLocation from '../components/SelectAddress/GetCurrentLocation';
 import SelectAllDisasterBottomSheet from '../components/DisasterNotiSettings/SelectAllDisaster/SelectAllDisasterBottomSheet';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { reportPostPayload } from '../apis/reportsAPI';
 
 import { launchCamera, CameraOptions, ImagePickerResponse } from 'react-native-image-picker';
 import useUser from '../hooks/queries/Auth/useUser';
@@ -31,7 +32,8 @@ interface LocationInfo {
 }
 
 export default function ReportPost() {
-  const { user } = useUser();
+  const { userData } = useUser();
+  const token = userData?.token.access || '';
   const [title, onChangeTitle] = useInput();
   const [content, onChangeContent] = useInput();
 
@@ -54,7 +56,7 @@ export default function ReportPost() {
 
   const navigation: NavigationProp<HomeStackParamList> = useNavigation();
 
-  const { reportMutation } = usePostReport(user.token);
+  const { reportMutation } = usePostReport(token);
 
   const showCamera = () => {
     const options: CameraOptions = {
@@ -98,21 +100,22 @@ export default function ReportPost() {
   };
 
   const submitReportForm = () => {
-    const formData = new FormData();
+    const payload: reportPostPayload = {
+      title,
+      content,
+      images: imgAssetList.map((img, index) => ({
+        uri: img.uri,
+      })),
+      tags: [
+        location.region_1depth_name,
+        location.region_2depth_name,
+        location.region_3depth_name,
+        disasterType,
+      ],
+      is_anonymous: isAnonymous,
+    };
 
-    formData.append('title', title);
-    formData.append('content', content);
-    formData.append('is_anonymous', isAnonymous);
-    formData.append('tags', location.region_1depth_name);
-    formData.append('tags', location.region_2depth_name);
-    formData.append('tags', location.region_3depth_name);
-    formData.append('tags', disasterType);
-
-    for (let i = 0; i < imgAssetList.length; i++) {
-      formData.append('image', imgAssetList[i]);
-    }
-
-    reportMutation.mutate(formData, {
+    reportMutation.mutate(payload, {
       onSuccess: (data) => {
         navigation.navigate('CompleteReportPost', { id: data.id });
       },

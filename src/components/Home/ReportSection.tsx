@@ -72,11 +72,12 @@ const reportArticles: ReportArticleType[] = [
 
 export default function ReportSection() {
   const navigation: NavigationProp<HomeStackParamList, 'ReportList'> = useNavigation();
-  const { user } = useUser();
+  const { userData } = useUser();
+  const token = userData?.token.access || '';
 
   const {
     reportListQuery: { data: reports },
-  } = useReportListQuery(user.token);
+  } = useReportListQuery(token);
 
   const navigateToReportList = () => {
     navigation.navigate('ReportList');

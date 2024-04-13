@@ -6,7 +6,7 @@ export interface reportPostPayload {
   content: string;
   images: ImageURISource[];
   tags: string[];
-  is_anoymous: boolean;
+  is_anonymous: boolean;
 }
 
 const reportsAPI = {
@@ -28,7 +28,7 @@ const reportsAPI = {
     });
     return res.data;
   },
-  post: async (payload, token: string) => {
+  post: async (payload: reportPostPayload, token: string) => {
     const res = await instance.post(`/posts/post/`, payload, {
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
     });

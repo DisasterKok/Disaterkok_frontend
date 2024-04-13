@@ -28,15 +28,11 @@ export default function DisasterNotiSettings({ navigation }: DstrNotiSetScreenPr
     ref.current?.present();
   }, []);
 
-  const { user } = useUser();
+  const { userData } = useUser();
 
   const onSubmit = () => {
-    const username = user.username;
-    const token = user.token;
-
     navigation.navigate('CompleteRegionSetting', {
-      username: username,
-      token: token,
+      username: userData?.username || '',
       locData: true,
     });
   };

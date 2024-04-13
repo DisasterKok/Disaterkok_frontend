@@ -1,35 +1,48 @@
 import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
-import useUserAsyncStorage from './useUserAsyncStorage';
+import { useEffect, useState } from 'react';
+import useUserStorage from './useUserStorage';
 
-const useUser = () => {
-  const { data: user, isLoading } = useQuery({
+interface Token {
+  access: string;
+  refresh: string;
+}
+
+interface UserData {
+  username: string;
+  locData: boolean;
+  token: Token;
+}
+
+interface User {
+  userData: UserData | null;
+  isLoading: boolean;
+}
+
+const useUserQuery = () => {
+  return useQuery<UserData | undefined>({
     queryKey: ['user'],
-    queryFn: () => useUserAsyncStorage.get(),
+    queryFn: async () => {
+      const username = await useUserStorage.getUserName();
+      const locData = await useUserStorage.getLocData();
+      const accessToken = await useUserStorage.getAccessToken();
+      const refreshToken = await useUserStorage.getRefreshToken();
+      return {
+        username,
+        locData,
+        token: { access: accessToken, refresh: refreshToken },
+      };
+    },
     staleTime: 300000,
     gcTime: 0,
   });
+};
 
-  useEffect(() => {
-    const updateUserAsyncStorage = async () => {
-      try {
-        if (user) {
-          await useUserAsyncStorage.set(user);
-        } else {
-          await useUserAsyncStorage.remove();
-        }
-      } catch (error) {
-        console.error('Error updating user in AsyncStorage:', error);
-      }
-    };
-
-    if (!isLoading) {
-      updateUserAsyncStorage();
-    }
-  }, [user, isLoading]);
+const useUser = (): User => {
+  const { data: userData, isLoading } = useUserQuery();
 
   return {
-    user: user || null,
+    userData: userData || null,
+    isLoading,
   };
 };
 
