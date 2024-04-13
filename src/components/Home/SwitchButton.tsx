@@ -37,25 +37,25 @@ const SwitchButton = ({
 
   const buttonWidth = translateX.interpolate({
     inputRange: [0, 2000],
-    outputRange: [65, 98],
+    outputRange: [79, 100],
     extrapolate: 'clamp',
   });
 
   const buttonLeft = translateX.interpolate({
     inputRange: [0, 2000],
-    outputRange: [0, 57],
+    outputRange: [2, 90],
     extrapolate: 'clamp',
   });
 
   const NationalTextColor = translateX.interpolate({
     inputRange: [0, 2000],
-    outputRange: ['#fff', '#888'],
+    outputRange: [`${COLOR.darkGray}`, '#888'],
     extrapolate: 'clamp',
   });
 
   const LocalTextColor = translateX.interpolate({
     inputRange: [0, 2000],
-    outputRange: ['#888', '#fff'],
+    outputRange: ['#888', `${COLOR.darkGray}`],
     extrapolate: 'clamp',
   });
 
@@ -69,9 +69,7 @@ const SwitchButton = ({
             styles.buttonIndicator,
             { width: buttonWidth, transform: [{ translateX: buttonLeft }] },
           ]}
-        >
-          <View style={styles.buttonShadow} />
-        </Animated.View>
+        />
         <Animated.View style={[styles.buttonField, styles.leftText]}>
           <Animated.Text style={[styles.buttonText, { color: NationalTextColor }]}>
             전국
@@ -81,8 +79,16 @@ const SwitchButton = ({
           <Animated.Text style={[styles.buttonText, { color: LocalTextColor, left: 7 }]}>
             우리동네
           </Animated.Text>
-          <TouchableOpacity style={{ left: 7, padding: 5 }} onPress={handleBoottomSheet}>
-            <AnimatedEntypo name="chevron-down" size={14} color={LocalTextColor} />
+          <TouchableOpacity
+            style={{ left: 7, padding: 5 }}
+            onPress={handleBoottomSheet}
+            disabled={!isLocalSelected}
+          >
+            <AnimatedEntypo
+              name="chevron-down"
+              size={14}
+              color={isLocalSelected ? LocalTextColor : 'transparent'}
+            />
           </TouchableOpacity>
         </Animated.View>
       </TouchableOpacity>
@@ -99,15 +105,16 @@ const styles = StyleSheet.create({
   },
   switchButton: {
     position: 'relative',
-    width: 155,
+    width: 192,
     height: 30,
-    backgroundColor: '#E6E6E6',
+    backgroundColor: `${COLOR.grayBackground}`,
     borderRadius: 20,
   },
   buttonIndicator: {
     width: 65,
-    height: 30,
-    backgroundColor: `${COLOR.primary}`,
+    height: 26,
+    top: 2,
+    backgroundColor: `${COLOR.white}`,
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -127,7 +134,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 1,
         shadowRadius: 0,
-        backgroundColor: `${COLOR.primary}`,
+        backgroundColor: `${COLOR.white}`,
       },
       android: {
         elevation: 2,
@@ -149,11 +156,11 @@ const styles = StyleSheet.create({
   },
   leftText: {
     left: 0,
-    width: 65,
+    width: 79,
   },
   rightText: {
     right: 0,
-    width: 98,
+    width: 100,
   },
 });
 

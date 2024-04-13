@@ -3,6 +3,7 @@ const COLOR = {
   secondary: '#3D66F5',
   white: '#ffffff',
   whiteBackground: '#FAFAFA',
+  grayBackground: '#F0F1F5',
   black: '#000000',
   gray: '#666666',
   darkGray: '#121212',
@@ -17,6 +18,7 @@ const COLOR = {
   activated: '#2A56F4',
   notiNationWide: `#F53535`,
   notiHomeTown: '#FFD336',
+  alert: '#FB5858',
 };
 
 export default COLOR;

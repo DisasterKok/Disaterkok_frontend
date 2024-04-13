@@ -10,13 +10,15 @@ import {
 } from 'react-native';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import COLOR from '../../../../constants/colors';
 import { ReportArticleType } from './types';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '../../../../navigation/types';
 import SharedModal from './SharedModal';
 import getElapsedTime from '../../../../utils/getElapsedTime';
+import LinearGradient from 'react-native-linear-gradient';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function ReportArticleCard({ data }: { data: ReportArticleType }) {
   const navigation: NavigationProp<HomeStackParamList> = useNavigation();
@@ -37,30 +39,35 @@ export default function ReportArticleCard({ data }: { data: ReportArticleType })
   return (
     <Pressable style={styles.cardLayout} onPress={navigateToReportDetail}>
       {images.length > 0 ? (
-        <ImageBackground source={{ uri: `${images[0].image}` }} style={styles.img}>
+        <ImageBackground source={{ uri: `${images[0].image}` }} imageStyle={styles.img}>
+          <LinearGradient
+            colors={['rgba(0, 0, 0, 0.5)', 'rgba(217, 217, 217, 0)']}
+            style={{ position: 'absolute', top: 0, width: '100%', height: '50%', borderRadius: 10 }}
+            start={{ x: 0.5, y: 0 }}
+            end={{ x: 0.5, y: 1 }}
+          />
+          <LinearGradient
+            colors={['rgba(217, 217, 217, 0)', 'rgba(0, 0, 0, 0.5)']}
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              width: '100%',
+              height: '50%',
+              borderRadius: 10,
+            }}
+            start={{ x: 0.5, y: 0 }}
+            end={{ x: 0.5, y: 1 }}
+          />
           <View style={styles.topContainer}>
             <View style={styles.topLeftContainer}>
               <View style={styles.topLeftItem}>
                 <Text style={styles.topLeftItemText}>{getElapsedTime(created_at)}</Text>
               </View>
-              <View style={styles.topLeftItem}>
-                <Text style={styles.topLeftItemText}>|</Text>
-              </View>
-              <View style={styles.topLeftItem}>
-                <FoundationIcon name="eye" size={15} color={COLOR.white} />
-                <Text style={styles.topLeftItemText}>{view}</Text>
-              </View>
-              <View style={styles.topLeftItem}>
-                <AntDesignIcon name="like2" size={10} color={COLOR.white} />
-                <Text style={styles.topLeftItemText}>{like}</Text>
-              </View>
             </View>
-            <EntypoIcon
-              name="dots-three-vertical"
-              size={15}
-              color={COLOR.white}
-              onPress={handleSharedModal}
-            />
+            <View style={styles.topLeftItem}>
+              <IonIcon name="eye-outline" size={12} color={COLOR.white} />
+              <Text style={styles.topLeftItemText}>{view}</Text>
+            </View>
           </View>
         </ImageBackground>
       ) : (
@@ -70,43 +77,44 @@ export default function ReportArticleCard({ data }: { data: ReportArticleType })
               <View style={styles.topLeftItem}>
                 <Text style={styles.topLeftItemText}>{getElapsedTime(created_at)}</Text>
               </View>
+            </View>
+            <View style={styles.topLeftItem}>
+              <IonIcon name="eye-outline" size={12} color={COLOR.white} />
+              <Text style={styles.topLeftItemText}>{view}</Text>
+            </View>
+          </View>
+          <View style={styles.bottomContainer}>
+            <View style={styles.topLeftContainer}>
               <View style={styles.topLeftItem}>
-                <Text style={styles.topLeftItemText}>|</Text>
-              </View>
-              <View style={styles.topLeftItem}>
-                <FoundationIcon name="eye" size={15} color={COLOR.white} />
-                <Text style={styles.topLeftItemText}>{view}</Text>
-              </View>
-              <View style={styles.topLeftItem}>
-                <AntDesignIcon name="like2" size={10} color={COLOR.white} />
-                <Text style={styles.topLeftItemText}>{like}</Text>
+                <Text style={styles.topLeftItemText}>{getElapsedTime(created_at)}</Text>
               </View>
             </View>
-            <EntypoIcon
-              name="dots-three-vertical"
-              size={15}
-              color={COLOR.white}
-              onPress={handleSharedModal}
-            />
+            <View style={styles.topLeftItem}>
+              <FoundationIcon name="eye" size={15} color={COLOR.white} />
+              <Text style={styles.topLeftItemText}>{view}</Text>
+            </View>
           </View>
         </View>
       )}
       <View style={styles.bottomContainer}>
-        <View style={styles.title}>
-          <Text style={styles.titleText}>{title}</Text>
+        <View style={styles.tagContainer}>
+          <ScrollView horizontal>
+            {tags.map((tag, index) => (
+              <View style={styles.tag} key={index}>
+                <Text style={styles.tagText}>{tag}</Text>
+              </View>
+            ))}
+          </ScrollView>
         </View>
-        <FlatList
-          data={tags}
-          renderItem={({ item }) => (
-            <View style={styles.tag}>
-              <Text style={styles.tagText}>{item}</Text>
-            </View>
-          )}
-          numColumns={1}
-          horizontal
-          contentContainerStyle={styles.tagContainer}
+        <EntypoIcon
+          name="share-alternative"
+          size={15}
+          color={COLOR.white}
+          onPress={handleSharedModal}
         />
       </View>
+
+      {/* <LinearGradient/> */}
       <SharedModal isModalOpen={isSharedOpen} handleModal={handleSharedModal} />
     </Pressable>
   );
@@ -114,8 +122,8 @@ export default function ReportArticleCard({ data }: { data: ReportArticleType })
 
 const styles = StyleSheet.create({
   cardLayout: {
-    width: '100%',
-    height: 300,
+    width: 138,
+    height: 248,
     backgroundColor: `${COLOR.white}`,
     ...Platform.select({
       ios: {
@@ -131,15 +139,15 @@ const styles = StyleSheet.create({
         elevation: 3,
       },
     }),
-    borderRadius: 5,
+    borderRadius: 10,
   },
   img: {
     position: 'relative',
     width: '100%',
-    height: 220,
+    height: '100%',
     backgroundColor: `${COLOR.middleGray}`,
-    borderTopLeftRadius: 5,
-    borderTopEndRadius: 5,
+    borderRadius: 10,
+    objectFit: 'cover',
   },
   topContainer: {
     width: '100%',
@@ -148,7 +156,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
   },
   topLeftContainer: {
     flexDirection: 'row',
@@ -164,7 +172,13 @@ const styles = StyleSheet.create({
     color: `${COLOR.white}`,
   },
   bottomContainer: {
-    padding: 10,
+    width: '100%',
+    position: 'absolute',
+    bottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 7,
   },
   title: {
     marginBottom: 15,
@@ -173,19 +187,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   tagContainer: {
-    flexDirection: 'row',
-    gap: 5,
+    width: '70%',
   },
   tag: {
-    height: 25,
-    backgroundColor: `${COLOR.lightBlue}`,
+    height: 16,
+    backgroundColor: `${COLOR.white}`,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 15,
+    paddingHorizontal: 7,
+    borderRadius: 10,
+    marginRight: 5,
   },
   tagText: {
-    fontSize: 10,
+    fontSize: 8,
+    fontWeight: '700',
+    color: `${COLOR.primary}`,
   },
 });
