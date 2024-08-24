@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import RootStackNavigator from './RootStackNavigator';
 import LoggedOutStack from './LoggedOutStack';
 import useUser from '../hooks/queries/Auth/useUser';
 
 const NavigationContent = () => {
-  const { user } = useUser();
+  const { userData } = useUser();
+
   return (
-    <NavigationContainer>{user ? <RootStackNavigator /> : <LoggedOutStack />}</NavigationContainer>
+    <NavigationContainer>
+      {userData?.token.access ? <RootStackNavigator /> : <LoggedOutStack />}
+    </NavigationContainer>
   );
 };
 

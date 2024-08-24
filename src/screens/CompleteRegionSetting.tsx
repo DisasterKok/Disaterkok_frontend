@@ -4,6 +4,7 @@ import COLOR from '../constants/colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { UserInputStackParamList } from '../navigation/types';
 import { useQueryClient } from '@tanstack/react-query';
+import useUser from '../hooks/queries/Auth/useUser';
 
 type CompleteRegionScreenProps = NativeStackScreenProps<
   UserInputStackParamList,
@@ -11,20 +12,15 @@ type CompleteRegionScreenProps = NativeStackScreenProps<
 >;
 
 const CompleteRegionSetting = ({ route }: CompleteRegionScreenProps) => {
-  const { username, token, locData } = route.params;
-  console.log(username, token, locData);
+  const { username, locData } = route.params;
+  const { userData } = useUser();
   const queryClient = useQueryClient();
 
-  const resetUserData = () => {
-    queryClient.setQueryData(['user'], null);
-  };
-
   const handleSubmit = () => {
-    // resetUserData();
     queryClient.setQueryData(['user'], {
       username: username,
-      token: token,
       locData: locData,
+      token: userData?.token,
     });
   };
 

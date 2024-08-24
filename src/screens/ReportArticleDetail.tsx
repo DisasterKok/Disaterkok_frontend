@@ -22,10 +22,11 @@ type ReportArticleDetailScreenProps = NativeStackScreenProps<
 
 export default function ReportArticleDetail({ route }: ReportArticleDetailScreenProps) {
   const { id } = route.params;
-  const { user } = useUser();
+  const { userData } = useUser();
+  const token = userData?.token.access || '';
   const {
     reportQuery: { data: report },
-  } = useReportQuery(id, user.token);
+  } = useReportQuery(id, token);
   console.log(report);
 
   const { reportLikeMutation } = useReportLike();
@@ -37,7 +38,7 @@ export default function ReportArticleDetail({ route }: ReportArticleDetailScreen
   };
 
   const handleLikePress = () => {
-    reportLikeMutation.mutate({ id, token: user.accessToken });
+    reportLikeMutation.mutate({ id, token });
   };
 
   return (

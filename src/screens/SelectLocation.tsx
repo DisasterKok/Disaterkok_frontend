@@ -38,10 +38,11 @@ import { useSignOut } from '../hooks/queries/Auth/useSignOut';
 type SelectLocScreenProps = NativeStackScreenProps<UserInputStackParamList, 'SelectLocation'>;
 
 export default function SelectLoc({ navigation }: SelectLocScreenProps) {
-  const { user } = useUser();
+  const { userData } = useUser();
+  const accessToken = userData?.token.access || '';
   const {
     regionListQuery: { data: regions },
-  } = useRegionListQuery(user.token);
+  } = useRegionListQuery(accessToken);
   const [addressDataList, setAddressDataList] = React.useState<UserRegion[]>(
     regions ? regions.results : [],
   );
@@ -56,9 +57,9 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
   const [isUpdateAliasOpen, setIsUpdateAliasOpen] = React.useState(false);
   const [updatingIndex, setUpdatingIndex] = React.useState<number>(0);
 
-  const { addRegionMutation } = useAddRegion(user.token);
-  const { updateAliasMutation } = useUpdateAlias(user.token);
-  const { setDefaultMutation } = useSetDefault(user.token);
+  const { addRegionMutation } = useAddRegion(accessToken);
+  const { updateAliasMutation } = useUpdateAlias(accessToken);
+  const { setDefaultMutation } = useSetDefault(accessToken);
 
   // 주소 찾기로 선택한 주소
   const { data, setAddressData, resetAddressData } = useAddressData({
@@ -167,6 +168,9 @@ export default function SelectLoc({ navigation }: SelectLocScreenProps) {
           <View style={styles.title}>
             <Text style={styles.titleText}>재난 상황을 확인하고 싶은{'\n'}동네를 설정해주세요</Text>
             <Text style={styles.explanation}>이후 홈화면에서 편집하거나 추가할 수 있어요</Text>
+            <Pressable onPress={() => signOut()}>
+              <Text>로그아웃</Text>
+            </Pressable>
           </View>
           <View style={styles.searchBar}>
             <FeatherIcon name="search" size={14} style={styles.searchIcon} />

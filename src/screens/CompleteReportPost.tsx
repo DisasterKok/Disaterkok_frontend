@@ -14,7 +14,7 @@ type ReportArticleDetailScreenProps = NativeStackScreenProps<
 export default function CompleteReportPost({ route }: ReportArticleDetailScreenProps) {
   const { id } = route.params;
 
-  const { user } = useUser();
+  const { userData } = useUser();
 
   const navigation: NavigationProp<HomeStackParamList> = useNavigation();
 
@@ -37,7 +37,7 @@ export default function CompleteReportPost({ route }: ReportArticleDetailScreenP
 
       <View style={styles.completeWrapper}>
         <Text style={styles.completeText}>업로드가 완료되었습니다</Text>
-        <Text style={styles.completeText}>{user.username} 님의 소중한 제보 감사합니다!</Text>
+        <Text style={styles.completeText}>{userData?.username} 님의 소중한 제보 감사합니다!</Text>
       </View>
 
       <View style={styles.buttonContainer}>

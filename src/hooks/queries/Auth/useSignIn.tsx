@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import userAPI, { loginPayload } from '../../../apis/userAPI';
+import useUserStorage from './useUserStorage';
 
 const useSignIn = () => {
   const queryClient = useQueryClient();
@@ -8,12 +9,16 @@ const useSignIn = () => {
       return userAPI.login(payload);
     },
     onSuccess: (data) => {
-      // 추후에 user / locData 캐싱 키 분리 및 api 연결 후 기능 연결
-      queryClient.setQueryData(['user'], {
+      const user = {
         username: data.user.username,
-        token: data.token.access,
-        locData: Boolean(data.exist),
-      });
+        locData: data.exist,
+        token: {
+          access: data.token.access,
+          refresh: data.token.refresh,
+        },
+      };
+      useUserStorage.set(user);
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
   });
   return { signInMutation };

@@ -10,9 +10,6 @@ import { useSignOut } from '../../hooks/queries/Auth/useSignOut';
 const FeatherAnimatedIcon = Animated.createAnimatedComponent(FeatherIcon);
 const AntAnimatedIcon = Animated.createAnimatedComponent(AntDesignIcon);
 
-import { useQueryClient } from '@tanstack/react-query';
-import useUser from '../../hooks/queries/Auth/useUser';
-
 const AppBar = ({
   animatedColor,
 }: {
@@ -31,16 +28,6 @@ const AppBar = ({
 
   // 임시
   const signOut = useSignOut();
-  const queryClient = useQueryClient();
-  const { user } = useUser();
-  const resetData = () => {
-    queryClient.setQueryData(['user'], {
-      username: user.username,
-      token: user.token,
-      locData: false,
-    });
-    //navigation.navigate('Home');
-  };
 
   return (
     <View style={styles.appBar}>

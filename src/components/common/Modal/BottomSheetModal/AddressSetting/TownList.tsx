@@ -40,22 +40,25 @@ interface TownListBottomSheetProps {
 }
 
 const TownList = ({ height, isEditable, bottomSheetModalRef }: TownListBottomSheetProps) => {
-  const { user } = useUser();
+  const { userData } = useUser();
+  const token = userData?.token;
+  console.log('townlist token:', token);
+  const accessToken = token ? token.access : '';
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false);
   const [updatingIndex, setUpdatingIndex] = React.useState<number>(0);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState<boolean>(false);
 
   const {
     regionListQuery: { data: regions },
-  } = useRegionListQuery(user.token);
+  } = useRegionListQuery(accessToken);
   const [addressDataList, setAddressDataList] = React.useState<UserRegion[]>(
     regions ? regions.results : [],
   );
-  const { addRegionMutation } = useAddRegion(user.token);
-  const { updateAliasMutation } = useUpdateAlias(user.token);
-  const { setDefaultMutation } = useSetDefault(user.token);
-  const { deleteRegionMutation } = useDeleteRegion(user.token);
-  const { setOnoffMutation } = useSetOnoff(user.token);
+  const { addRegionMutation } = useAddRegion(accessToken);
+  const { updateAliasMutation } = useUpdateAlias(accessToken);
+  const { setDefaultMutation } = useSetDefault(accessToken);
+  const { deleteRegionMutation } = useDeleteRegion(accessToken);
+  const { setOnoffMutation } = useSetOnoff(accessToken);
 
   const viewHeight = Dimensions.get('window').height * height - 30;
 
